@@ -3,5 +3,4 @@
 Projecte 2D
 
 Integrants:
-Christian Rivero
-Marc Román
+Christian Rivero, Marc Román
