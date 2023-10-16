@@ -6,12 +6,14 @@
 void Game::init()
 {
 	bPlay = true;
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	scene.init();
+	glClearColor(0.3529f, 0.6078, 1.f, 1.0f);
+	//mainMenu.Show();
+	scene.init(1);
 }
 
 bool Game::update(int deltaTime)
 {
+	//mainMenu.Show();
 	scene.update(deltaTime);
 	
 	return bPlay;
@@ -20,6 +22,7 @@ bool Game::update(int deltaTime)
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//mainMenu.render();
 	scene.render();
 }
 

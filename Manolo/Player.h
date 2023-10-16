@@ -14,21 +14,43 @@ class Player
 {
 
 public:
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram);
 	void update(int deltaTime);
 	void render();
-	
-	void setTileMap(TileMap *tileMap);
-	void setPosition(const glm::vec2 &pos);
-	
-private:
-	bool bJumping;
-	glm::ivec2 tileMapDispl, posPlayer;
-	int jumpAngle, startY;
-	Texture spritesheet;
-	Sprite *sprite;
-	TileMap *map;
 
+	void setTileMap(TileMap* tileMap);
+	void setPosition(const glm::vec2& pos);
+
+	void hit();
+	void creceMario();
+	void invencibility();
+	bool isInvencibleFunc();
+	void sameAnimationBeetwenModes(int animation);
+	glm::vec2 getPosition();
+	void hasMadeKill();
+	bool isInAnimacionDeadFunc();
+	void kickShell(); 
+	int getAltura();
+	void nextLevel();
+	void animacionEndLevelFunc();
+	bool isChangingLevel();
+
+	int alturaSprite;
+
+private:
+	bool bJumping, saltoQuieto, realesedJump, isBig, realesedBig, isInAnimacionAlternarModo, isInvencible, isInvulnerable, realesedInvencible, isInAnimacionDead, kickedAShell, animationEndLevel;
+	float velocity, timerAnimacionAlternarModo, timerIsInvencible, timerHasBeenHitted, timerAnimationDead, timerKickedAShell;
+	glm::ivec2 tileMapDispl, posPlayer;
+	int jumpAngle, startY, conteoCambiosAnimacion;
+	Texture minimario, bigmario, starmario, starbigmario;
+	Sprite* spriteMini;
+	Sprite* spriteBig;
+	Sprite* spriteMarioStar;
+	Sprite* spriteBigMarioStar;
+	TileMap* map;
+
+	void animacionAlternarModo();
+	Sprite* getCorrectSprite();
 };
 
 
