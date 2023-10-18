@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
+#include "MainMenu.h"
 
 
 #define SCREEN_X 32
@@ -30,6 +31,7 @@ Scene::Scene()
 {
 	map = NULL;
 	player = NULL;
+	mainMenu = NULL;
 	goomba = NULL;
 	star = NULL;
 	seta = NULL;
@@ -42,6 +44,8 @@ Scene::~Scene()
 		delete map;
 	if(player != NULL)
 		delete player;
+	if (mainMenu != NULL)
+		delete mainMenu;
 	if (goomba != NULL)
 		delete goomba;
 	if (star != NULL)
@@ -53,10 +57,17 @@ Scene::~Scene()
 }
 
 
-void Scene::init(int lev)
-{
-	if (lev == 1) {
+void Scene::init(int lev) {
+	if (lev == 0) { //repasar condición
+		level = 0;
+		initShaders();
+		mainMenu = new MainMenu();
+		mainMenu->init(texProgram);
+		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+	}
+	else if (lev == 1) {
 		level = 1;
+		personajes.clear();
 		endedLevel = false;
 		initShaders();
 		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -98,8 +109,11 @@ void Scene::init(int lev)
 		//personajes.push_back(star);
 		personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
+		//mainMenu = new MainMenu();
+		//mainMenu->init(texProgram);
 	}
-	else {
+	else if (lev == 2){
+		level = 2;
 		personajes.clear();
 		endedLevel = false;
 
@@ -150,98 +164,107 @@ void Scene::init(int lev)
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
-	player->update(deltaTime);
-	for (Personaje* personaje : personajes) {
-		if (personaje != nullptr) {
-			personaje->update(deltaTime);
-		}
-	}
-
-	vector<Personaje*>::iterator it = personajes.begin();
-	while (it != personajes.end()) {
-		Personaje* personaje = *it;
-		if (!player->isInAnimacionDeadFunc() && personaje != nullptr && checkCollision(player->getPosition(), personaje->getPosition(), player->getAltura(), 32)) {
-			string tipo = personaje->myType();
-			if (tipo == "Star") {
-				player->invencibility();
-				it = personajes.erase(it);
-				delete personaje;
+	if (level != 0) {
+		player->update(deltaTime);
+		for (Personaje* personaje : personajes) {
+			if (personaje != nullptr) {
+				personaje->update(deltaTime);
 			}
-			else if (tipo == "Goomba") {
-				if (player->isInvencibleFunc()) { //muere el enemigo
-					//personaje->killed();
+		}
+
+		vector<Personaje*>::iterator it = personajes.begin();
+		while (it != personajes.end()) {
+			Personaje* personaje = *it;
+			if (!player->isInAnimacionDeadFunc() && personaje != nullptr && checkCollision(player->getPosition(), personaje->getPosition(), player->getAltura(), 32)) {
+				string tipo = personaje->myType();
+				if (tipo == "Star") {
+					player->invencibility();
 					it = personajes.erase(it);
 					delete personaje;
 				}
-				else {
-					if (esMuerte(player->getPosition(), personaje->getPosition(), player->getAltura(), 32)) {
-						player->hasMadeKill();
-						//personaje->hit();
+				else if (tipo == "Goomba") {
+					if (player->isInvencibleFunc()) { //muere el enemigo
+						//personaje->killed();
 						it = personajes.erase(it);
-						/*
-						personaje->hit();
-						//delete personaje;
-						*/
 						delete personaje;
 					}
 					else {
-						player->hit();
+						if (esMuerte(player->getPosition(), personaje->getPosition(), player->getAltura(), 32)) {
+							player->hasMadeKill();
+							//personaje->hit();
+							it = personajes.erase(it);
+							/*
+							personaje->hit();
+							//delete personaje;
+							*/
+							delete personaje;
+						}
+						else {
+							player->hit();
+							++it;
+						}
+					}
+				}
+				else if (tipo == "Ktroopa") {
+					if (player->isInvencibleFunc()) { //muere el enemigo
+						//personaje->hit();
+						it = personajes.erase(it);
+						delete personaje;
+					}
+					else {
+						Ktroopa* ktroopa = dynamic_cast<Ktroopa*>(personaje);
+						if (esMuerte(player->getPosition(), ktroopa->getPosition(), player->getAltura(), 32) && ktroopa->isAlive()) { //de tortuga a shell, le ha saltado en la cabeza
+							ktroopa->killed();
+							player->hasMadeKill();
+						}
+						else if (!ktroopa->isAlive() && !ktroopa->isShellMovingFunc()) { //es shell quieta y pasa a moverse, le ha tocado en lado izq o dcha
+							if (isCollisionLeft(player->getPosition(), ktroopa->getPosition())) {
+								ktroopa->moveShellToRight(true);
+							}
+							else {
+								ktroopa->moveShellToRight(false);
+							}
+							player->kickShell();
+						}
+						else { //es shell en movimiento, es hit al player
+							player->hit();
+						}
 						++it;
 					}
 				}
-			}
-			else if (tipo == "Ktroopa") {
-				if (player->isInvencibleFunc()) { //muere el enemigo
-					//personaje->hit();
+				else if (tipo == "Seta") {
+					player->creceMario();
 					it = personajes.erase(it);
 					delete personaje;
 				}
-				else {
-					Ktroopa* ktroopa = dynamic_cast<Ktroopa*>(personaje);
-					if (esMuerte(player->getPosition(), ktroopa->getPosition(), player->getAltura(), 32) && ktroopa->isAlive()) { //de tortuga a shell, le ha saltado en la cabeza
-						ktroopa->killed();
-						player->hasMadeKill();
-					}
-					else if (!ktroopa->isAlive() && !ktroopa->isShellMovingFunc()) { //es shell quieta y pasa a moverse, le ha tocado en lado izq o dcha
-						if (isCollisionLeft(player->getPosition(), ktroopa->getPosition())) {
-							ktroopa->moveShellToRight(true);
-						}
-						else {
-							ktroopa->moveShellToRight(false);
-						}
-						player->kickShell();
-					}
-					else { //es shell en movimiento, es hit al player
-						player->hit();
-					}
-					++it;
-				}
 			}
-			else if (tipo == "Seta") {
-				player->creceMario();
-				it = personajes.erase(it);
-				delete personaje;
-			}
+			++it;
 		}
-		++it;
-	}
-	if (Game::instance().getKey('1')) {
-		borrarPersonajes();
-		init(1);
-	}
-	if (Game::instance().getKey('2')) {
-		borrarPersonajes();
-		init(2);
-	}
-	if (player->getPosition().x >= palo_bandera->getPosition().x) { //siguiente nivel
-		if (!player->isChangingLevel() && level == 1) {
-			player->animacionEndLevelFunc();
-			++level;
-			endedLevel = true;
-		}
-		else if (!player->isChangingLevel() && level == 2 && endedLevel){ //cambiamos de nivel, se cambia el mapa
+		if (Game::instance().getKey('1')) {
 			borrarPersonajes();
-			nextLevel();
+			init(1);
+		}
+		if (Game::instance().getKey('2')) {
+			borrarPersonajes();
+			init(2);
+		}
+		if (player->getPosition().x >= palo_bandera->getPosition().x) { //siguiente nivel
+			if (!player->isChangingLevel() && level == 1) {
+				player->animacionEndLevelFunc();
+				++level;
+				endedLevel = true;
+			}
+			else if (!player->isChangingLevel() && level == 2 && endedLevel) { //cambiamos de nivel, se cambia el mapa
+				borrarPersonajes();
+				nextLevel();
+			}
+		}
+	}
+	else {
+		int chosed;
+		mainMenu->update(deltaTime, chosed);
+		if (chosed != 0) {
+			init(chosed);
 		}
 	}
 }
@@ -256,15 +279,18 @@ void Scene::render()
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-	map->render();
-	for (Personaje* personaje : personajes) {
-		if (personaje != nullptr) {
-			personaje->render();
-		}
-	}
-	palo_bandera->render();
 
-	player->render();
+	if (level != 0) {
+		map->render();
+		for (Personaje* personaje : personajes) {
+			if (personaje != nullptr) {
+				personaje->render();
+			}
+		}
+		palo_bandera->render();
+		player->render();
+	}
+	else mainMenu->render();
 }
 
 void Scene::initShaders()
