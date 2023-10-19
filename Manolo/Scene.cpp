@@ -3,7 +3,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
-#include "MainMenu.h"
 
 
 #define SCREEN_X 32
@@ -31,7 +30,7 @@ Scene::Scene()
 {
 	map = NULL;
 	player = NULL;
-	mainMenu = NULL;
+	menus = NULL;
 	goomba = NULL;
 	star = NULL;
 	seta = NULL;
@@ -44,8 +43,8 @@ Scene::~Scene()
 		delete map;
 	if(player != NULL)
 		delete player;
-	if (mainMenu != NULL)
-		delete mainMenu;
+	if (menus != NULL)
+		delete menus;
 	if (goomba != NULL)
 		delete goomba;
 	if (star != NULL)
@@ -61,9 +60,16 @@ void Scene::init(int lev) {
 	if (lev == 0) { //repasar condición
 		level = 0;
 		initShaders();
-		mainMenu = new MainMenu();
-		mainMenu->init(texProgram);
+		menus = new Menus();
+		menus->init(texProgram);
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+
+		resumenLevel1.loadFromFile("images/resumenLevel1.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		spriteResumenLevel1 = Sprite::createSprite(glm::ivec2(640, 40), glm::vec2(1.0, 1.0), &resumenLevel1, &texProgram);
+		resumenLevel2.loadFromFile("images/resumenLevel2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		spriteResumenLevel2 = Sprite::createSprite(glm::ivec2(640, 40), glm::vec2(1.0, 1.0), &resumenLevel2, &texProgram);
+		spriteResumenLevel1->setPosition(glm::vec2(float(0), float(0)));
+		spriteResumenLevel2->setPosition(glm::vec2(float(0), float(0)));
 	}
 	else if (lev == 1) {
 		level = 1;
@@ -109,8 +115,8 @@ void Scene::init(int lev) {
 		//personajes.push_back(star);
 		personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
-		//mainMenu = new MainMenu();
-		//mainMenu->init(texProgram);
+		//menus = new MainMenu();
+		//menus->init(texProgram);
 	}
 	else if (lev == 2){
 		level = 2;
@@ -258,11 +264,20 @@ void Scene::update(int deltaTime)
 				borrarPersonajes();
 				nextLevel();
 			}
+			else if (!player->isChangingLevel() && level == 2) {
+				player->animacionEndLevelFunc();
+				++level;
+				endedLevel = true;
+			}
+			else if (!player->isChangingLevel() && level == 3 && endedLevel) { //cambiamos de nivel, se cambia el mapa
+				menus->showingCreditsFunc();
+				level = 0;
+			}
 		}
 	}
 	else {
 		int chosed;
-		mainMenu->update(deltaTime, chosed);
+		menus->update(deltaTime, chosed);
 		if (chosed != 0) {
 			init(chosed);
 		}
@@ -282,6 +297,8 @@ void Scene::render()
 
 	if (level != 0) {
 		map->render();
+		if (level == 1 || (level == 2 && player->isChangingLevel())) spriteResumenLevel1->render();
+		else if (level == 2 || (level == 3 && player->isChangingLevel())) spriteResumenLevel2->render();
 		for (Personaje* personaje : personajes) {
 			if (personaje != nullptr) {
 				personaje->render();
@@ -290,7 +307,7 @@ void Scene::render()
 		palo_bandera->render();
 		player->render();
 	}
-	else mainMenu->render();
+	else menus->render();
 }
 
 void Scene::initShaders()

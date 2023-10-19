@@ -12,7 +12,7 @@
 #include "Ktroopa.h"
 #include "Personaje.h"
 #include "ObjetoEntorno.h"
-#include "MainMenu.h"
+#include "Menus.h"
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -49,8 +49,11 @@ private:
 	glm::mat4 projection;
 	int level;
 	bool endedLevel;
-	MainMenu* mainMenu;
+	Menus* menus;
 	std::vector<Personaje*> personajes;
+	Texture resumenLevel1, resumenLevel2;
+	Sprite* spriteResumenLevel1, *spriteResumenLevel2;
+
 	void nextLevel();
 	void borrarPersonajes();
 };
