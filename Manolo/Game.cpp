@@ -7,8 +7,8 @@ void Game::init()
 {
 	bPlay = true;
 	glClearColor(0.3529f, 0.6078, 1.f, 1.0f);
-	//mainMenu.Show();
-	scene.init(1);
+	//mainMenu.init();
+	scene.init(0);
 }
 
 bool Game::update(int deltaTime)
