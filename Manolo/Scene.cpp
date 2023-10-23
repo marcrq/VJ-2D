@@ -57,12 +57,12 @@ Scene::~Scene()
 
 
 void Scene::init(int lev) {
-	if (lev == 0) { //repasar condición
+	if (lev == 0) { //repasar condiciï¿½n
 		level = 0;
 		initShaders();
 		menus = new Menus();
 		menus->init(texProgram);
-		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+		projection = glm::ortho(-1.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 
 		resumenLevel1.loadFromFile("images/resumenLevel1.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		spriteResumenLevel1 = Sprite::createSprite(glm::ivec2(640, 40), glm::vec2(1.0, 1.0), &resumenLevel1, &texProgram);
@@ -76,7 +76,7 @@ void Scene::init(int lev) {
 		personajes.clear();
 		endedLevel = false;
 		initShaders();
-		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 		player = new Player();
 		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -124,7 +124,7 @@ void Scene::init(int lev) {
 		endedLevel = false;
 
 		initShaders();
-		map = TileMap::createTileMap("levels/level03.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 		player = new Player();
 		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -346,19 +346,19 @@ bool Scene::checkCollision(glm::vec2 posPlayer, glm::vec2 posEnemy, int alturaPl
 	float left2 = posEnemy.x;
 	float right2 = posEnemy.x + 32; // Debes definir el ancho del objeto
 
-	// Calcula los límites de los objetos en el eje Y (teniendo en cuenta la altura)
+	// Calcula los lï¿½mites de los objetos en el eje Y (teniendo en cuenta la altura)
 	float top1 = posPlayer.y - alturaPlayer;
 	float bottom1 = posPlayer.y;
 	float top2 = posEnemy.y - alturaEnemy;
 	float bottom2 = posEnemy.y;
 
-	// Verifica si hay colisión en el eje X
+	// Verifica si hay colisiï¿½n en el eje X
 	bool collisionX = (left1 < right2) && (right1 > left2);
 
-	// Verifica si hay colisión en el eje Y (considerando la altura)
+	// Verifica si hay colisiï¿½n en el eje Y (considerando la altura)
 	bool collisionY = (top1 < bottom2) && (bottom1 > top2);
 
-	// Si hay colisión en ambos ejes, entonces hay colisión en 2D
+	// Si hay colisiï¿½n en ambos ejes, entonces hay colisiï¿½n en 2D
 	return collisionX && collisionY;
 }
 
@@ -368,13 +368,13 @@ bool Scene::esMuerte(glm::vec2 posPlayer, glm::vec2 posEnemy, int alturaPlayer, 
 	float left2 = posEnemy.x;
 	float right2 = posEnemy.x + 32; // Debes definir el ancho del objeto
 
-	// Calcula los límites de los objetos en el eje Y (teniendo en cuenta la altura)
+	// Calcula los lï¿½mites de los objetos en el eje Y (teniendo en cuenta la altura)
 	float top1 = posPlayer.y - alturaPlayer;
 	float bottom1 = posPlayer.y;
 	float top2 = posEnemy.y - alturaEnemy;
 	float bottom2 = posEnemy.y;
 
-	if (bottom1-4 >= top2 && bottom1 <= top2+4 && (left1 < right2 && right1 > left2)) return true; //el 37 es porq es difícil q coincida justo a la misma altura, así q le pongo una dif de 5 píxeles (altura 32)
+	if (bottom1-4 >= top2 && bottom1 <= top2+4 && (left1 < right2 && right1 > left2)) return true; //el 37 es porq es difï¿½cil q coincida justo a la misma altura, asï¿½ q le pongo una dif de 5 pï¿½xeles (altura 32)
 	else return false;
 }
 
@@ -384,7 +384,7 @@ bool Scene::isCollisionLeft(glm::vec2 posPlayer, glm::vec2 posEnemy) {
 	float left2 = posEnemy.x;
 	float right2 = posEnemy.x + 32; // Debes definir el ancho del objeto
 
-	// Si hay colisión en ambos ejes, entonces hay colisión en 2D
+	// Si hay colisiï¿½n en ambos ejes, entonces hay colisiï¿½n en 2D
 	return left1 < left2 && right1 < right2;
 }
 
