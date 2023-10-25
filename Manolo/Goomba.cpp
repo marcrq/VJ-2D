@@ -8,6 +8,7 @@
 #define ACCELERATION 0.002f
 #define MAX_VEL 3.f
 #define TIME_UNTIL_ELIMINATION 2.f
+#define POINTS 1
 
 enum GoombaAnims
 {
@@ -90,4 +91,8 @@ bool Goomba::isAlive() {
 
 string Goomba::myType() {
 	return "Goomba";
+}
+
+int Goomba::getPoints() {
+	return POINTS;
 }

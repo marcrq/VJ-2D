@@ -17,6 +17,7 @@ public:
     void killed();
     bool isShellMovingFunc();
     void moveShellToRight(bool toRight);
+    int getPoints();
 
 private:
     Texture ktroopa, shell;

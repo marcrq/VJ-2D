@@ -19,6 +19,7 @@
 #define LIGHT_INVULNERABILITY 0.2 //para que no cuente como hit cuando chuto shell
 
 
+
 enum PlayerAnims
 {
 	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, DEAD

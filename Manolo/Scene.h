@@ -47,15 +47,20 @@ private:
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
-	int level;
+	int level, timerLevel;
 	bool endedLevel;
+	int points;
 	Menus* menus;
 	std::vector<Personaje*> personajes;
-	Texture resumenLevel1, resumenLevel2;
-	Sprite* spriteResumenLevel1, *spriteResumenLevel2;
+	Texture resumenLevel1, resumenLevel2, numbers;
+	Sprite* spriteResumenLevel1, *spriteResumenLevel2, *spriteTimerCentena, *spriteTimerDecena, *spriteTimerUnidad, * spritePointsUnidad, * spritePointsDecena;
+	//Text textTimerLevel
 
 	void nextLevel();
 	void borrarPersonajes();
+	void asignarSpriteNumber(Sprite* s, int n);
+	void actualizarTimer();
+	void actualizarPoints();
 };
 
 
