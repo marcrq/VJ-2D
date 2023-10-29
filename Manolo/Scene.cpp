@@ -89,6 +89,9 @@ void Scene::init(int lev) {
 		deadScreenGameOver.loadFromFile("images/deadScreenGameOver.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		spriteDeadScreenGameOver = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &deadScreenGameOver, &texProgram);
 		spriteDeadScreenGameOver->setPosition(glm::vec2(float(0), float(0)));
+		timeUp.loadFromFile("images/timeUp.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		spriteTimeUp = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &timeUp, &texProgram);
+		spriteTimeUp->setPosition(glm::vec2(float(0), float(0)));
 	}
 	else if (lev == 1) {
 		level = 1;
@@ -700,8 +703,13 @@ void Scene::update(int deltaTime)
 			}
 		}
 
-		timerLevel = 20 - static_cast<int>(currentTime) / 1000;
-		actualizarTimer();
+		if (!player->isInAnimacionDeadFunc() && !showScreenDeadPlayer) {
+			timerLevel = 10 - static_cast<int>(currentTime) / 1000;
+			if (timerLevel == 0) {
+				player->instaKill();
+			}
+			actualizarTimer();
+		}
 	}
 	else {
 		int chosed;
@@ -743,10 +751,11 @@ void Scene::render()
 		spriteCoins->render();
 
 		if (showScreenDeadPlayer && lives != -1) {
-			if(level == 1) spriteScreenDeadLevel1->render();
+			if(timerLevel <= 0) spriteTimeUp->render();
+			else if(level == 1) spriteScreenDeadLevel1->render();
 			else spriteScreenDeadLevel2->render();
 			asignarSpriteNumber(spriteNumberOfLives, lives);
-			spriteNumberOfLives->render();
+			if (timerLevel > 0) spriteNumberOfLives->render();
 		}
 		else if (showScreenDeadPlayer && lives == -1) {
 			spriteDeadScreenGameOver->render();

@@ -34,6 +34,7 @@ public:
 	void nextLevel();
 	void animacionEndLevelFunc();
 	bool isChangingLevel();
+	void instaKill();
 
 	int alturaSprite;
 

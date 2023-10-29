@@ -583,6 +583,11 @@ bool Player::isChangingLevel() {
 	return animationEndLevel;
 }
 
+void Player::instaKill() {
+	isInAnimacionDead = true;
+	timerAnimationDead = 0.f;
+}
+
 //void keyboardCallback(unsigned char key, int x, int y) {
 //	if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {
 //		isChangingLevel();
