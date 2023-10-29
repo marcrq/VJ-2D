@@ -67,6 +67,7 @@ void Scene::init(int lev) {
 		level = 0;
 		coins = 0;
 		lives = 3;
+		points = 0;
 		firstTimeInGameShowScreenDead = true;
 		timerAnimationDying = -1.0;
 		initShaders();
@@ -96,7 +97,6 @@ void Scene::init(int lev) {
 	else if (lev == 1) {
 		level = 1;
 		timerLevel = 500;
-		points = 0;
 		showScreenDeadPlayer = false;
 		timerScreenDead = 0.f;
 		personajes.clear();
@@ -318,7 +318,6 @@ void Scene::init(int lev) {
 	else if (lev == 2){
 		level = 2;
 		timerLevel = 500;
-		points = 0;
 		showScreenDeadPlayer = false;
 		timerScreenDead = 0.f;
 		personajes.clear();
@@ -787,8 +786,10 @@ void Scene::render()
 		spriteTimerCentena->render();
 		spriteTimerDecena->render();
 		spriteTimerUnidad->render();
+		actualizarPoints();
 		spritePointsUnidad->render();
 		spritePointsDecena->render();
+		actualizarCoins(); //PONER DONDE SE GANA MONEDA Y QUITAR DE AQUÍ
 		spriteCoins->render();
 
 		if (showScreenDeadPlayer && lives != -1) {
@@ -913,6 +914,13 @@ void Scene::actualizarTimer() {
 	asignarSpriteNumber(spriteTimerCentena, timerLevel % 10);
 	timerLevel = aux;
 }
+
+void Scene::actualizarCoins() {
+	int aux = coins;
+	asignarSpriteNumber(spriteCoins, coins % 10);
+	coins = aux;
+}
+
 
 void Scene::actualizarPoints() {
 	int aux = points;

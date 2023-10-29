@@ -59,6 +59,7 @@ private:
 	void borrarPersonajes();
 	void asignarSpriteNumber(Sprite* s, int n);
 	void actualizarTimer();
+	void actualizarCoins();
 	void actualizarPoints();
 	void checkCollisionsShell(Personaje* it);
 };
