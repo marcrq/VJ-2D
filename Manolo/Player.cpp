@@ -13,7 +13,7 @@
 #define ACCELERATION 0.002f
 #define MAX_VEL 3.f
 #define TIME_INVINCIBILITY 2.f //cuando la estrella 12
-#define TIME_INVULNERABILITY 2.5 //cuando te pegan
+#define TIME_INVULNERABILITY 1.0 //cuando te pegan
 #define LIGHT_INVULNERABILITY 0.2 //para que no cuente como hit cuando chuto shell
 
 
