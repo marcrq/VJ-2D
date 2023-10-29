@@ -45,15 +45,14 @@ private:
 	ObjetoEntorno* bandera;
 	ObjetoEntorno* palo_bandera;
 	ShaderProgram texProgram;
-	float currentTime;
+	float currentTime, timerAnimationDying, timerScreenDead;
 	glm::mat4 projection;
-	int level, timerLevel;
-	bool endedLevel;
-	int points;
+	bool endedLevel, showScreenDeadPlayer, firstTimeInGameShowScreenDead;
+	int level, timerLevel, points, coins, lives;
 	Menus* menus;
 	std::vector<Personaje*> personajes;
-	Texture resumenLevel1, resumenLevel2, numbers;
-	Sprite* spriteResumenLevel1, *spriteResumenLevel2, *spriteTimerCentena, *spriteTimerDecena, *spriteTimerUnidad, * spritePointsUnidad, * spritePointsDecena;
+	Texture resumenLevel1, resumenLevel2, numbers, screenDeadLevel1, screenDeadLevel2, deadScreenGameOver;
+	Sprite* spriteResumenLevel1, *spriteResumenLevel2, *spriteTimerCentena, *spriteTimerDecena, *spriteTimerUnidad, * spritePointsUnidad, * spritePointsDecena, *spriteCoins, *spriteNumberOfLives, * spriteScreenDeadLevel1, * spriteScreenDeadLevel2, * spriteDeadScreenGameOver;
 	//Text textTimerLevel
 
 	void nextLevel();

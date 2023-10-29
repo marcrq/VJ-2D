@@ -25,6 +25,8 @@
 #define INIT_KTROOPA_X_TILES 15
 #define INIT_KTROOPA_Y_TILES 15
 
+#define MAX_TIME_ANIMATION_DYING 2.0
+#define MAX_TIME_SCREEN_DEAD 2.5//2.5
 
 Scene::Scene()
 {
@@ -57,30 +59,46 @@ Scene::~Scene()
 
 enum PlayerAnims
 {
-	UNO, DOS, TRES, CUATRO, CINCO, SEIS, SIETE, OCHO, NUEVE, CERO
+	CERO, UNO, DOS, TRES, CUATRO, CINCO, SEIS, SIETE, OCHO, NUEVE
 };
 
 void Scene::init(int lev) {
 	if (lev == 0) { //repasar condición
 		level = 0;
+		coins = 0;
+		lives = 3;
+		firstTimeInGameShowScreenDead = true;
+		timerAnimationDying = -1.0;
 		initShaders();
 		menus = new Menus();
 		menus->init(texProgram);
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 
-		resumenLevel1.loadFromFile("images/resumenLevel1.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		spriteResumenLevel1 = Sprite::createSprite(glm::ivec2(640, 40), glm::vec2(1.0, 1.0), &resumenLevel1, &texProgram);
-		resumenLevel2.loadFromFile("images/resumenLevel2.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		spriteResumenLevel2 = Sprite::createSprite(glm::ivec2(640, 40), glm::vec2(1.0, 1.0), &resumenLevel2, &texProgram);
+		resumenLevel1.loadFromFile("images/resumenLevel1v2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		spriteResumenLevel1 = Sprite::createSprite(glm::ivec2(640, 42), glm::vec2(1.0, 1.0), &resumenLevel1, &texProgram);
+		resumenLevel2.loadFromFile("images/resumenLevel2v2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		spriteResumenLevel2 = Sprite::createSprite(glm::ivec2(640, 42), glm::vec2(1.0, 1.0), &resumenLevel2, &texProgram);
 		spriteResumenLevel1->setPosition(glm::vec2(float(0), float(0)));
 		spriteResumenLevel2->setPosition(glm::vec2(float(0), float(0)));
+		screenDeadLevel1.loadFromFile("images/deadScreenLevel1.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		spriteScreenDeadLevel1 = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &screenDeadLevel1, &texProgram);
+		spriteScreenDeadLevel1->setPosition(glm::vec2(float(0), float(0)));
+		screenDeadLevel2.loadFromFile("images/deadScreenLevel2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		spriteScreenDeadLevel2 = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &screenDeadLevel2, &texProgram);
+		spriteScreenDeadLevel2->setPosition(glm::vec2(float(0), float(0)));
+		deadScreenGameOver.loadFromFile("images/deadScreenGameOver.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		spriteDeadScreenGameOver = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &deadScreenGameOver, &texProgram);
+		spriteDeadScreenGameOver->setPosition(glm::vec2(float(0), float(0)));
 	}
 	else if (lev == 1) {
 		level = 1;
 		timerLevel = 500;
 		points = 0;
+		showScreenDeadPlayer = false;
+		timerScreenDead = 0.f;
 		personajes.clear();
 		endedLevel = false;
+		timerAnimationDying = -1.0;
 		initShaders();
 		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 		player = new Player();
@@ -119,7 +137,7 @@ void Scene::init(int lev) {
 		//personajes.push_back(goomba);
 		personajes.push_back(ktroopa);
 		//personajes.push_back(star);
-		personajes.push_back(seta);
+		//personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
 		//menus = new MainMenu();
 		//menus->init(texProgram);
@@ -247,16 +265,64 @@ void Scene::init(int lev) {
 		spritePointsDecena->setAnimationSpeed(NUEVE, 8);
 		spritePointsDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
 		spritePointsDecena->setPosition(glm::vec2((3)* map->getTileSize(), (1)* map->getTileSize()));
-
-		////////////////////(////////////////////////////
+		////////////////////COINS////////////////////////////
+		spriteCoins = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
+		spriteCoins->setNumberAnimations(10);
+		spriteCoins->setAnimationSpeed(CERO, 8);
+		spriteCoins->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spriteCoins->setAnimationSpeed(UNO, 8);
+		spriteCoins->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spriteCoins->setAnimationSpeed(DOS, 8);
+		spriteCoins->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spriteCoins->setAnimationSpeed(TRES, 8);
+		spriteCoins->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spriteCoins->setAnimationSpeed(CUATRO, 8);
+		spriteCoins->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spriteCoins->setAnimationSpeed(CINCO, 8);
+		spriteCoins->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spriteCoins->setAnimationSpeed(SEIS, 8);
+		spriteCoins->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spriteCoins->setAnimationSpeed(SIETE, 8);
+		spriteCoins->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spriteCoins->setAnimationSpeed(OCHO, 8);
+		spriteCoins->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spriteCoins->setAnimationSpeed(NUEVE, 8);
+		spriteCoins->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spriteCoins->setPosition(glm::vec2((16)* map->getTileSize(), (1)* map->getTileSize()));
+		////////////////////LIVES////////////////////////////
+		spriteNumberOfLives = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
+		spriteNumberOfLives->setNumberAnimations(10);
+		spriteNumberOfLives->setAnimationSpeed(CERO, 8);
+		spriteNumberOfLives->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(UNO, 8);
+		spriteNumberOfLives->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(DOS, 8);
+		spriteNumberOfLives->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(TRES, 8);
+		spriteNumberOfLives->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(CUATRO, 8);
+		spriteNumberOfLives->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(CINCO, 8);
+		spriteNumberOfLives->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(SEIS, 8);
+		spriteNumberOfLives->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(SIETE, 8);
+		spriteNumberOfLives->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(OCHO, 8);
+		spriteNumberOfLives->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(NUEVE, 8);
+		spriteNumberOfLives->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spriteNumberOfLives->setPosition(glm::vec2((22)* map->getTileSize(), (16)* map->getTileSize()));
 	}
 	else if (lev == 2){
 		level = 2;
 		timerLevel = 500;
 		points = 0;
+		showScreenDeadPlayer = false;
+		timerScreenDead = 0.f;
 		personajes.clear();
 		endedLevel = false;
-
+		timerAnimationDying = -1.0;
 		initShaders();
 		map = TileMap::createTileMap("levels/level03.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 		player = new Player();
@@ -288,6 +354,16 @@ void Scene::init(int lev) {
 		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
 		palo_bandera->setPosition(glm::vec2((INIT_SETA_X_TILES - 1) * map->getTileSize(), (INIT_SETA_Y_TILES - 20) * map->getTileSize()));
 		palo_bandera->setTileMap(map);
+
+		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+		currentTime = 0.0f;
+
+		personajes.push_back(goomba);
+		//personajes.push_back(ktroopa);
+		//personajes.push_back(star);
+		//personajes.push_back(seta);
+		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
+
 
 		////////////////////////////////////////////////7
 		numbers.loadFromFile("images/numbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -411,17 +487,54 @@ void Scene::init(int lev) {
 		spritePointsDecena->setAnimationSpeed(NUEVE, 8);
 		spritePointsDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
 		spritePointsDecena->setPosition(glm::vec2((3)* map->getTileSize(), (1)* map->getTileSize()));
-		/////////////////////////////////////////////////
-
-		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
-		currentTime = 0.0f;
-
-		personajes.push_back(goomba);
-		//personajes.push_back(ktroopa);
-		personajes.push_back(star);
-		personajes.push_back(seta);
-		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
-
+		////////////////////COINS////////////////////////////
+		spriteCoins = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
+		spriteCoins->setNumberAnimations(10);
+		spriteCoins->setAnimationSpeed(CERO, 8);
+		spriteCoins->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spriteCoins->setAnimationSpeed(UNO, 8);
+		spriteCoins->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spriteCoins->setAnimationSpeed(DOS, 8);
+		spriteCoins->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spriteCoins->setAnimationSpeed(TRES, 8);
+		spriteCoins->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spriteCoins->setAnimationSpeed(CUATRO, 8);
+		spriteCoins->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spriteCoins->setAnimationSpeed(CINCO, 8);
+		spriteCoins->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spriteCoins->setAnimationSpeed(SEIS, 8);
+		spriteCoins->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spriteCoins->setAnimationSpeed(SIETE, 8);
+		spriteCoins->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spriteCoins->setAnimationSpeed(OCHO, 8);
+		spriteCoins->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spriteCoins->setAnimationSpeed(NUEVE, 8);
+		spriteCoins->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spriteCoins->setPosition(glm::vec2((16)* map->getTileSize(), (1)* map->getTileSize()));
+		////////////////////LIVES////////////////////////////
+		spriteNumberOfLives = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
+		spriteNumberOfLives->setNumberAnimations(10);
+		spriteNumberOfLives->setAnimationSpeed(CERO, 8);
+		spriteNumberOfLives->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(UNO, 8);
+		spriteNumberOfLives->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(DOS, 8);
+		spriteNumberOfLives->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(TRES, 8);
+		spriteNumberOfLives->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(CUATRO, 8);
+		spriteNumberOfLives->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(CINCO, 8);
+		spriteNumberOfLives->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(SEIS, 8);
+		spriteNumberOfLives->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(SIETE, 8);
+		spriteNumberOfLives->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(OCHO, 8);
+		spriteNumberOfLives->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spriteNumberOfLives->setAnimationSpeed(NUEVE, 8);
+		spriteNumberOfLives->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spriteNumberOfLives->setPosition(glm::vec2((22)* map->getTileSize(), (16)* map->getTileSize()));
 	}
 
 	
@@ -435,6 +548,33 @@ void Scene::update(int deltaTime)
 		for (Personaje* personaje : personajes) {
 			if (personaje != nullptr) {
 				personaje->update(deltaTime);
+			}
+		}
+
+		if (player->isInAnimacionDeadFunc() && timerAnimationDying == -1.0) {
+			timerAnimationDying = 0.;
+		}
+		if (timerAnimationDying != -1.0) {
+			timerAnimationDying += deltaTime / 1000.0;
+		}
+		if ((timerAnimationDying >= MAX_TIME_ANIMATION_DYING && !showScreenDeadPlayer) || firstTimeInGameShowScreenDead) {
+			if(!firstTimeInGameShowScreenDead) lives -= 1;
+			showScreenDeadPlayer = true;
+			timerAnimationDying = -1.0;
+		}
+		if (showScreenDeadPlayer) {
+			timerScreenDead += deltaTime / 1000.0;
+
+			if (timerScreenDead >= MAX_TIME_SCREEN_DEAD) {
+				showScreenDeadPlayer = false;
+				firstTimeInGameShowScreenDead = false;
+				timerScreenDead = 0.f;
+				player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+				borrarPersonajes();
+				init(level);
+				if (lives == -1) { //poner un sonidito
+					level = 0;
+				}
 			}
 		}
 
@@ -547,6 +687,7 @@ void Scene::update(int deltaTime)
 			else if (!player->isChangingLevel() && level == 2 && endedLevel) { //cambiamos de nivel, se cambia el mapa
 				borrarPersonajes();
 				nextLevel();
+				firstTimeInGameShowScreenDead = true;
 			}
 			else if (!player->isChangingLevel() && level == 2) {
 				player->animacionEndLevelFunc();
@@ -599,6 +740,17 @@ void Scene::render()
 		spriteTimerUnidad->render();
 		spritePointsUnidad->render();
 		spritePointsDecena->render();
+		spriteCoins->render();
+
+		if (showScreenDeadPlayer && lives != -1) {
+			if(level == 1) spriteScreenDeadLevel1->render();
+			else spriteScreenDeadLevel2->render();
+			asignarSpriteNumber(spriteNumberOfLives, lives);
+			spriteNumberOfLives->render();
+		}
+		else if (showScreenDeadPlayer && lives == -1) {
+			spriteDeadScreenGameOver->render();
+		}
 	}
 	else menus->render();
 }
@@ -698,40 +850,8 @@ void Scene::borrarPersonajes() {
 }
 
 void Scene::asignarSpriteNumber(Sprite* s, int n) {
-	switch (n) {
-		case(0):
-			s->changeAnimation(CERO);
-			break;
-		case(1):
-			s->changeAnimation(UNO);
-			break;
-		case(2):
-			s->changeAnimation(DOS);
-			break;
-		case(3):
-			s->changeAnimation(TRES);
-			break;
-		case(4):
-			s->changeAnimation(CUATRO);
-			break;
-		case(5):
-			s->changeAnimation(CINCO);
-			break;
-		case(6):
-			s->changeAnimation(SEIS);
-			break;
-		case(7):
-			s->changeAnimation(SIETE);
-			break;
-		case(8):
-			s->changeAnimation(OCHO);
-			break;
-		case(9):
-			s->changeAnimation(NUEVE);
-			break;
-		default:
-			s->changeAnimation(CERO);
-	}
+	if(n < 0 || n > 9) s->changeAnimation(0);
+	else s->changeAnimation(n);
 }
 
 void Scene::actualizarTimer() {
