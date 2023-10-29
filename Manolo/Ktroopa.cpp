@@ -24,6 +24,7 @@ enum KtroopaAnims
 		vaIzq = true;
 		conteoCambiosAnimacion = 0;
 		isShellMoving = false;
+		vivo = true;
 
 		ktroopa.loadFromFile("images/ktroopa.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		sprite = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.5, 0.5), &ktroopa, &shaderProgram);

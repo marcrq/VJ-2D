@@ -41,7 +41,7 @@ private:
 	Goomba* goomba;
 	Star* star;
 	Seta* seta;
-	Ktroopa* ktroopa;
+	Ktroopa* ktroopa, *ktroopa2;
 	ObjetoEntorno* bandera;
 	ObjetoEntorno* palo_bandera;
 	ShaderProgram texProgram;
@@ -60,6 +60,7 @@ private:
 	void asignarSpriteNumber(Sprite* s, int n);
 	void actualizarTimer();
 	void actualizarPoints();
+	void checkCollisionsShell(Personaje* it);
 };
 
 

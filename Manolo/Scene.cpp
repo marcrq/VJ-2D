@@ -137,13 +137,11 @@ void Scene::init(int lev) {
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 		currentTime = 0.0f;
 
-		//personajes.push_back(goomba);
+		personajes.push_back(goomba);
 		personajes.push_back(ktroopa);
 		//personajes.push_back(star);
 		//personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
-		//menus = new MainMenu();
-		//menus->init(texProgram);
 
 		/////////////////////////////////////77
 
@@ -353,6 +351,11 @@ void Scene::init(int lev) {
 		ktroopa->setPosition(glm::vec2(INIT_KTROOPA_X_TILES * map->getTileSize(), INIT_KTROOPA_Y_TILES * map->getTileSize()));
 		ktroopa->setTileMap(map);
 
+		ktroopa2 = new Ktroopa();
+		ktroopa2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		ktroopa2->setPosition(glm::vec2((INIT_KTROOPA_X_TILES+10)* map->getTileSize(), INIT_KTROOPA_Y_TILES* map->getTileSize()));
+		ktroopa2->setTileMap(map);
+
 		palo_bandera = new ObjetoEntorno();
 		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
 		palo_bandera->setPosition(glm::vec2((INIT_SETA_X_TILES - 1) * map->getTileSize(), (INIT_SETA_Y_TILES - 20) * map->getTileSize()));
@@ -362,7 +365,8 @@ void Scene::init(int lev) {
 		currentTime = 0.0f;
 
 		personajes.push_back(goomba);
-		//personajes.push_back(ktroopa);
+		personajes.push_back(ktroopa);
+		personajes.push_back(ktroopa2);
 		//personajes.push_back(star);
 		//personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
@@ -584,8 +588,9 @@ void Scene::update(int deltaTime)
 		vector<Personaje*>::iterator it = personajes.begin();
 		while (it != personajes.end()) {
 			Personaje* personaje = *it;
-			if (!player->isInAnimacionDeadFunc() && personaje != nullptr && checkCollision(player->getPosition(), personaje->getPosition(), player->getAltura(), 32)) {
-				string tipo = personaje->myType();
+			string tipo;
+			if(personaje != nullptr) tipo = personaje->myType();
+			if (!player->isInAnimacionDeadFunc() && personaje != nullptr && checkCollision(player->getPosition(), personaje->getPosition(), player->getAltura(), 32)) {			
 				if (tipo == "Star") {
 					player->invencibility();
 					Star* s = dynamic_cast<Star*>(personaje);
@@ -671,6 +676,42 @@ void Scene::update(int deltaTime)
 					delete personaje;
 				}
 			}
+			if (tipo == "Ktroopa") {
+				Ktroopa* kt = dynamic_cast<Ktroopa*>(personaje);
+				if (kt->isShellMovingFunc()) {
+					checkCollisionsShell(personaje);
+				}
+			}
+
+			++it;
+		}
+
+		//eliminar los tocados por shell en movimiento
+		it = personajes.begin();
+		while (it != personajes.end()) {
+			Personaje* personaje = *it;
+			string tipo;
+			if (personaje != nullptr) tipo = personaje->myType();
+			if (tipo == "Goomba") {
+				Goomba* g = dynamic_cast<Goomba*>(personaje);
+				if (!g->vivo) {
+					int p = g->getPoints();
+					points += p;
+					actualizarPoints();
+					it = personajes.erase(it);
+					delete personaje;
+				}
+			}
+			else if (tipo == "Ktroopa") {
+				Ktroopa* kt = dynamic_cast<Ktroopa*>(personaje);
+				if (!kt->vivo) {
+					int p = kt->getPoints();
+					points += p;
+					actualizarPoints();
+					it = personajes.erase(it);
+					delete personaje;
+				}
+			}
 			++it;
 		}
 		if (Game::instance().getKey('1')) {
@@ -704,7 +745,7 @@ void Scene::update(int deltaTime)
 		}
 
 		if (!player->isInAnimacionDeadFunc() && !showScreenDeadPlayer) {
-			timerLevel = 10 - static_cast<int>(currentTime) / 1000;
+			timerLevel = 400 - static_cast<int>(currentTime) / 1000;
 			if (timerLevel == 0) {
 				player->instaKill();
 			}
@@ -881,3 +922,24 @@ void Scene::actualizarPoints() {
 	points = aux;
 }
 
+void Scene::checkCollisionsShell(Personaje* personajeShell) {
+	vector<Personaje*>::iterator it2 = personajes.begin();
+	Ktroopa* shell = dynamic_cast<Ktroopa*>(personajeShell);
+	while (it2 != personajes.end()) {
+		Personaje* personaje = *it2;
+		string tipo;
+		if (personaje != nullptr) tipo = personaje->myType();
+		if (personaje != nullptr && (tipo == "Goomba" || tipo == "Ktroopa") && checkCollision(shell->getPosition(), personaje->getPosition(), 32, 32)) {
+			if (tipo == "Goomba") {
+				Goomba* g = dynamic_cast<Goomba*>(personaje);
+				g->vivo = false;
+			}
+			else if (tipo == "Ktroopa" && personajeShell != personaje) {
+				Ktroopa* kt = dynamic_cast<Ktroopa*>(personaje);
+				kt->vivo = false;
+			}
+		}
+
+		++it2;
+	}
+}
