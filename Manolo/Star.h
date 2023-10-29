@@ -11,6 +11,7 @@ public:
 	void hit() override;
 	bool isAlive() override;
 	string myType() override;
+	int getPoints();
 
 
 private:

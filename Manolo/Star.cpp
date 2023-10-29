@@ -6,6 +6,7 @@
 
 #define ACCELERATION 0.002f
 #define MAX_VEL 3.f
+#define POINTS 2
 
 
 enum StarAnims
@@ -108,4 +109,8 @@ bool Star::isAlive() {
 
 string Star::myType() {
 	return "Star";
+}
+
+int Star::getPoints() {
+	return POINTS;
 }

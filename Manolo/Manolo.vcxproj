@@ -23,7 +23,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="Ktroopa.h" />
-    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Menus.h" />
     <ClInclude Include="ObjetoEntorno.h" />
     <ClInclude Include="Personaje.h" />
     <ClInclude Include="Player.h" />
@@ -42,7 +42,7 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="Ktroopa.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Menus.cpp" />
     <ClCompile Include="ObjetoEntorno.cpp" />
     <ClCompile Include="Personaje.cpp" />
     <ClCompile Include="Player.cpp" />

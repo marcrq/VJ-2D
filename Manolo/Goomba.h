@@ -14,6 +14,7 @@ public:
 
     bool vivo;
     float timeSinceDead;
+    int getPoints();
 
 private:
     Texture goomba;

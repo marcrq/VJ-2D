@@ -6,23 +6,19 @@
 void Game::init()
 {
 	bPlay = true;
-	glClearColor(0.3529f, 0.6078, 1.f, 1.0f);
-	//mainMenu.init();
+	glClearColor(0.3529, 0.6078, 1.0, 1.0f);
 	scene.init(0);
 }
 
 bool Game::update(int deltaTime)
 {
-	//mainMenu.Show();
 	scene.update(deltaTime);
-	
 	return bPlay;
 }
 
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//mainMenu.render();
 	scene.render();
 }
 
@@ -69,6 +65,7 @@ bool Game::getSpecialKey(int key) const
 {
 	return specialKeys[key];
 }
+
 
 
 
