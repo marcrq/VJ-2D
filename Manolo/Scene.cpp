@@ -26,7 +26,7 @@
 #define INIT_KTROOPA_Y_TILES 15
 
 #define MAX_TIME_ANIMATION_DYING 2.0
-#define MAX_TIME_SCREEN_DEAD 2.5//2.5
+#define MAX_TIME_SCREEN_DEAD 0.5//2.5
 
 Scene::Scene()
 {
@@ -36,7 +36,7 @@ Scene::Scene()
 	goomba = NULL;
 	star = NULL;
 	seta = NULL;
-	ktroopa = NULL;
+	ktroopa2 = NULL;
 }
 
 Scene::~Scene()
@@ -55,6 +55,8 @@ Scene::~Scene()
 		delete seta;
 	if (ktroopa != NULL)
 		delete ktroopa;
+	if (ktroopa2 != NULL)
+		delete ktroopa2;
 }
 
 enum PlayerAnims
@@ -103,7 +105,7 @@ void Scene::init(int lev) {
 		endedLevel = false;
 		timerAnimationDying = -1.0;
 		initShaders();
-		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 		player = new Player();
 		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));

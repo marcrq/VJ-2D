@@ -243,7 +243,7 @@ void Player::update(int deltaTime)
 	}
 	else if (animationEndLevel) {
 		
-		if (posPlayer.y < 380) {
+		if (posPlayer.y < 385) {
 			if (getCorrectSprite()->animation() != JUMP_RIGHT) {//se apreta izq 1r vez
 				getCorrectSprite()->changeAnimation(JUMP_RIGHT);
 			}
@@ -436,6 +436,9 @@ void Player::update(int deltaTime)
 
 			}
 		}
+	}
+	if (posPlayer.y >= 440 && !isInAnimacionDead) {
+		instaKill();
 	}
 	spriteBig->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y - 32)));
 	spriteMini->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
