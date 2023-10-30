@@ -44,15 +44,15 @@ private:
 	void prepareBackgroundLayer(const glm::vec2& minCoords, ShaderProgram& program);
 
 private:
-	GLuint vao, backgroundVao;
-	GLuint vbo, backgroundVbo;
+	GLuint vao;
+	GLuint vbo;
 	GLint posLocation, texCoordLocation;
 	int nTiles;
 	glm::ivec2 position, mapSize, tilesheetSize;
 	int tileSize, blockSize;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
-	int *map, *backgroundMap;
+	int *map;
 
 };
 

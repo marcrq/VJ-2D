@@ -351,7 +351,7 @@ void Player::update(int deltaTime)
 
 
 
-		if ((Game::instance().getSpecialKey(GLUT_KEY_LEFT) && !bJumping) || (Game::instance().getSpecialKey(GLUT_KEY_LEFT) && bJumping && saltoQuieto)) //TODO ESTO ES PARA Q SE PUEDA MOVER SI ESTÁS HACIENDO UN SALTO EN PARADA
+		if ((Game::instance().getSpecialKey(GLUT_KEY_LEFT) && !bJumping) || (Game::instance().getSpecialKey(GLUT_KEY_LEFT) && bJumping && saltoQuieto)) //TODO ESTO ES PARA Q SE PUEDA MOVER SI ESTï¿½S HACIENDO UN SALTO EN PARADA
 		{
 			if (getCorrectSprite()->animation() != MOVE_LEFT && !bJumping) {//se apreta izq 1r vez
 				getCorrectSprite()->changeAnimation(MOVE_LEFT);
@@ -363,7 +363,7 @@ void Player::update(int deltaTime)
 				if (getCorrectSprite()->animation() != STAND_LEFT) getCorrectSprite()->changeAnimation(STAND_LEFT);
 			}
 		}
-		else if ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && !bJumping) || (Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && bJumping && saltoQuieto)) //TODO ESTO ES PARA Q SE PUEDA MOVER SI ESTÁS HACIENDO UN SALTO EN PARADA
+		else if ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && !bJumping) || (Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && bJumping && saltoQuieto)) //TODO ESTO ES PARA Q SE PUEDA MOVER SI ESTï¿½S HACIENDO UN SALTO EN PARADA
 		{
 			if (getCorrectSprite()->animation() != MOVE_RIGHT && !bJumping) {
 				getCorrectSprite()->changeAnimation(MOVE_RIGHT);
@@ -421,16 +421,16 @@ void Player::update(int deltaTime)
 			{
 				if (jumpAngle <= 90) {
 					posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
-					//if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y, alturaSprite)) {
-					//	jumpAngle = 91;
+					if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y, alturaSprite)) {
+						jumpAngle = 91;
 
-					//	if (getCorrectSprite()->animation() == JUMP_LEFT) {//se apreta izq 1r vez
-					//		getCorrectSprite()->changeAnimation(STAND_LEFT);
-					//	}
-					//	if (getCorrectSprite()->animation() == JUMP_RIGHT) {//se apreta izq 1r vez
-					//		getCorrectSprite()->changeAnimation(STAND_RIGHT);
-					//	}
-					//}
+						if (getCorrectSprite()->animation() == JUMP_LEFT) {//se apreta izq 1r vez
+							getCorrectSprite()->changeAnimation(STAND_LEFT);
+						}
+						if (getCorrectSprite()->animation() == JUMP_RIGHT) {//se apreta izq 1r vez
+							getCorrectSprite()->changeAnimation(STAND_RIGHT);
+						}
+					}
 				}
 				else {
 					//posPlayer.y = int(startY - 96 * sin(1.15 * 3.14159f * jumpAngle / 180.f));
@@ -555,7 +555,7 @@ Sprite* Player::getCorrectSprite() {
 	}
 }
 
-//a esta funcion le paso la animación que quiero, y la aplico a los 4 sprites a la vez
+//a esta funcion le paso la animaciï¿½n que quiero, y la aplico a los 4 sprites a la vez
 void Player::sameAnimationBeetwenModes(int animation) {
 	spriteMini->changeAnimation(animation);
 	spriteBig->changeAnimation(animation);
