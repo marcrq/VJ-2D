@@ -173,7 +173,6 @@ void Menus::render() {
         else if (opt == 1 && !insideInstrucciones) sprite2->render();
         else if (opt == 2 && !insideInstrucciones) sprite3->render();
         if (opt == 0 || opt == 1 || opt == 2) {
-            actualizarPoints();
             spritePointsUnidad->render();
             spritePointsDecena->render();
             spritePointsCentena->render();
@@ -189,6 +188,7 @@ void Menus::showingCreditsFunc() {
 
 void Menus::setMaxPoints(int p) {
     maxPoints = p;
+    actualizarPoints();
 }
 
 void Menus::asignarSpriteNumber(Sprite* s, int n) {
