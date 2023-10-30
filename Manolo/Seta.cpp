@@ -6,6 +6,7 @@
 
 #define ACCELERATION 0.002f
 #define MAX_VEL 3.f
+#define POINTS 1
 
 
 enum SetaAnims
@@ -74,4 +75,8 @@ bool Seta::isAlive() {
 
 string Seta::myType() {
 	return "Seta";
+}
+
+int Seta::getPoints() {
+	return POINTS;
 }

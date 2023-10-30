@@ -33,12 +33,14 @@ public:
 	int getAltura();
 	void nextLevel();
 	void animacionEndLevelFunc();
+	bool isInAnimacionEndLevel();
 	bool isChangingLevel();
+	void instaKill();
 
 	int alturaSprite;
 
 private:
-	bool bJumping, saltoQuieto, realesedJump, isBig, realesedBig, isInAnimacionAlternarModo, isInvencible, isInvulnerable, realesedInvencible, isInAnimacionDead, kickedAShell, animationEndLevel;
+	bool bJumping, saltoQuieto, realesedJump, isBig, realesedBig, isInAnimacionAlternarModo, isInvencible, isInvulnerable, realesedInvencible, isInAnimacionDead, kickedAShell, animationEndLevel, running;
 	float velocity, timerAnimacionAlternarModo, timerIsInvencible, timerHasBeenHitted, timerAnimationDead, timerKickedAShell;
 	glm::ivec2 tileMapDispl, posPlayer;
 	int jumpAngle, startY, conteoCambiosAnimacion;

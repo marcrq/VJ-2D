@@ -8,6 +8,7 @@
 #define ACCELERATION 0.002f
 #define MAX_VEL 3.f
 #define TIME_UNTIL_ELIMINATION 2.f
+#define POINTS 1
 
 enum GoombaAnims
 {
@@ -17,6 +18,8 @@ enum GoombaAnims
 void Goomba::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 	velocity = 1.f;
 	timeSinceDead = 0.f;
+	vaIzq = true;
+	vivo = true;
 	goomba.loadFromFile("images/goomba.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.33333, 1.0), &goomba, &shaderProgram);
 	sprite->setNumberAnimations(2);
@@ -33,9 +36,6 @@ void Goomba::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-
-	vaIzq = true;
-	vivo = true;
 }
 
 void Goomba::update(int deltaTime) {
@@ -90,4 +90,8 @@ bool Goomba::isAlive() {
 
 string Goomba::myType() {
 	return "Goomba";
+}
+
+int Goomba::getPoints() {
+	return POINTS;
 }

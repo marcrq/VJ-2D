@@ -8,6 +8,7 @@
 #define ACCELERATION 0.002f
 #define MAX_VEL 3.f
 #define TIME_RESURRECTION 4.f
+#define POINTS 1
 
 
 enum KtroopaAnims
@@ -23,6 +24,7 @@ enum KtroopaAnims
 		vaIzq = true;
 		conteoCambiosAnimacion = 0;
 		isShellMoving = false;
+		vivo = true;
 
 		ktroopa.loadFromFile("images/ktroopa.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		sprite = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.5, 0.5), &ktroopa, &shaderProgram);
@@ -166,4 +168,8 @@ enum KtroopaAnims
 		isShellMoving = true;
 		if(toRight) vaIzq = false;
 		else vaIzq = true;
+	}
+
+	int Ktroopa::getPoints() {
+		return POINTS;
 	}

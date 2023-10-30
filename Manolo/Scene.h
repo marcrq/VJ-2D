@@ -41,21 +41,27 @@ private:
 	Goomba* goomba;
 	Star* star;
 	Seta* seta;
-	Ktroopa* ktroopa;
+	Ktroopa* ktroopa, *ktroopa2;
 	ObjetoEntorno* bandera;
 	ObjetoEntorno* palo_bandera;
 	ShaderProgram texProgram;
-	float currentTime;
+	float currentTime, timerAnimationDying, timerScreenDead;
 	glm::mat4 projection;
-	int level;
-	bool endedLevel;
+	bool endedLevel, showScreenDeadPlayer, firstTimeInGameShowScreenDead, sumarPuntosTimer;
+	int level, timerLevel, points, maxPoints, coins, lives;
 	Menus* menus;
 	std::vector<Personaje*> personajes;
-	Texture resumenLevel1, resumenLevel2;
-	Sprite* spriteResumenLevel1, *spriteResumenLevel2;
+	Texture resumenLevel1, resumenLevel2, numbers, screenDeadLevel1, screenDeadLevel2, deadScreenGameOver, timeUp;
+	Sprite* spriteResumenLevel1, *spriteResumenLevel2, *spriteTimerCentena, *spriteTimerDecena, *spriteTimerUnidad, * spritePointsUnidad, * spritePointsDecena, * spritePointsCentena, *spriteCoins, *spriteNumberOfLives, * spriteScreenDeadLevel1, * spriteScreenDeadLevel2, * spriteDeadScreenGameOver, *spriteTimeUp;
+	//Text textTimerLevel
 
 	void nextLevel();
 	void borrarPersonajes();
+	void asignarSpriteNumber(Sprite* s, int n);
+	void actualizarTimer();
+	void actualizarCoins();
+	void actualizarPoints();
+	void checkCollisionsShell(Personaje* it);
 };
 
 

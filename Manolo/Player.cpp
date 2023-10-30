@@ -5,8 +5,6 @@
 #include "Player.h"
 #include "Game.h"
 
-#include <chrono>
-
 
 #define JUMP_ANGLE_STEP 4
 #define JUMP_HEIGHT 96
@@ -15,8 +13,9 @@
 #define ACCELERATION 0.002f
 #define MAX_VEL 3.f
 #define TIME_INVINCIBILITY 2.f //cuando la estrella 12
-#define TIME_INVULNERABILITY 2.5 //cuando te pegan
+#define TIME_INVULNERABILITY 1.0 //cuando te pegan
 #define LIGHT_INVULNERABILITY 0.2 //para que no cuente como hit cuando chuto shell
+
 
 
 enum PlayerAnims
@@ -24,9 +23,45 @@ enum PlayerAnims
 	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, DEAD
 };
 
+bool runningG = false;
+
+//static void keyboardCallback(unsigned char key, int x, int y)
+//{
+//	if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {
+//		runningG = true;
+//	}
+//	else {
+//		runningG = false;
+//	}
+//}
+
+static void specialDownCallback(int key, int x, int y)
+{
+	if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {
+		runningG = true;
+	}
+	else {
+		runningG = false;
+	}
+}
+
+// If a special key is released this callback is called
+
+static void specialUpCallback(int key, int x, int y)
+{
+	if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {
+		runningG = true;
+	}
+	else {
+		runningG = false;
+	}
+}
+
 
 void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
+	//glutSpecialFunc(specialDownCallback);
+	//glutSpecialUpFunc(specialUpCallback);
 
 	bJumping = false;
 	realesedJump = true;
@@ -45,6 +80,9 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	timerKickedAShell = 0.f;
 	alturaSprite = 32;
 	animationEndLevel = false;
+
+	running = false;
+	//glutKeyboardFunc(keyboardCallback);
 
 	minimario.loadFromFile("images/minimariosTODOS.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spriteMini = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.33333, 0.25), &minimario, &shaderProgram);
@@ -191,6 +229,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 void Player::update(int deltaTime)
 {
+	getCorrectSprite()->update(deltaTime);
 	if (isInAnimacionAlternarModo) {
 		timerAnimacionAlternarModo += deltaTime / 1000.0;
 		if (timerAnimacionAlternarModo > 1.f) {
@@ -239,14 +278,23 @@ void Player::update(int deltaTime)
 		}
 	}
 	else if (animationEndLevel) {
-		if (posPlayer.y < 380) posPlayer.y += 2.f;
+		
+		if (posPlayer.y < 385) {
+			if (getCorrectSprite()->animation() != JUMP_RIGHT) {//se apreta izq 1r vez
+				getCorrectSprite()->changeAnimation(JUMP_RIGHT);
+			}
+			posPlayer.y += 2.f;
+		}
 		else if (posPlayer.x < 550) {
+			if (getCorrectSprite()->animation() != MOVE_RIGHT) {//se apreta izq 1r vez
+				getCorrectSprite()->changeAnimation(MOVE_RIGHT);
+			}
 			posPlayer.x += 2.f;
 		}
 		else nextLevel();
 	}
 	else {
-		if (realesedBig && Game::instance().getKey('m')) {
+		if (realesedBig && (Game::instance().getKey('m') || Game::instance().getKey('M'))) {
 			if (!isBig) {
 				if(!isInvencible) sameAnimationBeetwenModes(spriteMini->animation());
 				else sameAnimationBeetwenModes(spriteMarioStar->animation());
@@ -261,10 +309,8 @@ void Player::update(int deltaTime)
 			realesedBig = false;
 		}
 
-		getCorrectSprite()->update(deltaTime);
-
 		//cosas de velocidades, run e invencibilidad
-		if (Game::instance().getKey('r')) {
+		if (Game::instance().getKey('z')) { //Game::instance().getKey('z')
 			velocity = 3.f;
 		}
 		else if (!isInvencible && velocity != 2.f) velocity = 2.f;
@@ -290,7 +336,7 @@ void Player::update(int deltaTime)
 			if (timerKickedAShell >= LIGHT_INVULNERABILITY) kickedAShell = false;
 		}
 
-		if (Game::instance().getKey('g')) {
+		if (Game::instance().getKey('g') || Game::instance().getKey('G')) {
 			timerIsInvencible = 0.f;
 			isInvencible = true;
 			realesedInvencible = false;
@@ -300,8 +346,8 @@ void Player::update(int deltaTime)
 		}
 
 		if (!realesedJump && !Game::instance().getKey(' ')) realesedJump = true;
-		if (!realesedBig && !Game::instance().getKey('m')) realesedBig = true;
-		if (!realesedInvencible && !Game::instance().getKey('g')) realesedInvencible = true;
+		if (!realesedBig && (!Game::instance().getKey('m') && !Game::instance().getKey('M'))) realesedBig = true;
+		if (!realesedInvencible && (!Game::instance().getKey('g') && !Game::instance().getKey('G'))) realesedInvencible = true;
 
 
 
@@ -392,12 +438,12 @@ void Player::update(int deltaTime)
 					posPlayer.y += FALL_STEP;
 					bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
 					if (!bJumping) {
-							if (getCorrectSprite()->animation() == JUMP_LEFT) {//se apreta izq 1r vez
-								getCorrectSprite()->changeAnimation(STAND_LEFT);
-							}
-							if (getCorrectSprite()->animation() == JUMP_RIGHT) {//se apreta izq 1r vez
-								getCorrectSprite()->changeAnimation(STAND_RIGHT);
-							}
+						if (getCorrectSprite()->animation() == JUMP_LEFT) {//se apreta izq 1r vez
+							getCorrectSprite()->changeAnimation(STAND_LEFT);
+						}
+						if (getCorrectSprite()->animation() == JUMP_RIGHT) {//se apreta izq 1r vez
+							getCorrectSprite()->changeAnimation(STAND_RIGHT);
+						}
 					}
 				}
 			}
@@ -426,6 +472,9 @@ void Player::update(int deltaTime)
 
 			}
 		}
+	}
+	if (posPlayer.y >= 440 && !isInAnimacionDead) {
+		instaKill();
 	}
 	spriteBig->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y - 32)));
 	spriteMini->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -549,7 +598,10 @@ bool Player::isInAnimacionDeadFunc() {
 
 void Player::animacionEndLevelFunc() {
 	animationEndLevel = true;
-	getCorrectSprite()->changeAnimation(MOVE_RIGHT);
+}
+
+bool Player::isInAnimacionEndLevel() {
+	return animationEndLevel;
 }
 
 void Player::nextLevel() {
@@ -567,9 +619,20 @@ void Player::nextLevel() {
 	kickedAShell = false;
 	timerKickedAShell = 0.f;
 	animationEndLevel = false;
+	running = false;
 }
 
 bool Player::isChangingLevel() {
 	return animationEndLevel;
 }
 
+void Player::instaKill() {
+	isInAnimacionDead = true;
+	timerAnimationDead = 0.f;
+}
+
+//void keyboardCallback(unsigned char key, int x, int y) {
+//	if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {
+//		isChangingLevel();
+//	}
+//}

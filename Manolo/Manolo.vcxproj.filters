@@ -27,6 +27,9 @@
     <ClInclude Include="Ktroopa.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="Menus.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
     <ClInclude Include="ObjetoEntorno.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -78,6 +81,9 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Menus.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="ObjetoEntorno.cpp">
