@@ -110,32 +110,32 @@ void Scene::init(int lev) {
 		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 		player = new Player();
 		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * 16, INIT_PLAYER_Y_TILES * 16));
 		player->setTileMap(map);
 
 		goomba = new Goomba();
 		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		goomba->setPosition(glm::vec2(INIT_GOOMBA_X_TILES * map->getTileSize(), INIT_GOOMBA_Y_TILES * map->getTileSize()));
+		goomba->setPosition(glm::vec2(INIT_GOOMBA_X_TILES * 16, INIT_GOOMBA_Y_TILES * 16));
 		goomba->setTileMap(map);
 
 		star = new Star();
 		star->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		star->setPosition(glm::vec2(INIT_STAR_X_TILES * map->getTileSize(), INIT_STAR_Y_TILES * map->getTileSize()));
+		star->setPosition(glm::vec2(INIT_STAR_X_TILES * 16, INIT_STAR_Y_TILES * 16));
 		star->setTileMap(map);
 
 		seta = new Seta();
 		seta->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		seta->setPosition(glm::vec2(INIT_SETA_X_TILES * map->getTileSize(), INIT_SETA_Y_TILES * map->getTileSize()));
+		seta->setPosition(glm::vec2(INIT_SETA_X_TILES * 16, INIT_SETA_Y_TILES * 16));
 		seta->setTileMap(map);
 
 		ktroopa = new Ktroopa();
 		ktroopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		ktroopa->setPosition(glm::vec2(INIT_KTROOPA_X_TILES * map->getTileSize(), INIT_KTROOPA_Y_TILES * map->getTileSize()));
+		ktroopa->setPosition(glm::vec2(INIT_KTROOPA_X_TILES * 16, INIT_KTROOPA_Y_TILES * 16));
 		ktroopa->setTileMap(map);
 
 		palo_bandera = new ObjetoEntorno();
 		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
-		palo_bandera->setPosition(glm::vec2((INIT_SETA_X_TILES - 1) * map->getTileSize(), (INIT_SETA_Y_TILES - 15) * map->getTileSize()));
+		palo_bandera->setPosition(glm::vec2((INIT_SETA_X_TILES - 1) * 16, (INIT_SETA_Y_TILES - 15) * 16));
 		palo_bandera->setTileMap(map);
 
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
@@ -172,7 +172,7 @@ void Scene::init(int lev) {
 		spriteTimerCentena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteTimerCentena->setAnimationSpeed(NUEVE, 8);
 		spriteTimerCentena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteTimerCentena->setPosition(glm::vec2((33) * map->getTileSize(), (1) * map->getTileSize()));
+		spriteTimerCentena->setPosition(glm::vec2((33) * 16, (1) * 16));
 
 		spriteTimerDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteTimerDecena->setNumberAnimations(10);
@@ -196,7 +196,7 @@ void Scene::init(int lev) {
 		spriteTimerDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteTimerDecena->setAnimationSpeed(NUEVE, 8);
 		spriteTimerDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteTimerDecena->setPosition(glm::vec2((34) * map->getTileSize(), (1) * map->getTileSize()));
+		spriteTimerDecena->setPosition(glm::vec2((34) * 16, (1) * 16));
 
 		spriteTimerUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteTimerUnidad->setNumberAnimations(10);
@@ -220,7 +220,7 @@ void Scene::init(int lev) {
 		spriteTimerUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteTimerUnidad->setAnimationSpeed(NUEVE, 8);
 		spriteTimerUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteTimerUnidad->setPosition(glm::vec2((35)* map->getTileSize(), (1)* map->getTileSize()));
+		spriteTimerUnidad->setPosition(glm::vec2((35)* 16, (1)* 16));
 
 		/////////////////POINTS//////////////////
 		spritePointsUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
@@ -245,7 +245,7 @@ void Scene::init(int lev) {
 		spritePointsUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsUnidad->setAnimationSpeed(NUEVE, 8);
 		spritePointsUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsUnidad->setPosition(glm::vec2((5)* map->getTileSize(), (1)* map->getTileSize()));
+		spritePointsUnidad->setPosition(glm::vec2((5)* 16, (1)* 16));
 
 		spritePointsDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spritePointsDecena->setNumberAnimations(10);
@@ -269,7 +269,7 @@ void Scene::init(int lev) {
 		spritePointsDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsDecena->setAnimationSpeed(NUEVE, 8);
 		spritePointsDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsDecena->setPosition(glm::vec2((4)* map->getTileSize(), (1)* map->getTileSize()));
+		spritePointsDecena->setPosition(glm::vec2((4)* 16, (1)* 16));
 
 		spritePointsCentena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spritePointsCentena->setNumberAnimations(10);
@@ -293,7 +293,7 @@ void Scene::init(int lev) {
 		spritePointsCentena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsCentena->setAnimationSpeed(NUEVE, 8);
 		spritePointsCentena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsCentena->setPosition(glm::vec2((3)* map->getTileSize(), (1)* map->getTileSize()));
+		spritePointsCentena->setPosition(glm::vec2((3)* 16, (1)* 16));
 		////////////////////COINS////////////////////////////
 		spriteCoins = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteCoins->setNumberAnimations(10);
@@ -317,7 +317,7 @@ void Scene::init(int lev) {
 		spriteCoins->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteCoins->setAnimationSpeed(NUEVE, 8);
 		spriteCoins->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteCoins->setPosition(glm::vec2((16)* map->getTileSize(), (1)* map->getTileSize()));
+		spriteCoins->setPosition(glm::vec2((16)* 16, (1)* 16));
 		////////////////////LIVES////////////////////////////
 		spriteNumberOfLives = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteNumberOfLives->setNumberAnimations(10);
@@ -341,7 +341,7 @@ void Scene::init(int lev) {
 		spriteNumberOfLives->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteNumberOfLives->setAnimationSpeed(NUEVE, 8);
 		spriteNumberOfLives->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteNumberOfLives->setPosition(glm::vec2((22)* map->getTileSize(), (16)* map->getTileSize()));
+		spriteNumberOfLives->setPosition(glm::vec2((22)* 16, (16)* 16));
 	}
 	else if (lev == 2){
 		level = 2;
@@ -355,37 +355,37 @@ void Scene::init(int lev) {
 		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 		player = new Player();
 		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * 16, INIT_PLAYER_Y_TILES * 16));
 		player->setTileMap(map);
 
 		goomba = new Goomba();
 		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		goomba->setPosition(glm::vec2(INIT_GOOMBA_X_TILES * map->getTileSize(), INIT_GOOMBA_Y_TILES * map->getTileSize()));
+		goomba->setPosition(glm::vec2(INIT_GOOMBA_X_TILES * 16, INIT_GOOMBA_Y_TILES * 16));
 		goomba->setTileMap(map);
 
 		star = new Star();
 		star->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		star->setPosition(glm::vec2(INIT_STAR_X_TILES * map->getTileSize(), INIT_STAR_Y_TILES * map->getTileSize()));
+		star->setPosition(glm::vec2(INIT_STAR_X_TILES * 16, INIT_STAR_Y_TILES * 16));
 		star->setTileMap(map);
 
 		seta = new Seta();
 		seta->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		seta->setPosition(glm::vec2(INIT_SETA_X_TILES * map->getTileSize(), INIT_SETA_Y_TILES * map->getTileSize()));
+		seta->setPosition(glm::vec2(INIT_SETA_X_TILES * 16, INIT_SETA_Y_TILES * 16));
 		seta->setTileMap(map);
 
 		ktroopa = new Ktroopa();
 		ktroopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		ktroopa->setPosition(glm::vec2(INIT_KTROOPA_X_TILES * map->getTileSize(), INIT_KTROOPA_Y_TILES * map->getTileSize()));
+		ktroopa->setPosition(glm::vec2(INIT_KTROOPA_X_TILES * 16, INIT_KTROOPA_Y_TILES * 16));
 		ktroopa->setTileMap(map);
 
 		ktroopa2 = new Ktroopa();
 		ktroopa2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		ktroopa2->setPosition(glm::vec2((INIT_KTROOPA_X_TILES+10)* map->getTileSize(), INIT_KTROOPA_Y_TILES* map->getTileSize()));
+		ktroopa2->setPosition(glm::vec2((INIT_KTROOPA_X_TILES+10)* 16, INIT_KTROOPA_Y_TILES* 16));
 		ktroopa2->setTileMap(map);
 
 		palo_bandera = new ObjetoEntorno();
 		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
-		palo_bandera->setPosition(glm::vec2((INIT_SETA_X_TILES - 1) * map->getTileSize(), (INIT_SETA_Y_TILES - 20) * map->getTileSize()));
+		palo_bandera->setPosition(glm::vec2((INIT_SETA_X_TILES - 1) * 16, (INIT_SETA_Y_TILES - 20) * 16));
 		palo_bandera->setTileMap(map);
 
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
@@ -423,7 +423,7 @@ void Scene::init(int lev) {
 		spriteTimerCentena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteTimerCentena->setAnimationSpeed(NUEVE, 8);
 		spriteTimerCentena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteTimerCentena->setPosition(glm::vec2((33)* map->getTileSize(), (1)* map->getTileSize()));
+		spriteTimerCentena->setPosition(glm::vec2((33)* 16, (1)* 16));
 
 		spriteTimerDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteTimerDecena->setNumberAnimations(10);
@@ -447,7 +447,7 @@ void Scene::init(int lev) {
 		spriteTimerDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteTimerDecena->setAnimationSpeed(NUEVE, 8);
 		spriteTimerDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteTimerDecena->setPosition(glm::vec2((34)* map->getTileSize(), (1)* map->getTileSize()));
+		spriteTimerDecena->setPosition(glm::vec2((34)* 16, (1)* 16));
 
 		spriteTimerUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteTimerUnidad->setNumberAnimations(10);
@@ -471,7 +471,7 @@ void Scene::init(int lev) {
 		spriteTimerUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteTimerUnidad->setAnimationSpeed(NUEVE, 8);
 		spriteTimerUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteTimerUnidad->setPosition(glm::vec2((35)* map->getTileSize(), (1)* map->getTileSize()));
+		spriteTimerUnidad->setPosition(glm::vec2((35)* 16, (1)* 16));
 
 		/////////////////POINTS//////////////////
 		spritePointsUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
@@ -496,7 +496,7 @@ void Scene::init(int lev) {
 		spritePointsUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsUnidad->setAnimationSpeed(NUEVE, 8);
 		spritePointsUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsUnidad->setPosition(glm::vec2((5)* map->getTileSize(), (1)* map->getTileSize()));
+		spritePointsUnidad->setPosition(glm::vec2((5)* 16, (1)* 16));
 
 		spritePointsDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spritePointsDecena->setNumberAnimations(10);
@@ -520,7 +520,7 @@ void Scene::init(int lev) {
 		spritePointsDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsDecena->setAnimationSpeed(NUEVE, 8);
 		spritePointsDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsDecena->setPosition(glm::vec2((4)* map->getTileSize(), (1)* map->getTileSize()));
+		spritePointsDecena->setPosition(glm::vec2((4)* 16, (1)* 16));
 
 		spritePointsCentena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spritePointsCentena->setNumberAnimations(10);
@@ -544,7 +544,7 @@ void Scene::init(int lev) {
 		spritePointsCentena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsCentena->setAnimationSpeed(NUEVE, 8);
 		spritePointsCentena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsCentena->setPosition(glm::vec2((3)* map->getTileSize(), (1)* map->getTileSize()));
+		spritePointsCentena->setPosition(glm::vec2((3)* 16, (1)* 16));
 		////////////////////COINS////////////////////////////
 		spriteCoins = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteCoins->setNumberAnimations(10);
@@ -568,7 +568,7 @@ void Scene::init(int lev) {
 		spriteCoins->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteCoins->setAnimationSpeed(NUEVE, 8);
 		spriteCoins->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteCoins->setPosition(glm::vec2((16)* map->getTileSize(), (1)* map->getTileSize()));
+		spriteCoins->setPosition(glm::vec2((16)* 16, (1)* 16));
 		////////////////////LIVES////////////////////////////
 		spriteNumberOfLives = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteNumberOfLives->setNumberAnimations(10);
@@ -592,7 +592,7 @@ void Scene::init(int lev) {
 		spriteNumberOfLives->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteNumberOfLives->setAnimationSpeed(NUEVE, 8);
 		spriteNumberOfLives->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteNumberOfLives->setPosition(glm::vec2((22)* map->getTileSize(), (16)* map->getTileSize()));
+		spriteNumberOfLives->setPosition(glm::vec2((22)* 16, (16)* 16));
 	}
 
 	
@@ -628,7 +628,7 @@ void Scene::update(int deltaTime)
 				showScreenDeadPlayer = false;
 				firstTimeInGameShowScreenDead = false;
 				timerScreenDead = 0.f;
-				player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+				player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * 16, INIT_PLAYER_Y_TILES * 16));
 				borrarPersonajes();
 				init(level);
 				if (lives == -1) { //poner un sonidito
