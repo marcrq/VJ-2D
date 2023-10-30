@@ -33,6 +33,7 @@ public:
 	int getAltura();
 	void nextLevel();
 	void animacionEndLevelFunc();
+	bool isInAnimacionEndLevel();
 	bool isChangingLevel();
 	void instaKill();
 

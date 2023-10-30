@@ -48,11 +48,11 @@ private:
 	float currentTime, timerAnimationDying, timerScreenDead;
 	glm::mat4 projection;
 	bool endedLevel, showScreenDeadPlayer, firstTimeInGameShowScreenDead;
-	int level, timerLevel, points, coins, lives;
+	int level, timerLevel, points, maxPoints, coins, lives;
 	Menus* menus;
 	std::vector<Personaje*> personajes;
 	Texture resumenLevel1, resumenLevel2, numbers, screenDeadLevel1, screenDeadLevel2, deadScreenGameOver, timeUp;
-	Sprite* spriteResumenLevel1, *spriteResumenLevel2, *spriteTimerCentena, *spriteTimerDecena, *spriteTimerUnidad, * spritePointsUnidad, * spritePointsDecena, *spriteCoins, *spriteNumberOfLives, * spriteScreenDeadLevel1, * spriteScreenDeadLevel2, * spriteDeadScreenGameOver, *spriteTimeUp;
+	Sprite* spriteResumenLevel1, *spriteResumenLevel2, *spriteTimerCentena, *spriteTimerDecena, *spriteTimerUnidad, * spritePointsUnidad, * spritePointsDecena, * spritePointsCentena, *spriteCoins, *spriteNumberOfLives, * spriteScreenDeadLevel1, * spriteScreenDeadLevel2, * spriteDeadScreenGameOver, *spriteTimeUp;
 	//Text textTimerLevel
 
 	void nextLevel();

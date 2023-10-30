@@ -600,6 +600,10 @@ void Player::animacionEndLevelFunc() {
 	animationEndLevel = true;
 }
 
+bool Player::isInAnimacionEndLevel() {
+	return animationEndLevel;
+}
+
 void Player::nextLevel() {
 	bJumping = false;
 	realesedJump = true;

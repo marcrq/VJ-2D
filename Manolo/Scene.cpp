@@ -70,6 +70,7 @@ void Scene::init(int lev) {
 		coins = 0;
 		lives = 3;
 		points = 0;
+		maxPoints = 0;
 		firstTimeInGameShowScreenDead = true;
 		timerAnimationDying = -1.0;
 		initShaders();
@@ -243,7 +244,7 @@ void Scene::init(int lev) {
 		spritePointsUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsUnidad->setAnimationSpeed(NUEVE, 8);
 		spritePointsUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsUnidad->setPosition(glm::vec2((4)* map->getTileSize(), (1)* map->getTileSize()));
+		spritePointsUnidad->setPosition(glm::vec2((5)* map->getTileSize(), (1)* map->getTileSize()));
 
 		spritePointsDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spritePointsDecena->setNumberAnimations(10);
@@ -267,7 +268,31 @@ void Scene::init(int lev) {
 		spritePointsDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsDecena->setAnimationSpeed(NUEVE, 8);
 		spritePointsDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsDecena->setPosition(glm::vec2((3)* map->getTileSize(), (1)* map->getTileSize()));
+		spritePointsDecena->setPosition(glm::vec2((4)* map->getTileSize(), (1)* map->getTileSize()));
+
+		spritePointsCentena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
+		spritePointsCentena->setNumberAnimations(10);
+		spritePointsCentena->setAnimationSpeed(CERO, 8);
+		spritePointsCentena->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(UNO, 8);
+		spritePointsCentena->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(DOS, 8);
+		spritePointsCentena->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(TRES, 8);
+		spritePointsCentena->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(CUATRO, 8);
+		spritePointsCentena->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(CINCO, 8);
+		spritePointsCentena->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(SEIS, 8);
+		spritePointsCentena->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(SIETE, 8);
+		spritePointsCentena->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(OCHO, 8);
+		spritePointsCentena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(NUEVE, 8);
+		spritePointsCentena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spritePointsCentena->setPosition(glm::vec2((3)* map->getTileSize(), (1)* map->getTileSize()));
 		////////////////////COINS////////////////////////////
 		spriteCoins = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteCoins->setNumberAnimations(10);
@@ -470,7 +495,7 @@ void Scene::init(int lev) {
 		spritePointsUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsUnidad->setAnimationSpeed(NUEVE, 8);
 		spritePointsUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsUnidad->setPosition(glm::vec2((4)* map->getTileSize(), (1)* map->getTileSize()));
+		spritePointsUnidad->setPosition(glm::vec2((5)* map->getTileSize(), (1)* map->getTileSize()));
 
 		spritePointsDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spritePointsDecena->setNumberAnimations(10);
@@ -494,7 +519,31 @@ void Scene::init(int lev) {
 		spritePointsDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsDecena->setAnimationSpeed(NUEVE, 8);
 		spritePointsDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsDecena->setPosition(glm::vec2((3)* map->getTileSize(), (1)* map->getTileSize()));
+		spritePointsDecena->setPosition(glm::vec2((4)* map->getTileSize(), (1)* map->getTileSize()));
+
+		spritePointsCentena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
+		spritePointsCentena->setNumberAnimations(10);
+		spritePointsCentena->setAnimationSpeed(CERO, 8);
+		spritePointsCentena->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(UNO, 8);
+		spritePointsCentena->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(DOS, 8);
+		spritePointsCentena->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(TRES, 8);
+		spritePointsCentena->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(CUATRO, 8);
+		spritePointsCentena->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(CINCO, 8);
+		spritePointsCentena->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(SEIS, 8);
+		spritePointsCentena->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(SIETE, 8);
+		spritePointsCentena->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(OCHO, 8);
+		spritePointsCentena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spritePointsCentena->setAnimationSpeed(NUEVE, 8);
+		spritePointsCentena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spritePointsCentena->setPosition(glm::vec2((3)* map->getTileSize(), (1)* map->getTileSize()));
 		////////////////////COINS////////////////////////////
 		spriteCoins = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteCoins->setNumberAnimations(10);
@@ -591,7 +640,7 @@ void Scene::update(int deltaTime)
 			Personaje* personaje = *it;
 			string tipo;
 			if(personaje != nullptr) tipo = personaje->myType();
-			if (!player->isInAnimacionDeadFunc() && personaje != nullptr && checkCollision(player->getPosition(), personaje->getPosition(), player->getAltura(), 32)) {			
+			if (!player->isInAnimacionEndLevel() && !player->isInAnimacionDeadFunc() && personaje != nullptr && checkCollision(player->getPosition(), personaje->getPosition(), player->getAltura(), 32)) {
 				if (tipo == "Star") {
 					player->invencibility();
 					Star* s = dynamic_cast<Star*>(personaje);
@@ -715,6 +764,7 @@ void Scene::update(int deltaTime)
 			}
 			++it;
 		}
+
 		if (Game::instance().getKey('1')) {
 			borrarPersonajes();
 			init(1);
@@ -724,10 +774,16 @@ void Scene::update(int deltaTime)
 			init(2);
 		}
 		if (player->getPosition().x >= palo_bandera->getPosition().x) { //siguiente nivel
+
 			if (!player->isChangingLevel() && level == 1) {
 				player->animacionEndLevelFunc();
 				++level;
 				endedLevel = true;
+
+				float altura = 401 - player->getPosition().y;
+				int pointsAltura = altura / 10;
+				points += pointsAltura;
+				actualizarPoints();
 			}
 			else if (!player->isChangingLevel() && level == 2 && endedLevel) { //cambiamos de nivel, se cambia el mapa
 				borrarPersonajes();
@@ -738,9 +794,16 @@ void Scene::update(int deltaTime)
 				player->animacionEndLevelFunc();
 				++level;
 				endedLevel = true;
+
+				float altura = 401 - player->getPosition().y;
+				int pointsAltura = altura / 10;
+				points += pointsAltura;
+				actualizarPoints();
 			}
 			else if (!player->isChangingLevel() && level == 3 && endedLevel) { //cambiamos de nivel, se cambia el mapa
 				menus->showingCreditsFunc();
+				if (points > maxPoints) maxPoints = points;
+				points = 0;
 				level = 0;
 			}
 		}
@@ -791,6 +854,7 @@ void Scene::render()
 		actualizarPoints();
 		spritePointsUnidad->render();
 		spritePointsDecena->render();
+		spritePointsCentena->render();
 		actualizarCoins(); //PONER DONDE SE GANA MONEDA Y QUITAR DE AQUÍ
 		spriteCoins->render();
 
@@ -929,6 +993,8 @@ void Scene::actualizarPoints() {
 	asignarSpriteNumber(spritePointsUnidad, points % 10);
 	points = points / 10;
 	asignarSpriteNumber(spritePointsDecena, points % 10);
+	points = points / 10;
+	asignarSpriteNumber(spritePointsCentena, points % 10);
 	points = aux;
 }
 
