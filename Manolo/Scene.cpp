@@ -8,8 +8,8 @@
 #define SCREEN_X 0
 #define SCREEN_Y 16
 
-#define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 5
+#define INIT_PLAYER_X_TILES 2
+#define INIT_PLAYER_Y_TILES 12
 
 #define INIT_GOOMBA_X_TILES 26
 #define INIT_GOOMBA_Y_TILES 15
@@ -172,6 +172,7 @@ void Scene::update(int deltaTime)
 	currentTime += deltaTime;
 	if (level != 0) {
 		player->update(deltaTime);
+
 		for (Personaje* personaje : personajes) {
 			if (personaje != nullptr) {
 				personaje->update(deltaTime);
