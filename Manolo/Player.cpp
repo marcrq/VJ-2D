@@ -23,9 +23,45 @@ enum PlayerAnims
 	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, DEAD
 };
 
+bool runningG = false;
+
+//static void keyboardCallback(unsigned char key, int x, int y)
+//{
+//	if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {
+//		runningG = true;
+//	}
+//	else {
+//		runningG = false;
+//	}
+//}
+
+static void specialDownCallback(int key, int x, int y)
+{
+	if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {
+		runningG = true;
+	}
+	else {
+		runningG = false;
+	}
+}
+
+// If a special key is released this callback is called
+
+static void specialUpCallback(int key, int x, int y)
+{
+	if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {
+		runningG = true;
+	}
+	else {
+		runningG = false;
+	}
+}
+
 
 void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
+	//glutSpecialFunc(specialDownCallback);
+	//glutSpecialUpFunc(specialUpCallback);
 
 	bJumping = false;
 	realesedJump = true;
@@ -274,7 +310,7 @@ void Player::update(int deltaTime)
 		}
 
 		//cosas de velocidades, run e invencibilidad
-		if (Game::instance().getKey('r')) { //Game::instance().getKey('r')
+		if (Game::instance().getKey('z')) { //Game::instance().getKey('z')
 			velocity = 3.f;
 		}
 		else if (!isInvencible && velocity != 2.f) velocity = 2.f;
