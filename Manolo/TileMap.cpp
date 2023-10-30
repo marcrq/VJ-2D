@@ -109,8 +109,6 @@ bool TileMap::loadLevel(const string& levelFile)
 		}
 	}
 
-	getline(fin, line);
-
 	fin.close();
 
 	return true;
