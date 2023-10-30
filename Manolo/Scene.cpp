@@ -73,6 +73,7 @@ void Scene::init(int lev) {
 		maxPoints = 0;
 		firstTimeInGameShowScreenDead = true;
 		timerAnimationDying = -1.0;
+		sumarPuntosTimer = false;
 		initShaders();
 		menus = new Menus();
 		menus->init(texProgram);
@@ -774,42 +775,62 @@ void Scene::update(int deltaTime)
 			init(2);
 		}
 		if (player->getPosition().x >= palo_bandera->getPosition().x) { //siguiente nivel
+			if ((!player->isChangingLevel() && level == 1) || (level == 2 && sumarPuntosTimer)) {
+				if (level == 1) {
+					player->animacionEndLevelFunc();
+					++level;
+					endedLevel = true;
 
-			if (!player->isChangingLevel() && level == 1) {
-				player->animacionEndLevelFunc();
-				++level;
-				endedLevel = true;
-
-				float altura = 401 - player->getPosition().y;
-				int pointsAltura = altura / 10;
-				points += pointsAltura;
-				actualizarPoints();
+					float altura = 401 - player->getPosition().y;
+					int pointsAltura = altura / 10;
+					points += pointsAltura;
+					actualizarPoints();
+					sumarPuntosTimer = true;
+				}
+				if (sumarPuntosTimer) {
+					--timerLevel;
+					++points;
+					actualizarPoints();
+					actualizarTimer();
+					if (timerLevel == 0) sumarPuntosTimer = false;
+				}
 			}
 			else if (!player->isChangingLevel() && level == 2 && endedLevel) { //cambiamos de nivel, se cambia el mapa
 				borrarPersonajes();
 				nextLevel();
 				firstTimeInGameShowScreenDead = true;
 			}
-			else if (!player->isChangingLevel() && level == 2) {
-				player->animacionEndLevelFunc();
-				++level;
-				endedLevel = true;
+			else if ((!player->isChangingLevel() && level == 2) || (level == 3 && sumarPuntosTimer)) {
+				if (level == 2) {
+					player->animacionEndLevelFunc();
+					++level;
+					endedLevel = true;
 
-				float altura = 401 - player->getPosition().y;
-				int pointsAltura = altura / 10;
-				points += pointsAltura;
-				actualizarPoints();
+					float altura = 401 - player->getPosition().y;
+					int pointsAltura = altura / 10;
+					points += pointsAltura;
+					actualizarPoints();
+					sumarPuntosTimer = true;
+				}
+				if (sumarPuntosTimer) {
+					--timerLevel;
+					++points;
+					actualizarPoints();
+					actualizarTimer();
+					if (timerLevel == 0) sumarPuntosTimer = false;
+				}
 			}
 			else if (!player->isChangingLevel() && level == 3 && endedLevel) { //cambiamos de nivel, se cambia el mapa
 				menus->showingCreditsFunc();
 				if (points > maxPoints) maxPoints = points;
+				menus->setMaxPoints(maxPoints);
 				points = 0;
 				level = 0;
 			}
 		}
 
-		if (!player->isInAnimacionDeadFunc() && !showScreenDeadPlayer) {
-			timerLevel = 400 - static_cast<int>(currentTime) / 1000;
+		if (player->getPosition().x < palo_bandera->getPosition().x && !player->isInAnimacionDeadFunc() && !showScreenDeadPlayer) {
+			timerLevel = 300 - static_cast<int>(currentTime) / 1000;
 			if (timerLevel == 0) {
 				player->instaKill();
 			}
@@ -838,8 +859,8 @@ void Scene::render()
 
 	if (level != 0) {
 		map->render();
-		if (level == 1 || (level == 2 && player->isChangingLevel())) spriteResumenLevel1->render();
-		else if (level == 2 || (level == 3 && player->isChangingLevel())) spriteResumenLevel2->render();
+		if (level == 1 || (level == 2 && player->isChangingLevel()) || (level == 2 && sumarPuntosTimer)) spriteResumenLevel1->render();
+		else if (level == 2 || (level == 3 && player->isChangingLevel()) || (level == 3 && sumarPuntosTimer)) spriteResumenLevel2->render();
 		for (Personaje* personaje : personajes) {
 			if (personaje != nullptr) {
 				personaje->render();

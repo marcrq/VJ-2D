@@ -47,7 +47,7 @@ private:
 	ShaderProgram texProgram;
 	float currentTime, timerAnimationDying, timerScreenDead;
 	glm::mat4 projection;
-	bool endedLevel, showScreenDeadPlayer, firstTimeInGameShowScreenDead;
+	bool endedLevel, showScreenDeadPlayer, firstTimeInGameShowScreenDead, sumarPuntosTimer;
 	int level, timerLevel, points, maxPoints, coins, lives;
 	Menus* menus;
 	std::vector<Personaje*> personajes;
