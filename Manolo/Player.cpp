@@ -287,9 +287,10 @@ void Player::update(int deltaTime)
 		else if (timerAnimationDead < 3.f) {
 			posPlayer.y += 3.f;
 		}
-		else {
+		else if (timerAnimationDead >= 4.f) {
 			isInAnimacionDead = false;
 		}
+
 	}
 	else if (animationEndLevel) {
 		
@@ -529,7 +530,7 @@ glm::vec2 Player::getPosition() { return posPlayer; }
 void Player::hit() {
 	if (!isInvulnerable && !kickedAShell) {
 		if (isBig) {
-			engine->play2D(soundMarioDie);
+			engine->play2D(soundMarioPowerDown);
 			isInvulnerable = true;
 			timerHasBeenHitted = 0.f;
 			isBig = false;
@@ -540,7 +541,7 @@ void Player::hit() {
 			animacionAlternarModo();
 		}
 		else { //muere -1vida
-			engine->play2D(soundMarioBigJump);
+			engine->play2D(soundMarioDie);
 			isInAnimacionDead = true;
 			timerAnimationDead = 0.f;
 		}

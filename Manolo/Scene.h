@@ -48,7 +48,7 @@ private:
 	ObjetoEntorno* bandera;
 	ObjetoEntorno* palo_bandera;
 	ShaderProgram texProgram;
-	float currentTime, timerAnimationDying, timerScreenDead;
+	float currentTime, timerAnimationDying, timerScreenDead, timerAnimationEndLevel;
 	glm::mat4 projection;
 	bool endedLevel, showScreenDeadPlayer, firstTimeInGameShowScreenDead, sumarPuntosTimer;
 	int level, timerLevel, points, maxPoints, coins, lives;

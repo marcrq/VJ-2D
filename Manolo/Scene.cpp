@@ -17,7 +17,7 @@
 //25
 
 #define INIT_STAR_X_TILES 25
-#define INIT_STAR_Y_TILES 25
+#define INIT_STAR_Y_TILES 17
 
 
 #define INIT_SETA_X_TILES 30
@@ -26,8 +26,8 @@
 #define INIT_KTROOPA_X_TILES 15
 #define INIT_KTROOPA_Y_TILES 15
 
-#define MAX_TIME_ANIMATION_DYING 2.0
-#define MAX_TIME_SCREEN_DEAD 8.5//2.5
+#define MAX_TIME_ANIMATION_DYING 4.0
+#define MAX_TIME_SCREEN_DEAD 2.5//2.5
 
 #define TIME_LEVEL 300
 
@@ -43,8 +43,7 @@ Scene::Scene()
 
 	engine = createIrrKlangDevice();
 	soundMenu = engine->play2D("audio/menu-mario.mp3", true, false, true);
-	soundGame = engine->play2D("audio/ringtones-super-mario-bros.mp3", true, false, true);
-	soundGame->setIsPaused(true);
+	soundGame = engine->play2D("audio/ringtones-super-mario-bros.mp3", true, true, true);
 	soundGameOver = engine->addSoundSourceFromFile("audio/smb_gameover.wav");
 	soundTimeUp = engine->addSoundSourceFromFile("audio/smb_warning.wav");
 	soundFlapPole = engine->addSoundSourceFromFile("audio/smb_flagpole.wav");
@@ -78,16 +77,17 @@ enum PlayerAnims
 
 void Scene::init(int lev) {
 	if (lev == 0) {
-		soundMenu->setPlayPosition(0.0);
-		soundMenu->setIsPaused(false);
+		//soundMenu->setPlayPosition(0.0);
+		soundMenu->setIsPaused(true);
 		level = 0;
 		coins = 0;
-		lives = 3;
+		lives = 0;
 		points = 0;
 		maxPoints = 0;
 		firstTimeInGameShowScreenDead = true;
 		timerAnimationDying = -1.0;
 		sumarPuntosTimer = false;
+		timerAnimationEndLevel = -1.0;
 		initShaders();
 		menus = new Menus();
 		menus->init(texProgram);
@@ -114,6 +114,7 @@ void Scene::init(int lev) {
 	}
 	else if (lev == 1) {
 		soundMenu->setIsPaused(true);
+		if(!firstTimeInGameShowScreenDead) soundGame->setIsPaused(false);
 		level = 1;
 		timerLevel = 500;
 		showScreenDeadPlayer = false;
@@ -158,7 +159,7 @@ void Scene::init(int lev) {
 
 		personajes.push_back(goomba);
 		personajes.push_back(ktroopa);
-		//personajes.push_back(star);
+		personajes.push_back(star);
 		personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
 
@@ -360,6 +361,10 @@ void Scene::init(int lev) {
 	}
 	else if (lev == 2) {
 		soundMenu->setIsPaused(true);
+		soundMenu->setIsPaused(true);
+		if (!firstTimeInGameShowScreenDead) {
+			soundGame->setIsPaused(false);
+		}
 		//soundGame->setPlayPosition(0.0);
 		level = 2;
 		timerLevel = 500;
@@ -628,6 +633,7 @@ void Scene::update(int deltaTime)
 		}
 
 		if (player->isInAnimacionDeadFunc() && timerAnimationDying == -1.0) {
+			soundGame->setIsPaused(true);
 			timerAnimationDying = 0.;
 		}
 		if (timerAnimationDying != -1.0) {
@@ -636,6 +642,8 @@ void Scene::update(int deltaTime)
 		if ((timerAnimationDying >= MAX_TIME_ANIMATION_DYING && !showScreenDeadPlayer) || firstTimeInGameShowScreenDead) {
 			if (!firstTimeInGameShowScreenDead) lives -= 1;
 			showScreenDeadPlayer = true;
+			if (timerLevel <= 0 && lives != -1) engine->play2D(soundTimeUp);
+			else if(lives == -1) engine->play2D(soundGameOver);
 			timerAnimationDying = -1.0;
 		}
 		if (showScreenDeadPlayer) {
@@ -645,12 +653,9 @@ void Scene::update(int deltaTime)
 				showScreenDeadPlayer = false;
 				firstTimeInGameShowScreenDead = false;
 				timerScreenDead = 0.f;
-				player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * 16, INIT_PLAYER_Y_TILES * 16));
 				borrarPersonajes();
-				init(level);
-				if (lives == -1) { //poner un sonidito
-					level = 0;
-				}
+				if(lives != -1) init(level);
+				else init(0);
 			}
 		}
 
@@ -660,6 +665,12 @@ void Scene::update(int deltaTime)
 			string tipo;
 			if (personaje != nullptr) tipo = personaje->myType();
 			if (!firstTimeInGameShowScreenDead && !player->isInAnimacionEndLevel() && !player->isInAnimacionDeadFunc() && personaje != nullptr && checkCollision(player->getPosition(), personaje->getPosition(), player->getAltura(), 32)) {
+				if (tipo == "Ktroopa") {
+					Ktroopa* kt = dynamic_cast<Ktroopa*>(personaje);
+					if (kt->isShellMovingFunc()) {
+						checkCollisionsShell(personaje);
+					}
+				}
 				if (tipo == "Star") {
 					player->invencibility();
 					Star* s = dynamic_cast<Star*>(personaje);
@@ -740,12 +751,6 @@ void Scene::update(int deltaTime)
 					delete personaje;
 				}
 			}
-			if (tipo == "Ktroopa") {
-				Ktroopa* kt = dynamic_cast<Ktroopa*>(personaje);
-				if (kt->isShellMovingFunc()) {
-					checkCollisionsShell(personaje);
-				}
-			}
 
 			++it;
 		}
@@ -790,6 +795,10 @@ void Scene::update(int deltaTime)
 		if (player->getPosition().x >= palo_bandera->getPosition().x) { //siguiente nivel
 			if ((!player->isChangingLevel() && level == 1) || (level == 2 && sumarPuntosTimer)) {
 				if (level == 1) {
+					soundGame->setPlayPosition(0.0);
+					soundGame->setIsPaused(true);
+					engine->play2D(soundFlapPole);
+					engine->play2D(soundComplete);
 					player->animacionEndLevelFunc();
 					++level;
 					endedLevel = true;
@@ -799,6 +808,7 @@ void Scene::update(int deltaTime)
 					points += pointsAltura;
 					actualizarPoints();
 					sumarPuntosTimer = true;
+					timerAnimationEndLevel = 0.0;
 				}
 				if (sumarPuntosTimer) {
 					--timerLevel;
@@ -808,13 +818,21 @@ void Scene::update(int deltaTime)
 					if (timerLevel == 0) sumarPuntosTimer = false;
 				}
 			}
+			else if (timerAnimationEndLevel >= 0 && !player->isChangingLevel() && level == 2 && endedLevel) {
+				timerAnimationEndLevel += deltaTime / 1000.0;
+				if (timerAnimationEndLevel >= 5.0) timerAnimationEndLevel = -1.0;
+			}
 			else if (!player->isChangingLevel() && level == 2 && endedLevel) { //cambiamos de nivel, se cambia el mapa
 				borrarPersonajes();
-				nextLevel();
+				init(2);
 				firstTimeInGameShowScreenDead = true;
 			}
 			else if ((!player->isChangingLevel() && level == 2) || (level == 3 && sumarPuntosTimer)) {
 				if (level == 2) {
+					soundGame->setPlayPosition(0.0);
+					soundGame->setIsPaused(true);
+					engine->play2D(soundFlapPole);
+					engine->play2D(soundComplete);
 					player->animacionEndLevelFunc();
 					++level;
 					endedLevel = true;
@@ -824,6 +842,7 @@ void Scene::update(int deltaTime)
 					points += pointsAltura;
 					actualizarPoints();
 					sumarPuntosTimer = true;
+					timerAnimationEndLevel = 0.0;
 				}
 				if (sumarPuntosTimer) {
 					--timerLevel;
@@ -833,7 +852,11 @@ void Scene::update(int deltaTime)
 					if (timerLevel == 0) sumarPuntosTimer = false;
 				}
 			}
-			else if (!player->isChangingLevel() && level == 3 && endedLevel) { //cambiamos de nivel, se cambia el mapa
+			else if (timerAnimationEndLevel >= 0 && !player->isChangingLevel() && level == 3 && endedLevel) {
+				timerAnimationEndLevel += deltaTime / 1000.0;
+				if (timerAnimationEndLevel >= 5.0) timerAnimationEndLevel = -1.0;
+			}
+			else if (!player->isChangingLevel() && level == 3 && endedLevel) { //cambiamos de nivel, se cambia a los creditos
 				menus->showingCreditsFunc();
 				if (points > maxPoints) maxPoints = points;
 				menus->setMaxPoints(maxPoints);
@@ -843,7 +866,7 @@ void Scene::update(int deltaTime)
 		}
 
 		if (player->getPosition().x < palo_bandera->getPosition().x && !player->isInAnimacionDeadFunc() && !showScreenDeadPlayer) {
-			timerLevel = TIME_LEVEL - static_cast<int>(currentTime) / 1000;
+			timerLevel = 30 - static_cast<int>(currentTime) / 1000;
 			if (timerLevel == 0) {
 				player->instaKill();
 				soundGame->setIsPaused(true);
@@ -873,8 +896,8 @@ void Scene::render()
 
 	if (level != 0) {
 		map->render();
-		if (level == 1 || (level == 2 && player->isChangingLevel()) || (level == 2 && sumarPuntosTimer)) spriteResumenLevel1->render();
-		else if (level == 2 || (level == 3 && player->isChangingLevel()) || (level == 3 && sumarPuntosTimer)) spriteResumenLevel2->render();
+		if (level == 1 || (level == 2 && player->isChangingLevel()) || (level == 2 && sumarPuntosTimer) || (level == 2 && timerAnimationEndLevel != -1)) spriteResumenLevel1->render();
+		else if (level == 2 || (level == 3 && player->isChangingLevel()) || (level == 3 && sumarPuntosTimer) || (level == 3 && timerAnimationEndLevel != -1)) spriteResumenLevel2->render();
 		for (Personaje* personaje : personajes) {
 			if (personaje != nullptr) {
 				personaje->render();
@@ -894,10 +917,7 @@ void Scene::render()
 		spriteCoins->render();
 
 		if (showScreenDeadPlayer && lives != -1) {
-			if (timerLevel <= 0) {
-				engine->play2D(soundTimeUp);
-				spriteTimeUp->render();
-			}
+			if (timerLevel <= 0) spriteTimeUp->render();
 			else if (level == 1) spriteScreenDeadLevel1->render();
 			else spriteScreenDeadLevel2->render();
 			asignarSpriteNumber(spriteNumberOfLives, lives);
