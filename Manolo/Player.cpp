@@ -60,8 +60,22 @@ static void specialUpCallback(int key, int x, int y)
 
 void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
+
 	//glutSpecialFunc(specialDownCallback);
 	//glutSpecialUpFunc(specialUpCallback);
+
+	
+	engine = createIrrKlangDevice();
+	// play some sound stream, looped
+	//ISound* backgroundMusic = engine->play2D("audio/ringtones-super-mario-bros.mp3", true);
+	soundMarioDie = engine->addSoundSourceFromFile("audio/mariodie.wav");
+	soundMarioGrows = engine->addSoundSourceFromFile("audio/smb_powerup.wav");
+	soundMarioBigJump = engine->addSoundSourceFromFile("audio/smb_jump-super.wav");
+	soundMarioSmallJump = engine->addSoundSourceFromFile("audio/smb_jump-small.wav");
+	soundMarioKick = engine->addSoundSourceFromFile("audio/smb_kick.wav");
+	soundMarioCabezazo = engine->addSoundSourceFromFile("audio/smb_bump.wav");
+	soundMarioKill = engine->addSoundSourceFromFile("audio/smb_stomp.wav");
+	soundMarioPowerDown = engine->addSoundSourceFromFile("audio/smb_powerdown.wav");
 
 	bJumping = false;
 	realesedJump = true;
@@ -279,17 +293,17 @@ void Player::update(int deltaTime)
 	}
 	else if (animationEndLevel) {
 		
-		if (posPlayer.y < 385) {
+		if (posPlayer.y < 376) {
 			if (getCorrectSprite()->animation() != JUMP_RIGHT) {//se apreta izq 1r vez
 				getCorrectSprite()->changeAnimation(JUMP_RIGHT);
 			}
-			posPlayer.y += 2.f;
+			posPlayer.y += 1.f;
 		}
-		else if (posPlayer.x < 550) {
+		else if (posPlayer.x < 520) {
 			if (getCorrectSprite()->animation() != MOVE_RIGHT) {//se apreta izq 1r vez
 				getCorrectSprite()->changeAnimation(MOVE_RIGHT);
 			}
-			posPlayer.x += 2.f;
+			posPlayer.x += 1.f;
 		}
 		else nextLevel();
 	}
@@ -421,8 +435,13 @@ void Player::update(int deltaTime)
 			{
 				if (jumpAngle <= 90) {
 					posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+					/*if (!Game::instance().getKey(' ')) {
+						jumpAngle = 91;
+					}*/
 					if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y, alturaSprite)) {
 						jumpAngle = 91;
+
+						engine->play2D(soundMarioCabezazo);
 
 						if (getCorrectSprite()->animation() == JUMP_LEFT) {//se apreta izq 1r vez
 							getCorrectSprite()->changeAnimation(STAND_LEFT);
@@ -455,6 +474,12 @@ void Player::update(int deltaTime)
 			{
 				if (realesedJump && Game::instance().getKey(' '))
 				{
+					if (isBig) {
+						engine->play2D(soundMarioBigJump);
+					}
+					else {
+						engine->play2D(soundMarioSmallJump);
+					}
 					realesedJump = false;
 					bJumping = true;
 					jumpAngle = 0;
@@ -473,7 +498,7 @@ void Player::update(int deltaTime)
 			}
 		}
 	}
-	if (posPlayer.y >= 440 && !isInAnimacionDead) {
+	if (posPlayer.y >= 405 && posPlayer.y < 420 && !isInAnimacionDead && animationEndLevel) {
 		instaKill();
 	}
 	spriteBig->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y - 32)));
@@ -504,6 +529,7 @@ glm::vec2 Player::getPosition() { return posPlayer; }
 void Player::hit() {
 	if (!isInvulnerable && !kickedAShell) {
 		if (isBig) {
+			engine->play2D(soundMarioDie);
 			isInvulnerable = true;
 			timerHasBeenHitted = 0.f;
 			isBig = false;
@@ -514,6 +540,7 @@ void Player::hit() {
 			animacionAlternarModo();
 		}
 		else { //muere -1vida
+			engine->play2D(soundMarioBigJump);
 			isInAnimacionDead = true;
 			timerAnimationDead = 0.f;
 		}
@@ -528,6 +555,7 @@ void Player::creceMario() {
 		sameAnimationBeetwenModes(spriteMini->animation());
 		setPosition(posPlayer);
 		animacionAlternarModo();
+		engine->play2D(soundMarioGrows);
 	}
 }
 
@@ -571,6 +599,7 @@ void Player::invencibility() {
 void Player::kickShell() {
 	kickedAShell = true;
 	timerKickedAShell = 0.f;
+	engine->play2D(soundMarioKick);
 }
 
 bool Player::isInvencibleFunc() {
@@ -581,6 +610,8 @@ void Player::hasMadeKill() {
 	bJumping = true;
 	jumpAngle = 0;
 	startY = posPlayer.y;
+
+	engine->play2D(soundMarioKill);
 
 	if (getCorrectSprite()->animation() == MOVE_RIGHT || getCorrectSprite()->animation() == STAND_RIGHT) {//se apreta izq 1r vez
 		if (getCorrectSprite()->animation() == STAND_RIGHT) saltoQuieto = true;
@@ -627,8 +658,13 @@ bool Player::isChangingLevel() {
 }
 
 void Player::instaKill() {
+	engine->play2D(soundMarioDie);
 	isInAnimacionDead = true;
 	timerAnimationDead = 0.f;
+}
+
+bool Player::isBigFunc() {
+	return isBig;
 }
 
 //void keyboardCallback(unsigned char key, int x, int y) {

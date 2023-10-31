@@ -11,8 +11,9 @@ public:
     void hit() override;
     bool isAlive() override;
     string myType() override;
+    bool isPisado();
 
-    bool vivo;
+    bool vivo, pisado;
     float timeSinceDead;
     int getPoints();
 

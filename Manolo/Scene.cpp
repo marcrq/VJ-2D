@@ -5,8 +5,9 @@
 #include "Game.h"
 
 
+
 #define SCREEN_X 0
-#define SCREEN_Y 16
+#define SCREEN_Y 0
 
 #define INIT_PLAYER_X_TILES 2
 #define INIT_PLAYER_Y_TILES 12
@@ -26,7 +27,9 @@
 #define INIT_KTROOPA_Y_TILES 15
 
 #define MAX_TIME_ANIMATION_DYING 2.0
-#define MAX_TIME_SCREEN_DEAD 0.5//2.5
+#define MAX_TIME_SCREEN_DEAD 8.5//2.5
+
+#define TIME_LEVEL 300
 
 Scene::Scene()
 {
@@ -37,13 +40,22 @@ Scene::Scene()
 	star = NULL;
 	seta = NULL;
 	ktroopa2 = NULL;
+
+	engine = createIrrKlangDevice();
+	soundMenu = engine->play2D("audio/menu-mario.mp3", true, false, true);
+	soundGame = engine->play2D("audio/ringtones-super-mario-bros.mp3", true, false, true);
+	soundGame->setIsPaused(true);
+	soundGameOver = engine->addSoundSourceFromFile("audio/smb_gameover.wav");
+	soundTimeUp = engine->addSoundSourceFromFile("audio/smb_warning.wav");
+	soundFlapPole = engine->addSoundSourceFromFile("audio/smb_flagpole.wav");
+	soundComplete = engine->addSoundSourceFromFile("audio/smb_stage_clear.wav");
 }
 
 Scene::~Scene()
 {
-	if(map != NULL)
+	if (map != NULL)
 		delete map;
-	if(player != NULL)
+	if (player != NULL)
 		delete player;
 	if (menus != NULL)
 		delete menus;
@@ -65,7 +77,9 @@ enum PlayerAnims
 };
 
 void Scene::init(int lev) {
-	if (lev == 0) { //repasar condici�n
+	if (lev == 0) {
+		soundMenu->setPlayPosition(0.0);
+		soundMenu->setIsPaused(false);
 		level = 0;
 		coins = 0;
 		lives = 3;
@@ -99,6 +113,7 @@ void Scene::init(int lev) {
 		spriteTimeUp->setPosition(glm::vec2(float(0), float(0)));
 	}
 	else if (lev == 1) {
+		soundMenu->setIsPaused(true);
 		level = 1;
 		timerLevel = 500;
 		showScreenDeadPlayer = false;
@@ -144,7 +159,7 @@ void Scene::init(int lev) {
 		personajes.push_back(goomba);
 		personajes.push_back(ktroopa);
 		//personajes.push_back(star);
-		//personajes.push_back(seta);
+		personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
 
 		/////////////////////////////////////77
@@ -220,7 +235,7 @@ void Scene::init(int lev) {
 		spriteTimerUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteTimerUnidad->setAnimationSpeed(NUEVE, 8);
 		spriteTimerUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteTimerUnidad->setPosition(glm::vec2((35)* 16, (1)* 16));
+		spriteTimerUnidad->setPosition(glm::vec2((35) * 16, (1) * 16));
 
 		/////////////////POINTS//////////////////
 		spritePointsUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
@@ -245,7 +260,7 @@ void Scene::init(int lev) {
 		spritePointsUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsUnidad->setAnimationSpeed(NUEVE, 8);
 		spritePointsUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsUnidad->setPosition(glm::vec2((5)* 16, (1)* 16));
+		spritePointsUnidad->setPosition(glm::vec2((5) * 16, (1) * 16));
 
 		spritePointsDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spritePointsDecena->setNumberAnimations(10);
@@ -269,7 +284,7 @@ void Scene::init(int lev) {
 		spritePointsDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsDecena->setAnimationSpeed(NUEVE, 8);
 		spritePointsDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsDecena->setPosition(glm::vec2((4)* 16, (1)* 16));
+		spritePointsDecena->setPosition(glm::vec2((4) * 16, (1) * 16));
 
 		spritePointsCentena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spritePointsCentena->setNumberAnimations(10);
@@ -293,7 +308,7 @@ void Scene::init(int lev) {
 		spritePointsCentena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsCentena->setAnimationSpeed(NUEVE, 8);
 		spritePointsCentena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsCentena->setPosition(glm::vec2((3)* 16, (1)* 16));
+		spritePointsCentena->setPosition(glm::vec2((3) * 16, (1) * 16));
 		////////////////////COINS////////////////////////////
 		spriteCoins = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteCoins->setNumberAnimations(10);
@@ -317,7 +332,7 @@ void Scene::init(int lev) {
 		spriteCoins->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteCoins->setAnimationSpeed(NUEVE, 8);
 		spriteCoins->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteCoins->setPosition(glm::vec2((16)* 16, (1)* 16));
+		spriteCoins->setPosition(glm::vec2((16) * 16, (1) * 16));
 		////////////////////LIVES////////////////////////////
 		spriteNumberOfLives = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteNumberOfLives->setNumberAnimations(10);
@@ -341,9 +356,11 @@ void Scene::init(int lev) {
 		spriteNumberOfLives->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteNumberOfLives->setAnimationSpeed(NUEVE, 8);
 		spriteNumberOfLives->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteNumberOfLives->setPosition(glm::vec2((22)* 16, (16)* 16));
+		spriteNumberOfLives->setPosition(glm::vec2((22) * 16, (16) * 16));
 	}
-	else if (lev == 2){
+	else if (lev == 2) {
+		soundMenu->setIsPaused(true);
+		//soundGame->setPlayPosition(0.0);
 		level = 2;
 		timerLevel = 500;
 		showScreenDeadPlayer = false;
@@ -380,7 +397,7 @@ void Scene::init(int lev) {
 
 		ktroopa2 = new Ktroopa();
 		ktroopa2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		ktroopa2->setPosition(glm::vec2((INIT_KTROOPA_X_TILES+10)* 16, INIT_KTROOPA_Y_TILES* 16));
+		ktroopa2->setPosition(glm::vec2((INIT_KTROOPA_X_TILES + 10) * 16, INIT_KTROOPA_Y_TILES * 16));
 		ktroopa2->setTileMap(map);
 
 		palo_bandera = new ObjetoEntorno();
@@ -392,8 +409,8 @@ void Scene::init(int lev) {
 		currentTime = 0.0f;
 
 		personajes.push_back(goomba);
-		personajes.push_back(ktroopa);
-		personajes.push_back(ktroopa2);
+		//personajes.push_back(ktroopa);
+		//personajes.push_back(ktroopa2);
 		//personajes.push_back(star);
 		//personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
@@ -423,7 +440,7 @@ void Scene::init(int lev) {
 		spriteTimerCentena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteTimerCentena->setAnimationSpeed(NUEVE, 8);
 		spriteTimerCentena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteTimerCentena->setPosition(glm::vec2((33)* 16, (1)* 16));
+		spriteTimerCentena->setPosition(glm::vec2((33) * 16, (1) * 16));
 
 		spriteTimerDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteTimerDecena->setNumberAnimations(10);
@@ -447,7 +464,7 @@ void Scene::init(int lev) {
 		spriteTimerDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteTimerDecena->setAnimationSpeed(NUEVE, 8);
 		spriteTimerDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteTimerDecena->setPosition(glm::vec2((34)* 16, (1)* 16));
+		spriteTimerDecena->setPosition(glm::vec2((34) * 16, (1) * 16));
 
 		spriteTimerUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteTimerUnidad->setNumberAnimations(10);
@@ -471,7 +488,7 @@ void Scene::init(int lev) {
 		spriteTimerUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteTimerUnidad->setAnimationSpeed(NUEVE, 8);
 		spriteTimerUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteTimerUnidad->setPosition(glm::vec2((35)* 16, (1)* 16));
+		spriteTimerUnidad->setPosition(glm::vec2((35) * 16, (1) * 16));
 
 		/////////////////POINTS//////////////////
 		spritePointsUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
@@ -496,7 +513,7 @@ void Scene::init(int lev) {
 		spritePointsUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsUnidad->setAnimationSpeed(NUEVE, 8);
 		spritePointsUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsUnidad->setPosition(glm::vec2((5)* 16, (1)* 16));
+		spritePointsUnidad->setPosition(glm::vec2((5) * 16, (1) * 16));
 
 		spritePointsDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spritePointsDecena->setNumberAnimations(10);
@@ -520,7 +537,7 @@ void Scene::init(int lev) {
 		spritePointsDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsDecena->setAnimationSpeed(NUEVE, 8);
 		spritePointsDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsDecena->setPosition(glm::vec2((4)* 16, (1)* 16));
+		spritePointsDecena->setPosition(glm::vec2((4) * 16, (1) * 16));
 
 		spritePointsCentena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spritePointsCentena->setNumberAnimations(10);
@@ -544,7 +561,7 @@ void Scene::init(int lev) {
 		spritePointsCentena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spritePointsCentena->setAnimationSpeed(NUEVE, 8);
 		spritePointsCentena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsCentena->setPosition(glm::vec2((3)* 16, (1)* 16));
+		spritePointsCentena->setPosition(glm::vec2((3) * 16, (1) * 16));
 		////////////////////COINS////////////////////////////
 		spriteCoins = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteCoins->setNumberAnimations(10);
@@ -568,7 +585,7 @@ void Scene::init(int lev) {
 		spriteCoins->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteCoins->setAnimationSpeed(NUEVE, 8);
 		spriteCoins->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteCoins->setPosition(glm::vec2((16)* 16, (1)* 16));
+		spriteCoins->setPosition(glm::vec2((16) * 16, (1) * 16));
 		////////////////////LIVES////////////////////////////
 		spriteNumberOfLives = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteNumberOfLives->setNumberAnimations(10);
@@ -592,10 +609,10 @@ void Scene::init(int lev) {
 		spriteNumberOfLives->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
 		spriteNumberOfLives->setAnimationSpeed(NUEVE, 8);
 		spriteNumberOfLives->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteNumberOfLives->setPosition(glm::vec2((22)* 16, (16)* 16));
+		spriteNumberOfLives->setPosition(glm::vec2((22) * 16, (16) * 16));
 	}
 
-	
+
 }
 
 void Scene::update(int deltaTime)
@@ -617,7 +634,7 @@ void Scene::update(int deltaTime)
 			timerAnimationDying += deltaTime / 1000.0;
 		}
 		if ((timerAnimationDying >= MAX_TIME_ANIMATION_DYING && !showScreenDeadPlayer) || firstTimeInGameShowScreenDead) {
-			if(!firstTimeInGameShowScreenDead) lives -= 1;
+			if (!firstTimeInGameShowScreenDead) lives -= 1;
 			showScreenDeadPlayer = true;
 			timerAnimationDying = -1.0;
 		}
@@ -641,8 +658,8 @@ void Scene::update(int deltaTime)
 		while (it != personajes.end()) {
 			Personaje* personaje = *it;
 			string tipo;
-			if(personaje != nullptr) tipo = personaje->myType();
-			if (!player->isInAnimacionEndLevel() && !player->isInAnimacionDeadFunc() && personaje != nullptr && checkCollision(player->getPosition(), personaje->getPosition(), player->getAltura(), 32)) {
+			if (personaje != nullptr) tipo = personaje->myType();
+			if (!firstTimeInGameShowScreenDead && !player->isInAnimacionEndLevel() && !player->isInAnimacionDeadFunc() && personaje != nullptr && checkCollision(player->getPosition(), personaje->getPosition(), player->getAltura(), 32)) {
 				if (tipo == "Star") {
 					player->invencibility();
 					Star* s = dynamic_cast<Star*>(personaje);
@@ -653,31 +670,25 @@ void Scene::update(int deltaTime)
 					delete personaje;
 				}
 				else if (tipo == "Goomba") {
+					Goomba* g = dynamic_cast<Goomba*>(personaje);
 					if (player->isInvencibleFunc()) { //muere el enemigo
 						//personaje->killed();
-						Goomba* g = dynamic_cast<Goomba*>(personaje);
 						int p = g->getPoints();
 						points += p;
 						actualizarPoints();
 						it = personajes.erase(it);
 						delete personaje;
 					}
-					else {
+					else if(!g->isPisado()) {
 						if (esMuerte(player->getPosition(), personaje->getPosition(), player->getAltura(), 32)) {
 							player->hasMadeKill();
-							//personaje->hit();
-							Goomba* g= dynamic_cast<Goomba*>(personaje);
+							g->hit();
 							int p = g->getPoints();
 							points += p;
 							actualizarPoints();
-							it = personajes.erase(it);
-							/*
-							personaje->hit();
-							//delete personaje;
-							*/
-							delete personaje;
 						}
 						else {
+							if (!player->isBigFunc()) soundGame->setIsPaused(true);
 							player->hit();
 							++it;
 						}
@@ -713,6 +724,7 @@ void Scene::update(int deltaTime)
 							player->kickShell();
 						}
 						else { //es shell en movimiento, es hit al player
+							if (!player->isBigFunc()) soundGame->setIsPaused(true);
 							player->hit();
 						}
 						++it;
@@ -738,7 +750,7 @@ void Scene::update(int deltaTime)
 			++it;
 		}
 
-		//eliminar los tocados por shell en movimiento
+		//eliminar los tocados por shell en movimiento, o los goombas pisados
 		it = personajes.begin();
 		while (it != personajes.end()) {
 			Personaje* personaje = *it;
@@ -831,9 +843,10 @@ void Scene::update(int deltaTime)
 		}
 
 		if (player->getPosition().x < palo_bandera->getPosition().x && !player->isInAnimacionDeadFunc() && !showScreenDeadPlayer) {
-			timerLevel = 300 - static_cast<int>(currentTime) / 1000;
+			timerLevel = TIME_LEVEL - static_cast<int>(currentTime) / 1000;
 			if (timerLevel == 0) {
 				player->instaKill();
+				soundGame->setIsPaused(true);
 			}
 			actualizarTimer();
 		}
@@ -869,7 +882,7 @@ void Scene::render()
 		}
 		palo_bandera->render();
 		player->render();
-	
+
 		spriteTimerCentena->render();
 		spriteTimerDecena->render();
 		spriteTimerUnidad->render();
@@ -881,8 +894,11 @@ void Scene::render()
 		spriteCoins->render();
 
 		if (showScreenDeadPlayer && lives != -1) {
-			if(timerLevel <= 0) spriteTimeUp->render();
-			else if(level == 1) spriteScreenDeadLevel1->render();
+			if (timerLevel <= 0) {
+				engine->play2D(soundTimeUp);
+				spriteTimeUp->render();
+			}
+			else if (level == 1) spriteScreenDeadLevel1->render();
 			else spriteScreenDeadLevel2->render();
 			asignarSpriteNumber(spriteNumberOfLives, lives);
 			if (timerLevel > 0) spriteNumberOfLives->render();
@@ -899,13 +915,13 @@ void Scene::initShaders()
 	Shader vShader, fShader;
 
 	vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
-	if(!vShader.isCompiled())
+	if (!vShader.isCompiled())
 	{
 		cout << "Vertex Shader Error" << endl;
 		cout << "" << vShader.log() << endl << endl;
 	}
 	fShader.initFromFile(FRAGMENT_SHADER, "shaders/texture.frag");
-	if(!fShader.isCompiled())
+	if (!fShader.isCompiled())
 	{
 		cout << "Fragment Shader Error" << endl;
 		cout << "" << fShader.log() << endl << endl;
@@ -914,7 +930,7 @@ void Scene::initShaders()
 	texProgram.addShader(vShader);
 	texProgram.addShader(fShader);
 	texProgram.link();
-	if(!texProgram.isLinked())
+	if (!texProgram.isLinked())
 	{
 		cout << "Shader Linking Error" << endl;
 		cout << "" << texProgram.log() << endl << endl;
@@ -931,9 +947,9 @@ bool Scene::checkCollision(glm::vec2 posPlayer, glm::vec2 posEnemy, int alturaPl
 	float right2 = posEnemy.x + 32; // Debes definir el ancho del objeto
 
 	// Calcula los l�mites de los objetos en el eje Y (teniendo en cuenta la altura)
-	float top1 = posPlayer.y - alturaPlayer;
+	float top1 = posPlayer.y - 32;
 	float bottom1 = posPlayer.y;
-	float top2 = posEnemy.y - alturaEnemy;
+	float top2 = posEnemy.y - 32;
 	float bottom2 = posEnemy.y;
 
 	// Verifica si hay colisi�n en el eje X
@@ -953,12 +969,12 @@ bool Scene::esMuerte(glm::vec2 posPlayer, glm::vec2 posEnemy, int alturaPlayer, 
 	float right2 = posEnemy.x + 32; // Debes definir el ancho del objeto
 
 	// Calcula los l�mites de los objetos en el eje Y (teniendo en cuenta la altura)
-	float top1 = posPlayer.y - alturaPlayer;
+	float top1 = posPlayer.y - 32;
 	float bottom1 = posPlayer.y;
-	float top2 = posEnemy.y - alturaEnemy;
+	float top2 = posEnemy.y - 32;
 	float bottom2 = posEnemy.y;
 
-	if (bottom1-4 >= top2 && bottom1 <= top2+4 && (left1 < right2 && right1 > left2)) return true; //el 37 es porq es dif�cil q coincida justo a la misma altura, as� q le pongo una dif de 5 p�xeles (altura 32)
+	if (bottom1 - 4 >= top2 && bottom1 <= top2 + 4 && (left1 < right2 && right1 > left2)) return true; //el 37 es porq es dif�cil q coincida justo a la misma altura, as� q le pongo una dif de 5 p�xeles (altura 32)
 	else return false;
 }
 
@@ -989,7 +1005,7 @@ void Scene::borrarPersonajes() {
 }
 
 void Scene::asignarSpriteNumber(Sprite* s, int n) {
-	if(n < 0 || n > 9) s->changeAnimation(0);
+	if (n < 0 || n > 9) s->changeAnimation(0);
 	else s->changeAnimation(n);
 }
 
@@ -1030,7 +1046,8 @@ void Scene::checkCollisionsShell(Personaje* personajeShell) {
 		if (personaje != nullptr && (tipo == "Goomba" || tipo == "Ktroopa") && checkCollision(shell->getPosition(), personaje->getPosition(), 32, 32)) {
 			if (tipo == "Goomba") {
 				Goomba* g = dynamic_cast<Goomba*>(personaje);
-				g->vivo = false;
+				g->hit();
+				//g->vivo = false;
 			}
 			else if (tipo == "Ktroopa" && personajeShell != personaje) {
 				Ktroopa* kt = dynamic_cast<Ktroopa*>(personaje);
