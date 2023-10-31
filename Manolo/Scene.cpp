@@ -6,10 +6,10 @@
 
 
 #define SCREEN_X 0
-#define SCREEN_Y 16
+#define SCREEN_Y 0
 
-#define INIT_PLAYER_X_TILES 2
-#define INIT_PLAYER_Y_TILES 12
+#define INIT_PLAYER_X_TILES 4
+#define INIT_PLAYER_Y_TILES 24
 
 #define INIT_GOOMBA_X_TILES 26
 #define INIT_GOOMBA_Y_TILES 15
@@ -135,7 +135,7 @@ void Scene::init(int lev) {
 
 		palo_bandera = new ObjetoEntorno();
 		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
-		palo_bandera->setPosition(glm::vec2((INIT_SETA_X_TILES - 1) * 16, (INIT_SETA_Y_TILES - 15) * 16));
+		palo_bandera->setPosition(glm::vec2(198 * 16, 11 * 16));
 		palo_bandera->setTileMap(map);
 
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
@@ -775,6 +775,7 @@ void Scene::update(int deltaTime)
 			borrarPersonajes();
 			init(2);
 		}
+
 		if (player->getPosition().x >= palo_bandera->getPosition().x) { //siguiente nivel
 			if ((!player->isChangingLevel() && level == 1) || (level == 2 && sumarPuntosTimer)) {
 				if (level == 1) {
@@ -877,7 +878,7 @@ void Scene::render()
 		spritePointsUnidad->render();
 		spritePointsDecena->render();
 		spritePointsCentena->render();
-		actualizarCoins(); //PONER DONDE SE GANA MONEDA Y QUITAR DE AQUÍ
+		actualizarCoins(); //PONER DONDE SE GANA MONEDA Y QUITAR DE AQUï¿½
 		spriteCoins->render();
 
 		if (showScreenDeadPlayer && lives != -1) {

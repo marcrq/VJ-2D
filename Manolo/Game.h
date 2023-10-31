@@ -40,6 +40,9 @@ public:
 	
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
+	int getScreenWidth() const {
+		return SCREEN_WIDTH;
+	}
 
 private:
 	bool bPlay;                       // Continue to play game?
