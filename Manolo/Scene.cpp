@@ -1002,7 +1002,7 @@ bool Scene::esMuerte(glm::vec2 posPlayer, glm::vec2 posEnemy, int alturaPlayer, 
 	float top2 = posEnemy.y - 32;
 	float bottom2 = posEnemy.y;
 
-	if (bottom1 - 4 >= top2 && bottom1 <= top2 + 4 && (left1 < right2 && right1 > left2)) return true; //el 37 es porq es dif�cil q coincida justo a la misma altura, as� q le pongo una dif de 5 p�xeles (altura 32)
+	if (((bottom1 - 4 >= top2 && bottom1 <= top2 + 4) || (bottom1 >= top2 && bottom1-2 <= top2)) && (left1 < right2 && right1 > left2)) return true; //el 37 es porq es dif�cil q coincida justo a la misma altura, as� q le pongo una dif de 5 p�xeles (altura 32)
 	else return false;
 }
 
