@@ -309,18 +309,19 @@ void Player::update(int deltaTime)
 		else nextLevel();
 	}
 	else {
-		if (realesedBig && (Game::instance().getKey('m') || Game::instance().getKey('M'))) {
+		if (realesedBig && (Game::instance().getKey('m'))) { // || Game::instance().getKey('M')
 			if (!isBig) {
 				if(!isInvencible) sameAnimationBeetwenModes(spriteMini->animation());
 				else sameAnimationBeetwenModes(spriteMarioStar->animation());
 				alturaSprite = 64;
+				isBig = true;
 			}
 			else {
 				if (!isInvencible) sameAnimationBeetwenModes(spriteBig->animation());
 				else sameAnimationBeetwenModes(spriteBigMarioStar->animation());
 				alturaSprite = 32;
+				isBig = false;
 			}
-			isBig = !isBig;
 			realesedBig = false;
 		}
 
@@ -664,9 +665,6 @@ void Player::instaKill() {
 	timerAnimationDead = 0.f;
 }
 
-bool Player::isBigFunc() {
-	return isBig;
-}
 
 //void keyboardCallback(unsigned char key, int x, int y) {
 //	if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {

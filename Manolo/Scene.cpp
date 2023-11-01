@@ -42,7 +42,6 @@ Scene::Scene()
 	ktroopa2 = NULL;
 
 	engine = createIrrKlangDevice();
-	soundMenu = engine->play2D("audio/menu-mario.mp3", true, false, true);
 	soundGame = engine->play2D("audio/ringtones-super-mario-bros.mp3", true, true, true);
 	soundGameOver = engine->addSoundSourceFromFile("audio/smb_gameover.wav");
 	soundTimeUp = engine->addSoundSourceFromFile("audio/smb_warning.wav");
@@ -77,8 +76,6 @@ enum PlayerAnims
 
 void Scene::init(int lev) {
 	if (lev == 0) {
-		//soundMenu->setPlayPosition(0.0);
-		soundMenu->setIsPaused(true);
 		level = 0;
 		coins = 0;
 		lives = 0;
@@ -113,7 +110,6 @@ void Scene::init(int lev) {
 		spriteTimeUp->setPosition(glm::vec2(float(0), float(0)));
 	}
 	else if (lev == 1) {
-		soundMenu->setIsPaused(true);
 		if(!firstTimeInGameShowScreenDead) soundGame->setIsPaused(false);
 		level = 1;
 		timerLevel = 500;
@@ -159,7 +155,7 @@ void Scene::init(int lev) {
 
 		personajes.push_back(goomba);
 		personajes.push_back(ktroopa);
-		personajes.push_back(star);
+		//personajes.push_back(star);
 		personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
 
@@ -360,8 +356,6 @@ void Scene::init(int lev) {
 		spriteNumberOfLives->setPosition(glm::vec2((22) * 16, (16) * 16));
 	}
 	else if (lev == 2) {
-		soundMenu->setIsPaused(true);
-		soundMenu->setIsPaused(true);
 		if (!firstTimeInGameShowScreenDead) {
 			soundGame->setIsPaused(false);
 		}
@@ -414,8 +408,8 @@ void Scene::init(int lev) {
 		currentTime = 0.0f;
 
 		personajes.push_back(goomba);
-		//personajes.push_back(ktroopa);
-		//personajes.push_back(ktroopa2);
+		personajes.push_back(ktroopa);
+		personajes.push_back(ktroopa2);
 		//personajes.push_back(star);
 		//personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
@@ -643,7 +637,7 @@ void Scene::update(int deltaTime)
 			if (!firstTimeInGameShowScreenDead) lives -= 1;
 			showScreenDeadPlayer = true;
 			if (timerLevel <= 0 && lives != -1) engine->play2D(soundTimeUp);
-			else if(lives == -1) engine->play2D(soundGameOver);
+			else if(lives <= -1) engine->play2D(soundGameOver);
 			timerAnimationDying = -1.0;
 		}
 		if (showScreenDeadPlayer) {
@@ -665,12 +659,6 @@ void Scene::update(int deltaTime)
 			string tipo;
 			if (personaje != nullptr) tipo = personaje->myType();
 			if (!firstTimeInGameShowScreenDead && !player->isInAnimacionEndLevel() && !player->isInAnimacionDeadFunc() && personaje != nullptr && checkCollision(player->getPosition(), personaje->getPosition(), player->getAltura(), 32)) {
-				if (tipo == "Ktroopa") {
-					Ktroopa* kt = dynamic_cast<Ktroopa*>(personaje);
-					if (kt->isShellMovingFunc()) {
-						checkCollisionsShell(personaje);
-					}
-				}
 				if (tipo == "Star") {
 					player->invencibility();
 					Star* s = dynamic_cast<Star*>(personaje);
@@ -699,7 +687,10 @@ void Scene::update(int deltaTime)
 							actualizarPoints();
 						}
 						else {
-							if (!player->isBigFunc()) soundGame->setIsPaused(true);
+							//bool isBig = player->isBigFunc();
+							/*if (!isBig) {
+								soundGame->setIsPaused(true);
+							}*/
 							player->hit();
 							++it;
 						}
@@ -735,7 +726,7 @@ void Scene::update(int deltaTime)
 							player->kickShell();
 						}
 						else { //es shell en movimiento, es hit al player
-							if (!player->isBigFunc()) soundGame->setIsPaused(true);
+							//if (!player->isBigFunc()) soundGame->setIsPaused(true);
 							player->hit();
 						}
 						++it;
@@ -752,6 +743,21 @@ void Scene::update(int deltaTime)
 				}
 			}
 
+			++it;
+		}
+
+		//para todas las shells en movimiento, miro si colisionan
+		it = personajes.begin();
+		while (it != personajes.end()) {
+			Personaje* personaje = *it;
+			string tipo;
+			if (personaje != nullptr) tipo = personaje->myType();
+			if (tipo == "Ktroopa") {
+				Ktroopa* kt = dynamic_cast<Ktroopa*>(personaje);
+				if (kt->isShellMovingFunc()) {
+					checkCollisionsShell(personaje);
+				}
+			}
 			++it;
 		}
 
@@ -785,10 +791,12 @@ void Scene::update(int deltaTime)
 		}
 
 		if (Game::instance().getKey('1')) {
+			lives = 3;
 			borrarPersonajes();
 			init(1);
 		}
 		if (Game::instance().getKey('2')) {
+			lives = 3;
 			borrarPersonajes();
 			init(2);
 		}
@@ -923,7 +931,7 @@ void Scene::render()
 			asignarSpriteNumber(spriteNumberOfLives, lives);
 			if (timerLevel > 0) spriteNumberOfLives->render();
 		}
-		else if (showScreenDeadPlayer && lives == -1) {
+		else if (showScreenDeadPlayer && lives <= -1) {
 			spriteDeadScreenGameOver->render();
 		}
 	}
@@ -967,9 +975,9 @@ bool Scene::checkCollision(glm::vec2 posPlayer, glm::vec2 posEnemy, int alturaPl
 	float right2 = posEnemy.x + 32; // Debes definir el ancho del objeto
 
 	// Calcula los l�mites de los objetos en el eje Y (teniendo en cuenta la altura)
-	float top1 = posPlayer.y - 32;
+	float top1 = posPlayer.y - alturaPlayer;
 	float bottom1 = posPlayer.y;
-	float top2 = posEnemy.y - 32;
+	float top2 = posEnemy.y - alturaEnemy;
 	float bottom2 = posEnemy.y;
 
 	// Verifica si hay colisi�n en el eje X
@@ -1060,21 +1068,20 @@ void Scene::checkCollisionsShell(Personaje* personajeShell) {
 	vector<Personaje*>::iterator it2 = personajes.begin();
 	Ktroopa* shell = dynamic_cast<Ktroopa*>(personajeShell);
 	while (it2 != personajes.end()) {
-		Personaje* personaje = *it2;
+		Personaje* personaje2 = *it2;
 		string tipo;
-		if (personaje != nullptr) tipo = personaje->myType();
-		if (personaje != nullptr && (tipo == "Goomba" || tipo == "Ktroopa") && checkCollision(shell->getPosition(), personaje->getPosition(), 32, 32)) {
+		if (personaje2 != nullptr) tipo = personaje2->myType();
+		if (personaje2 != nullptr && personaje2 != personajeShell && (tipo == "Goomba" || tipo == "Ktroopa") && checkCollision(shell->getPosition(), personaje2->getPosition(), 32, 32)) {
 			if (tipo == "Goomba") {
-				Goomba* g = dynamic_cast<Goomba*>(personaje);
-				g->hit();
-				//g->vivo = false;
+				Goomba* g = dynamic_cast<Goomba*>(personaje2);
+				if(!g->isPisado()) g->hit();
 			}
-			else if (tipo == "Ktroopa" && personajeShell != personaje) {
-				Ktroopa* kt = dynamic_cast<Ktroopa*>(personaje);
+			else if (tipo == "Ktroopa" && personajeShell != personaje2) {
+				Ktroopa* kt = dynamic_cast<Ktroopa*>(personaje2);
 				kt->vivo = false;
 			}
 		}
-
+		tipo = "null";
 		++it2;
 	}
 }
