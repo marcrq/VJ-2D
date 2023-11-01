@@ -4,6 +4,8 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
+#include <irrKlang.h>
+using namespace irrklang;
 
 
 // Player is basically a Sprite that represents the player. As such it has
@@ -36,6 +38,7 @@ public:
 	bool isInAnimacionEndLevel();
 	bool isChangingLevel();
 	void instaKill();
+	bool isBigFunc();
 
 	int alturaSprite;
 
@@ -50,6 +53,9 @@ private:
 	Sprite* spriteMarioStar;
 	Sprite* spriteBigMarioStar;
 	TileMap* map;
+
+	ISoundEngine* engine;
+	ISoundSource* soundMarioDie, *soundMarioGrows, *soundMarioBigJump, * soundMarioSmallJump, *soundMarioKick, *soundMarioCabezazo, *soundMarioKill, * soundMarioPowerDown;
 
 	void animacionAlternarModo();
 	Sprite* getCorrectSprite();

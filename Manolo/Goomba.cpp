@@ -7,7 +7,7 @@
 
 #define ACCELERATION 0.002f
 #define MAX_VEL 3.f
-#define TIME_UNTIL_ELIMINATION 2.f
+#define TIME_UNTIL_ELIMINATION 3.f
 #define POINTS 1
 
 enum GoombaAnims
@@ -20,6 +20,7 @@ void Goomba::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 	timeSinceDead = 0.f;
 	vaIzq = true;
 	vivo = true;
+	pisado = false;
 	goomba.loadFromFile("images/goomba.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.33333, 1.0), &goomba, &shaderProgram);
 	sprite->setNumberAnimations(2);
@@ -29,8 +30,6 @@ void Goomba::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 	sprite->addKeyframe(MOVE, glm::vec2(0.33333f, 1.0f));
 
 	sprite->setAnimationSpeed(DEAD, 8);
-	sprite->addKeyframe(DEAD, glm::vec2(0.66666f, 1.0f));
-	sprite->addKeyframe(DEAD, glm::vec2(0.66666f, 1.0f));
 	sprite->addKeyframe(DEAD, glm::vec2(0.66666f, 1.0f));
 
 	sprite->changeAnimation(0);
@@ -44,12 +43,12 @@ void Goomba::update(int deltaTime) {
 	posPlayer.y += 1.5; //estas 2 lineas es para controlar la caida
 	bool isGrounded = map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
 
-	if (!vivo) {
+	if (pisado && vivo) {
 		timeSinceDead += deltaTime / 1000.0;
-		if (timeSinceDead >= TIME_UNTIL_ELIMINATION) delete this;
+		if (timeSinceDead >= TIME_UNTIL_ELIMINATION) vivo = false;
 	}
 
-	else if (vaIzq && isGrounded) {
+	else if (vaIzq && isGrounded && !pisado) {
 		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
 		{
 			//posPlayer.x += 2;
@@ -60,7 +59,7 @@ void Goomba::update(int deltaTime) {
 			posPlayer.x -= 1;
 		}
 	}
-	else if (!vaIzq && isGrounded) {
+	else if (!vaIzq && isGrounded && !pisado) {
 		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
 		{
 			//posPlayer.x += 2;
@@ -79,7 +78,7 @@ void Goomba::render() {
 }
 
 void Goomba::hit() {
-	vivo = false;
+	pisado = true;
 	sprite->changeAnimation(DEAD);
 	timeSinceDead = 0.f;
 }
@@ -94,4 +93,8 @@ string Goomba::myType() {
 
 int Goomba::getPoints() {
 	return POINTS;
+}
+
+bool Goomba::isPisado() {
+	return pisado;
 }

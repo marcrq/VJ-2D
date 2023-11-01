@@ -14,6 +14,9 @@
 #include "ObjetoEntorno.h"
 #include "Menus.h"
 
+#include <irrKlang.h>
+using namespace irrklang;
+
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
 
@@ -45,7 +48,7 @@ private:
 	ObjetoEntorno* bandera;
 	ObjetoEntorno* palo_bandera;
 	ShaderProgram texProgram;
-	float currentTime, timerAnimationDying, timerScreenDead;
+	float currentTime, timerAnimationDying, timerScreenDead, timerAnimationEndLevel;
 	glm::mat4 projection;
 	bool endedLevel, showScreenDeadPlayer, firstTimeInGameShowScreenDead, sumarPuntosTimer;
 	int level, timerLevel, points, maxPoints, coins, lives;
@@ -54,6 +57,10 @@ private:
 	Texture resumenLevel1, resumenLevel2, numbers, screenDeadLevel1, screenDeadLevel2, deadScreenGameOver, timeUp;
 	Sprite* spriteResumenLevel1, *spriteResumenLevel2, *spriteTimerCentena, *spriteTimerDecena, *spriteTimerUnidad, * spritePointsUnidad, * spritePointsDecena, * spritePointsCentena, *spriteCoins, *spriteNumberOfLives, * spriteScreenDeadLevel1, * spriteScreenDeadLevel2, * spriteDeadScreenGameOver, *spriteTimeUp;
 	//Text textTimerLevel
+
+	ISoundEngine* engine;
+	ISound* soundMenu, * soundGame;
+	ISoundSource *soundGameOver, * soundTimeUp, * soundFlapPole, * soundComplete;
 
 	void nextLevel();
 	void borrarPersonajes();
