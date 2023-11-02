@@ -18,6 +18,7 @@ public:
     bool isShellMovingFunc();
     void moveShellToRight(bool toRight);
     int getPoints();
+    void changeVelocitiesScroll(bool thereIsScroll, int v);
 
 private:
     Texture ktroopa, shell;

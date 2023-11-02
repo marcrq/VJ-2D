@@ -246,6 +246,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 void Player::update(int deltaTime)
 {
+	thereIsScroll = false;
 	getCorrectSprite()->update(deltaTime);
 	if (isInAnimacionAlternarModo) {
 		timerAnimacionAlternarModo += deltaTime / 1000.0;
@@ -398,7 +399,10 @@ void Player::update(int deltaTime)
 			if (getCorrectSprite()->animation() != MOVE_RIGHT && !bJumping) {
 				getCorrectSprite()->changeAnimation(MOVE_RIGHT);
 			}
-			if(posPlayer.x >= SCROLL_LIMIT) walkedBeyondLimit += velocity;
+			if (posPlayer.x >= SCROLL_LIMIT) {
+				walkedBeyondLimit += velocity; 
+				thereIsScroll = true;
+			}
 			else posPlayer.x += velocity;
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
 			{
@@ -419,7 +423,10 @@ void Player::update(int deltaTime)
 		{
 			jumpAngle += JUMP_ANGLE_STEP;
 			if (getCorrectSprite()->animation() == JUMP_RIGHT && !saltoQuieto) {
-				if (posPlayer.x >= SCROLL_LIMIT) walkedBeyondLimit += velocity;
+				if (posPlayer.x >= SCROLL_LIMIT) {
+					walkedBeyondLimit += velocity; 
+					thereIsScroll = true;
+				}
 				else posPlayer.x += velocity;
 				if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
 				{

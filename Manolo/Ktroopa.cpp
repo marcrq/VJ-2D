@@ -9,6 +9,8 @@
 #define MAX_VEL 3.f
 #define TIME_RESURRECTION 4.f
 #define POINTS 1
+#define VELTURTLE 1.0
+#define VELSHELL 3.0
 
 
 enum KtroopaAnims
@@ -92,6 +94,7 @@ enum KtroopaAnims
 				if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y));
 
 				if (vaIzq) {
+					posPlayer.x -= velocity;
 					if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
 					{
 						//posPlayer.x += 2;
@@ -99,20 +102,15 @@ enum KtroopaAnims
 						vaIzq = false;
 						sprite->changeAnimation(MOVE_RIGHT);
 					}
-					else {
-						posPlayer.x -= velocity;
-					}
 				}
 				else {
+					posPlayer.x += velocity;
 					if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
 					{
 						//posPlayer.x += 2;
 						posPlayer.x -= velocity;
 						vaIzq = true;
 						sprite->changeAnimation(MOVE_LEFT);
-					}
-					else {
-						posPlayer.x += velocity;
 					}
 				}
 			}
@@ -172,4 +170,26 @@ enum KtroopaAnims
 
 	int Ktroopa::getPoints() {
 		return POINTS;
+	}
+
+	void Ktroopa::changeVelocitiesScroll(bool thereIsScroll, int v) {
+		int vel;
+		if (isShellMoving) vel = VELSHELL;
+		else vel = VELTURTLE;
+		if (thereIsScroll) {
+			if (vaIzq) {
+				velocity = vel + v;
+			}
+			else {
+				velocity = vel - v;
+			}
+		}
+		else {
+			if (vaIzq) {
+				velocity = vel;
+			}
+			else {
+				velocity = vel;
+			}
+		}
 	}

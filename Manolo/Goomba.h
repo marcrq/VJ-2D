@@ -16,6 +16,7 @@ public:
     bool vivo, pisado;
     float timeSinceDead;
     int getPoints();
+    void changeVelocitiesScroll(bool thereIsScroll, int v);
 
 private:
     Texture goomba;

@@ -9,6 +9,7 @@
 #define MAX_VEL 3.f
 #define TIME_UNTIL_ELIMINATION 3.f
 #define POINTS 1
+#define VEL 1.0
 
 enum GoombaAnims
 {
@@ -49,25 +50,21 @@ void Goomba::update(int deltaTime) {
 	}
 
 	else if (vaIzq && isGrounded && !pisado) {
+		posPlayer.x -= velocity;
 		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
 		{
 			//posPlayer.x += 2;
-			posPlayer.x += 1;
+			posPlayer.x += velocity;
 			vaIzq = false;
-		}
-		else {
-			posPlayer.x -= 1;
 		}
 	}
 	else if (!vaIzq && isGrounded && !pisado) {
+		posPlayer.x += velocity;
 		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
 		{
 			//posPlayer.x += 2;
-			posPlayer.x -= 1;
+			posPlayer.x -= velocity;
 			vaIzq = true;
-		}
-		else {
-			posPlayer.x += 1;
 		}
 	}
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -97,4 +94,23 @@ int Goomba::getPoints() {
 
 bool Goomba::isPisado() {
 	return pisado;
+}
+
+void Goomba::changeVelocitiesScroll(bool thereIsScroll, int v) {
+	if (thereIsScroll) {
+		if (vaIzq) {
+			velocity = VEL + v;
+		}
+		else {
+			velocity = VEL - v;
+		}
+	}
+	else {
+		if (vaIzq) {
+			velocity = VEL;
+		}
+		else {
+			velocity = VEL;
+		}
+	}
 }

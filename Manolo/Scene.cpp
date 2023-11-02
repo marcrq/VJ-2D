@@ -20,7 +20,7 @@
 #define INIT_STAR_Y_TILES 17
 
 
-#define INIT_SETA_X_TILES 30
+#define INIT_SETA_X_TILES 60
 #define INIT_SETA_Y_TILES 15
 
 #define INIT_KTROOPA_X_TILES 15
@@ -155,7 +155,7 @@ void Scene::init(int lev) {
 
 		//personajes.push_back(goomba);
 		//personajes.push_back(ktroopa);
-		//personajes.push_back(star);
+		personajes.push_back(star);
 		personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
 
@@ -653,7 +653,38 @@ void Scene::update(int deltaTime)
 			}
 		}
 
+		//CONTROL DE ERRORES
+		if (Game::instance().getKey('s')) {
+			lives = lives;
+		}
+
+		//ajustar velocidades
 		vector<Personaje*>::iterator it = personajes.begin();
+		while (it != personajes.end()) {
+			Personaje* personaje = *it;
+			string tipo;
+			if (personaje != nullptr) tipo = personaje->myType();
+			if (tipo == "Seta") {
+				Seta* s = dynamic_cast<Seta*>(personaje);
+				s->changeVelocitiesScroll(player->thereIsScroll, player->velocity);
+			}
+			else if (tipo == "Goomba") {
+				Goomba* s = dynamic_cast<Goomba*>(personaje);
+				s->changeVelocitiesScroll(player->thereIsScroll, player->velocity);
+			}
+			else if (tipo == "Ktroopa") {
+				Ktroopa* s = dynamic_cast<Ktroopa*>(personaje);
+				s->changeVelocitiesScroll(player->thereIsScroll, player->velocity);
+			}
+			else if (tipo == "Star") {
+				Star* s = dynamic_cast<Star*>(personaje);
+				s->changeVelocitiesScroll(player->thereIsScroll, player->velocity);
+			}
+			++it;
+		}
+
+		/////////////////7
+		it = personajes.begin(); //vector<Personaje*>::iterator
 		while (it != personajes.end()) {
 			Personaje* personaje = *it;
 			string tipo;
@@ -898,13 +929,10 @@ void Scene::render()
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	texProgram.setUniformMatrix4f("modelview", modelview);
-	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
 	if (level != 0) {
 		// Create a translation matrix and translate it by a certain amount
-		glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-(float)player->getRelativePosition(), 0.0, 0.0)); // Replace x, y, z with your desired translation values
+		glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-(float)player->getRelativePosition(), 0.0, 0.0)); // +32, posición original
 
 		// Multiply the translation matrix with the modelview matrix
 		modelview = translationMatrix;
@@ -918,6 +946,8 @@ void Scene::render()
 		else if (level == 2 || (level == 3 && player->isChangingLevel()) || (level == 3 && sumarPuntosTimer) || (level == 3 && timerAnimationEndLevel != -1)) spriteResumenLevel2->render();
 		for (Personaje* personaje : personajes) {
 			if (personaje != nullptr) {
+				modelview = glm::mat4(1.0f);
+				texProgram.setUniformMatrix4f("modelview", modelview);
 				personaje->render();
 			}
 		}

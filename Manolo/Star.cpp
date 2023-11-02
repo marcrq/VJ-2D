@@ -7,6 +7,7 @@
 #define ACCELERATION 0.002f
 #define MAX_VEL 3.f
 #define POINTS 2
+#define VEL 2.0
 
 
 enum StarAnims
@@ -70,25 +71,21 @@ void Star::update(int deltaTime)
 	}
 
 	if (vaIzq) {
+		posPlayer.x -= velocity;
 		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
 		{
 			//posPlayer.x += 2;
 			posPlayer.x += velocity;
 			vaIzq = false;
 		}
-		else {
-			posPlayer.x -= velocity;
-		}
 	}
 	else {
+		posPlayer.x += velocity;
 		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
 		{
 			//posPlayer.x += 2;
 			posPlayer.x -= velocity;
 			vaIzq = true;
-		}
-		else {
-			posPlayer.x += velocity;
 		}
 	}
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -113,4 +110,23 @@ string Star::myType() {
 
 int Star::getPoints() {
 	return POINTS;
+}
+
+void Star::changeVelocitiesScroll(bool thereIsScroll, int v) {
+	if (thereIsScroll) {
+		if (vaIzq) {
+			velocity = VEL + v;
+		}
+		else {
+			velocity = VEL - v;
+		}
+	}
+	else {
+		if (vaIzq) {
+			velocity = VEL;
+		}
+		else {
+			velocity = VEL;
+		}
+	}
 }

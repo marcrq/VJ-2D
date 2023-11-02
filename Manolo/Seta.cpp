@@ -5,7 +5,7 @@
 #define FALL_STEP 4
 
 #define ACCELERATION 0.002f
-#define MAX_VEL 3.f
+#define VEL 2.f
 #define POINTS 1
 
 
@@ -35,25 +35,21 @@ void Seta::update(int deltaTime)
 	if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y));
 
 	if (vaIzq) {
+		posPlayer.x -= velocity;
 		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
 		{
 			//posPlayer.x += 2;
 			posPlayer.x += velocity;
 			vaIzq = false;
 		}
-		else {
-			posPlayer.x -= velocity;
-		}
 	}
 	else {
+		posPlayer.x += velocity;
 		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
 		{
 			//posPlayer.x += 2;
 			posPlayer.x -= velocity;
 			vaIzq = true;
-		}
-		else {
-			posPlayer.x += velocity;
 		}
 	}
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -79,4 +75,23 @@ string Seta::myType() {
 
 int Seta::getPoints() {
 	return POINTS;
+}
+
+void Seta::changeVelocitiesScroll(bool thereIsScroll, int v) {
+	if (thereIsScroll) {
+		if (vaIzq) {
+			velocity = VEL + v;
+		}
+		else {
+			velocity = VEL - v;
+		}
+	}
+	else{
+		if (vaIzq) {
+			velocity = VEL;
+		}
+		else {
+			velocity = VEL;
+		}
+	}
 }
