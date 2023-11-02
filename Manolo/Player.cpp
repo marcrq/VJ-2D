@@ -384,9 +384,11 @@ void Player::update(int deltaTime)
 			}
 			else posPlayer.x -= velocity;*/
 			posPlayer.x -= velocity;
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)) || movementSafeZone*(-1) > SCROLL_LIMIT) //poner condición para que no se vaya de la pantalla
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)) || posPlayer.x <= 20) //poner condición para que no se vaya de la pantalla
 			{
-				if (posPlayer.x >= SCROLL_LIMIT) movementSafeZone += velocity;
+				if (posPlayer.x >= SCROLL_LIMIT) {
+					posPlayer.x += velocity;
+				}
 				else posPlayer.x += velocity;
 				if (getCorrectSprite()->animation() != STAND_LEFT) getCorrectSprite()->changeAnimation(STAND_LEFT);
 			}
@@ -396,11 +398,7 @@ void Player::update(int deltaTime)
 			if (getCorrectSprite()->animation() != MOVE_RIGHT && !bJumping) {
 				getCorrectSprite()->changeAnimation(MOVE_RIGHT);
 			}
-			if (posPlayer.x >= SCROLL_LIMIT && movementSafeZone < 0) {
-				movementSafeZone += velocity;
-				posPlayer.x += velocity;
-			}
-			else if(posPlayer.x >= SCROLL_LIMIT) walkedBeyondLimit += velocity;
+			if(posPlayer.x >= SCROLL_LIMIT) walkedBeyondLimit += velocity;
 			else posPlayer.x += velocity;
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
 			{
@@ -421,10 +419,12 @@ void Player::update(int deltaTime)
 		{
 			jumpAngle += JUMP_ANGLE_STEP;
 			if (getCorrectSprite()->animation() == JUMP_RIGHT && !saltoQuieto) {
-				posPlayer.x += velocity;
+				if (posPlayer.x >= SCROLL_LIMIT) walkedBeyondLimit += velocity;
+				else posPlayer.x += velocity;
 				if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
 				{
-					posPlayer.x -= velocity;
+					if (posPlayer.x >= SCROLL_LIMIT) walkedBeyondLimit -= velocity;
+					else posPlayer.x -= velocity;
 					if (getCorrectSprite()->animation() != STAND_RIGHT) getCorrectSprite()->changeAnimation(STAND_RIGHT);
 				}
 			}
