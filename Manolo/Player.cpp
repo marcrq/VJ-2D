@@ -378,11 +378,12 @@ void Player::update(int deltaTime)
 			if (getCorrectSprite()->animation() != MOVE_LEFT && !bJumping) {//se apreta izq 1r vez
 				getCorrectSprite()->changeAnimation(MOVE_LEFT);
 			}
-			if (posPlayer.x + walkedBeyondLimit >= SCROLL_LIMIT) {
+			/*if (posPlayer.x + walkedBeyondLimit >= SCROLL_LIMIT) {
 				movementSafeZone -= velocity;
 				posPlayer.x -= velocity;
 			}
-			else posPlayer.x -= velocity;
+			else posPlayer.x -= velocity;*/
+			posPlayer.x -= velocity;
 			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)) || movementSafeZone*(-1) > SCROLL_LIMIT) //poner condición para que no se vaya de la pantalla
 			{
 				if (posPlayer.x >= SCROLL_LIMIT) movementSafeZone += velocity;

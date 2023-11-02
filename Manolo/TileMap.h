@@ -56,10 +56,6 @@ private:
 	int *map;
 
 	int relativePosition;
-
-	ShaderProgram* program;
-	GLint modelLocation;
-
 };
 
 
