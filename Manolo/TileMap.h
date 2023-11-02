@@ -36,6 +36,7 @@ public:
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, int altura) const;
+	void setRelativePosition(int r);
 	
 private:
 	bool loadLevel(const string &levelFile);
@@ -53,6 +54,11 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	int *map;
+
+	int relativePosition;
+
+	ShaderProgram* program;
+	GLint modelLocation;
 
 };
 

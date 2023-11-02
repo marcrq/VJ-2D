@@ -16,6 +16,8 @@
 #define TIME_INVULNERABILITY 1.0 //cuando te pegan
 #define LIGHT_INVULNERABILITY 0.2 //para que no cuente como hit cuando chuto shell
 
+#define SCROLL_LIMIT 192.0
+
 
 
 enum PlayerAnims
@@ -94,8 +96,9 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	timerKickedAShell = 0.f;
 	alturaSprite = 32;
 	animationEndLevel = false;
-
+	walkedBeyondLimit = 0;
 	running = false;
+	movementSafeZone = 0;
 	//glutKeyboardFunc(keyboardCallback);
 
 	minimario.loadFromFile("images/minimariosTODOS.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -366,16 +369,24 @@ void Player::update(int deltaTime)
 		if (!realesedInvencible && (!Game::instance().getKey('g') && !Game::instance().getKey('G'))) realesedInvencible = true;
 
 
-
+		//CHECK DE VARIABLES
+		if (Game::instance().getKey('s')) {
+			velocity = velocity;
+		}
 		if ((Game::instance().getSpecialKey(GLUT_KEY_LEFT) && !bJumping) || (Game::instance().getSpecialKey(GLUT_KEY_LEFT) && bJumping && saltoQuieto)) //TODO ESTO ES PARA Q SE PUEDA MOVER SI EST�S HACIENDO UN SALTO EN PARADA
 		{
 			if (getCorrectSprite()->animation() != MOVE_LEFT && !bJumping) {//se apreta izq 1r vez
 				getCorrectSprite()->changeAnimation(MOVE_LEFT);
 			}
-			posPlayer.x -= velocity;
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
+			if (posPlayer.x + walkedBeyondLimit >= SCROLL_LIMIT) {
+				movementSafeZone -= velocity;
+				posPlayer.x -= velocity;
+			}
+			else posPlayer.x -= velocity;
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)) || movementSafeZone*(-1) > SCROLL_LIMIT) //poner condición para que no se vaya de la pantalla
 			{
-				posPlayer.x += velocity;
+				if (posPlayer.x >= SCROLL_LIMIT) movementSafeZone += velocity;
+				else posPlayer.x += velocity;
 				if (getCorrectSprite()->animation() != STAND_LEFT) getCorrectSprite()->changeAnimation(STAND_LEFT);
 			}
 		}
@@ -384,10 +395,16 @@ void Player::update(int deltaTime)
 			if (getCorrectSprite()->animation() != MOVE_RIGHT && !bJumping) {
 				getCorrectSprite()->changeAnimation(MOVE_RIGHT);
 			}
-			posPlayer.x += velocity;
+			if (posPlayer.x >= SCROLL_LIMIT && movementSafeZone < 0) {
+				movementSafeZone += velocity;
+				posPlayer.x += velocity;
+			}
+			else if(posPlayer.x >= SCROLL_LIMIT) walkedBeyondLimit += velocity;
+			else posPlayer.x += velocity;
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
 			{
-				posPlayer.x -= velocity;
+				if (posPlayer.x >= SCROLL_LIMIT) walkedBeyondLimit -= velocity;
+				else posPlayer.x -= velocity;
 				if (getCorrectSprite()->animation() != STAND_RIGHT) getCorrectSprite()->changeAnimation(STAND_RIGHT);
 			}
 		}
@@ -665,6 +682,11 @@ void Player::instaKill() {
 	timerAnimationDead = 0.f;
 }
 
+int Player::getRelativePosition() {
+	int r = getPosition().x;
+	if (walkedBeyondLimit == 0) return 0;
+	else return walkedBeyondLimit;
+}
 
 //void keyboardCallback(unsigned char key, int x, int y) {
 //	if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {

@@ -153,8 +153,8 @@ void Scene::init(int lev) {
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 		currentTime = 0.0f;
 
-		personajes.push_back(goomba);
-		personajes.push_back(ktroopa);
+		//personajes.push_back(goomba);
+		//personajes.push_back(ktroopa);
 		//personajes.push_back(star);
 		personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
@@ -874,7 +874,7 @@ void Scene::update(int deltaTime)
 		}
 
 		if (player->getPosition().x < palo_bandera->getPosition().x && !player->isInAnimacionDeadFunc() && !showScreenDeadPlayer) {
-			timerLevel = 30 - static_cast<int>(currentTime) / 1000;
+			timerLevel = TIME_LEVEL - static_cast<int>(currentTime) / 1000;
 			if (timerLevel == 0) {
 				player->instaKill();
 				soundGame->setIsPaused(true);
@@ -903,6 +903,16 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
 	if (level != 0) {
+		// Create a translation matrix and translate it by a certain amount
+		glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-(float)player->getRelativePosition(), 0.0, 0.0)); // Replace x, y, z with your desired translation values
+
+		// Multiply the translation matrix with the modelview matrix
+		modelview = translationMatrix;
+
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+
+		map->setRelativePosition(player->getRelativePosition());
 		map->render();
 		if (level == 1 || (level == 2 && player->isChangingLevel()) || (level == 2 && sumarPuntosTimer) || (level == 2 && timerAnimationEndLevel != -1)) spriteResumenLevel1->render();
 		else if (level == 2 || (level == 3 && player->isChangingLevel()) || (level == 3 && sumarPuntosTimer) || (level == 3 && timerAnimationEndLevel != -1)) spriteResumenLevel2->render();
