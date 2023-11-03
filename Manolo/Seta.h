@@ -22,6 +22,7 @@ public:
 private:
 	Texture seta;
 	bool vaIzq, isJumping, isGrounded;
+	float timerStopped;
 };
 
 

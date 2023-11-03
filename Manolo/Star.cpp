@@ -8,6 +8,7 @@
 #define MAX_VEL 3.f
 #define POINTS 2
 #define VEL 2.0
+#define TIME_STOPPED 2.f
 
 
 enum StarAnims
@@ -19,6 +20,7 @@ enum StarAnims
 void Star::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
 	velocity = 2.f;
+	timerStopped = 0.f;
 	star.loadFromFile("images/star.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.5, 1.0), &star, &shaderProgram);
 	sprite->setNumberAnimations(1);
@@ -31,7 +33,7 @@ void Star::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
-	vaIzq = true;
+	vaIzq = false;
 	isJumping = false;
 	vivo = true;
 }
@@ -40,52 +42,58 @@ void Star::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 
-	if (isJumping)
-	{
-		jumpAngle += JUMP_ANGLE_STEP;
-		if (jumpAngle == 180)
+	//acaba de aparecer, va a estar un tiempo sin hacer nada
+	if (timerStopped <= TIME_STOPPED) {
+		timerStopped += deltaTime / 1000.0;
+	}
+	else {
+		if (isJumping)
 		{
-			posPlayer.y = startY;
-			isJumping = false;
-		}
-		else
-		{
-			posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
-			if (jumpAngle > 90) {
-				isGrounded = map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
-				if (isGrounded) {
-					isJumping = false;
+			jumpAngle += JUMP_ANGLE_STEP;
+			if (jumpAngle == 180)
+			{
+				posPlayer.y = startY;
+				isJumping = false;
+			}
+			else
+			{
+				posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+				if (jumpAngle > 90) {
+					isGrounded = map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+					if (isGrounded) {
+						isJumping = false;
+					}
 				}
 			}
 		}
-	}
-	else
-	{
-		posPlayer.y += FALL_STEP;
-		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
+		else
 		{
-			isJumping = true;
-			jumpAngle = 0;
-			startY = posPlayer.y;
+			posPlayer.y += FALL_STEP;
+			if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
+			{
+				isJumping = true;
+				jumpAngle = 0;
+				startY = posPlayer.y;
+			}
 		}
-	}
 
-	if (vaIzq) {
-		posPlayer.x -= velocity;
-		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
-		{
-			//posPlayer.x += 2;
-			posPlayer.x += velocity;
-			vaIzq = false;
-		}
-	}
-	else {
-		posPlayer.x += velocity;
-		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
-		{
-			//posPlayer.x += 2;
+		if (vaIzq) {
 			posPlayer.x -= velocity;
-			vaIzq = true;
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
+			{
+				//posPlayer.x += 2;
+				posPlayer.x += velocity;
+				vaIzq = false;
+			}
+		}
+		else {
+			posPlayer.x += velocity;
+			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
+			{
+				//posPlayer.x += 2;
+				posPlayer.x -= velocity;
+				vaIzq = true;
+			}
 		}
 	}
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -114,6 +122,9 @@ int Star::getPoints() {
 
 void Star::changeVelocitiesScroll(bool thereIsScroll, int v) {
 	if (thereIsScroll) {
+		if (timerStopped <= TIME_STOPPED) {
+			posPlayer.x -= v;
+		}
 		if (vaIzq) {
 			velocity = VEL + v;
 		}

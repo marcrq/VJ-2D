@@ -21,6 +21,11 @@ TileMap::TileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProg
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
 	relativePosition = 0;
+
+	pulsado = false;
+	rewardsLevel1.clear();
+	rewardsLevel1.push_back(make_tuple(514, false, false));
+	rewardsLevel1.push_back(make_tuple(673, false, false));
 }
 
 TileMap::~TileMap()
@@ -210,7 +215,7 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 {
 	int x0, x1, y;
 
-	x0 = pos.x / tileSize + relativePosition / tileSize;;
+	x0 = pos.x / tileSize + relativePosition / tileSize;
 	x1 = (pos.x + size.x - 1 + relativePosition) / tileSize;
 	y = (pos.y + size.y - 1) / tileSize;
 	for (int x = x0; x <= x1; x++)
@@ -228,7 +233,7 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 	return false;
 }
 
-bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, int altura) const
+bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, int altura)
 {
 	int x0, x1, top;
 
@@ -240,6 +245,14 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int
 	{
 		int tile = map[top * mapSize.x + x];
 		if (tile >= 1 && tile <= 8) {
+			/*if (514 >= x * tileSize && 514 <= (x + 1) * tileSize) {
+				pulsado = true;
+			}*/
+			for (auto& reward : rewardsLevel1) {
+				if (!std::get<1>(reward) && std::get<0>(reward) >= x * tileSize && std::get<0>(reward) <= (x + 1) * tileSize) {
+					std::get<1>(reward) = true;
+				}
+			}
 			return true;
 		}
 	}
@@ -249,4 +262,8 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int
 
 void TileMap::setRelativePosition(int r) {
 	relativePosition = r;
+}
+
+void TileMap::itIsPressed() {
+	
 }

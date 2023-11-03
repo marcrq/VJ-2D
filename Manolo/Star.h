@@ -18,6 +18,7 @@ public:
 private:
 	Texture star;
 	bool vaIzq, isJumping, isGrounded, vivo;
+	float timerStopped;
 };
 
 

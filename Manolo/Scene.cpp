@@ -47,6 +47,7 @@ Scene::Scene()
 	soundTimeUp = engine->addSoundSourceFromFile("audio/smb_warning.wav");
 	soundFlapPole = engine->addSoundSourceFromFile("audio/smb_flagpole.wav");
 	soundComplete = engine->addSoundSourceFromFile("audio/smb_stage_clear.wav");
+	soundCoin = engine->addSoundSourceFromFile("audio/smb_coin.wav");
 }
 
 Scene::~Scene()
@@ -130,10 +131,10 @@ void Scene::init(int lev) {
 		goomba->setPosition(glm::vec2(INIT_GOOMBA_X_TILES * 16, INIT_GOOMBA_Y_TILES * 16));
 		goomba->setTileMap(map);
 
-		star = new Star();
+		/*star = new Star();
 		star->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		star->setPosition(glm::vec2(INIT_STAR_X_TILES * 16, INIT_STAR_Y_TILES * 16));
-		star->setTileMap(map);
+		star->setTileMap(map);*/
 
 		seta = new Seta();
 		seta->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -153,9 +154,9 @@ void Scene::init(int lev) {
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 		currentTime = 0.0f;
 
-		//personajes.push_back(goomba);
+		personajes.push_back(goomba);
 		//personajes.push_back(ktroopa);
-		personajes.push_back(star);
+		//personajes.push_back(star);
 		personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
 
@@ -626,6 +627,47 @@ void Scene::update(int deltaTime)
 			}
 		}
 
+		if (level == 1) {
+			if (map->pulsado) {
+				/*seta2 = new Seta();
+				seta2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				seta2->setPosition(glm::vec2(player->getPosition().x, 16 * 16));
+				seta2->setTileMap(map);*/
+				/*star = new Star();
+				star->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				star->setPosition(glm::vec2(player->getPosition().x, 16 * 16));
+				star->setTileMap(map);
+				personajes.pop_back();
+				personajes.push_back(star);
+				personajes.push_back(nullptr);*/
+			}
+			for (auto& reward : map->rewardsLevel1) {
+				bool pulsado = std::get<1>(reward);
+				bool consumido = std::get<2>(reward);
+				if (pulsado && !consumido) {
+ 					std::get<2>(reward) = true;
+					if (std::get<0>(reward) == 514) {
+						seta2 = new Seta();
+						seta2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+						seta2->setPosition(glm::vec2(player->getPosition().x, 16 * 16));
+						seta2->setTileMap(map);
+						personajes.pop_back();
+						personajes.push_back(seta2);
+						personajes.push_back(nullptr);
+					}
+					//aquí poner otras posiciones donde crear setas o estrellas
+					else if (std::get<0>(reward) == 99999) {
+
+					}
+					//sinó, +1 moneda
+					else {
+						++coins;
+						engine->play2D(soundCoin);
+					}
+				}
+			}
+		}
+
 		if (player->isInAnimacionDeadFunc() && timerAnimationDying == -1.0) {
 			soundGame->setIsPaused(true);
 			timerAnimationDying = 0.;
@@ -654,7 +696,7 @@ void Scene::update(int deltaTime)
 		}
 
 		//CONTROL DE ERRORES
-		if (Game::instance().getKey('s')) {
+		if (Game::instance().getKey('e')) {
 			lives = lives;
 		}
 

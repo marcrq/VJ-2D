@@ -5,6 +5,9 @@
 #include <glm/glm.hpp>
 #include "Texture.h"
 #include "ShaderProgram.h"
+#include <vector>
+#include <tuple>  // Necesario para std::pair
+#include <iostream>
 
 
 // Class Tilemap is capable of loading a tile map from a text file in a very
@@ -35,14 +38,18 @@ public:
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
-	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, int altura) const;
+	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, int altura);
 	void setRelativePosition(int r);
+
+	bool pulsado;
+	std::vector<std::tuple<int, bool, bool>> rewardsLevel1; //posición, pulsado, creado/consumida moneda
 	
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
 	void prepareInteractiveLayer(const glm::vec2& minCoords, ShaderProgram& program);
 	void prepareBackgroundLayer(const glm::vec2& minCoords, ShaderProgram& program);
+	void itIsPressed();
 
 private:
 	GLuint vao;
@@ -56,6 +63,7 @@ private:
 	int *map;
 
 	int relativePosition;
+	
 };
 
 

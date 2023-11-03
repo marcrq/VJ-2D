@@ -371,7 +371,7 @@ void Player::update(int deltaTime)
 
 
 		//CHECK DE VARIABLES
-		if (Game::instance().getKey('s')) {
+		if (Game::instance().getKey('p')) {
 			velocity = velocity;
 		}
 		if ((Game::instance().getSpecialKey(GLUT_KEY_LEFT) && !bJumping) || (Game::instance().getSpecialKey(GLUT_KEY_LEFT) && bJumping && saltoQuieto)) //TODO ESTO ES PARA Q SE PUEDA MOVER SI EST�S HACIENDO UN SALTO EN PARADA

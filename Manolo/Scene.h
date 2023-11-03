@@ -43,7 +43,7 @@ private:
 	Player *player;
 	Goomba* goomba;
 	Star* star;
-	Seta* seta;
+	Seta* seta, *seta2;
 	Ktroopa* ktroopa, *ktroopa2;
 	ObjetoEntorno* bandera;
 	ObjetoEntorno* palo_bandera;
@@ -60,7 +60,7 @@ private:
 
 	ISoundEngine* engine;
 	ISound* soundMenu, * soundGame;
-	ISoundSource *soundGameOver, * soundTimeUp, * soundFlapPole, * soundComplete;
+	ISoundSource *soundGameOver, * soundTimeUp, * soundFlapPole, * soundComplete, *soundCoin;
 
 	void nextLevel();
 	void borrarPersonajes();
