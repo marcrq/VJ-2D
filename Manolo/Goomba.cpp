@@ -53,7 +53,6 @@ void Goomba::update(int deltaTime) {
 		posPlayer.x -= velocity;
 		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)).first)
 		{
-			//posPlayer.x += 2;
 			posPlayer.x += velocity;
 			vaIzq = false;
 		}
@@ -62,7 +61,6 @@ void Goomba::update(int deltaTime) {
 		posPlayer.x += velocity;
 		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)).first)
 		{
-			//posPlayer.x += 2;
 			posPlayer.x -= velocity;
 			vaIzq = true;
 		}
@@ -104,9 +102,12 @@ void Goomba::changeVelocitiesScroll(bool thereIsScroll, int v) {
 		else {
 			velocity = VEL - v;
 		}
+		if (pisado) {
+			posPlayer.x -= v;
+		}
 	}
 	else {
-		if (vaIzq) {
+		if (vaIzq && !pisado) {
 			velocity = VEL;
 		}
 		else {

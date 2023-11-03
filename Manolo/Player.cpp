@@ -436,7 +436,6 @@ void Player::update(int deltaTime)
 					walkedBeyondLimit += velocity; 
 				}
 				else posPlayer.x += velocity;
-
 				pair<bool, int> collisionRight = map->collisionMoveRight(posPlayer, glm::ivec2(32, 32));
 				if (collisionRight.first)
 				{
@@ -447,14 +446,14 @@ void Player::update(int deltaTime)
 					if (getCorrectSprite()->animation() != STAND_RIGHT) getCorrectSprite()->changeAnimation(STAND_RIGHT);
 				}
 				else {
-					thereIsScroll = true;
+					//thereIsScroll = true;
 				}
 			}
 
 			else if (getCorrectSprite()->animation() == JUMP_LEFT && !saltoQuieto) {
 				posPlayer.x -= velocity;
 				pair<bool, int> collisionLeft = map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32));
-				if (collisionLeft.first)
+				if (collisionLeft.first || posPlayer.x <= 20)
 				{
 					if (collisionLeft.second == 12)
 						instaKill();
