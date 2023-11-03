@@ -9,8 +9,8 @@
 #define SCREEN_X 0
 #define SCREEN_Y 0
 
-#define INIT_PLAYER_X_TILES 2
-#define INIT_PLAYER_Y_TILES 12
+#define INIT_PLAYER_X_TILES 5
+#define INIT_PLAYER_Y_TILES 24
 
 #define INIT_GOOMBA_X_TILES 26
 #define INIT_GOOMBA_Y_TILES 15
@@ -655,11 +655,11 @@ void Scene::update(int deltaTime)
 						personajes.push_back(seta2);
 						personajes.push_back(nullptr);
 					}
-					//aquí poner otras posiciones donde crear setas o estrellas
+					//aquï¿½ poner otras posiciones donde crear setas o estrellas
 					else if (std::get<0>(reward) == 99999) {
 
 					}
-					//sinó, +1 moneda
+					//sinï¿½, +1 moneda
 					else {
 						++coins;
 						engine->play2D(soundCoin);
@@ -974,7 +974,7 @@ void Scene::render()
 
 	if (level != 0) {
 		// Create a translation matrix and translate it by a certain amount
-		glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-(float)player->getRelativePosition(), 0.0, 0.0)); // +32, posición original
+		glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-(float)player->getRelativePosition(), 0.0, 0.0)); // +32, posiciï¿½n original
 
 		// Multiply the translation matrix with the modelview matrix
 		modelview = translationMatrix;
@@ -1003,7 +1003,7 @@ void Scene::render()
 		spritePointsUnidad->render();
 		spritePointsDecena->render();
 		spritePointsCentena->render();
-		actualizarCoins(); //PONER DONDE SE GANA MONEDA Y QUITAR DE AQUÍ
+		actualizarCoins(); //PONER DONDE SE GANA MONEDA Y QUITAR DE AQUï¿½
 		spriteCoins->render();
 
 		if (showScreenDeadPlayer && lives != -1) {
