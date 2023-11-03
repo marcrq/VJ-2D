@@ -183,6 +183,9 @@ enum KtroopaAnims
 			else {
 				velocity = vel - v;
 			}
+			if (isDead) {
+				posPlayer.x += v;
+			}
 		}
 		else {
 			if (vaIzq) {

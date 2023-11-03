@@ -417,7 +417,7 @@ void Player::update(int deltaTime)
 				if (getCorrectSprite()->animation() != STAND_RIGHT) getCorrectSprite()->changeAnimation(STAND_RIGHT);
 			}
 			else {
-				thereIsScroll = true;
+				if (posPlayer.x >= SCROLL_LIMIT) thereIsScroll = true;
 			}
 		}
 		else
@@ -446,7 +446,7 @@ void Player::update(int deltaTime)
 					if (getCorrectSprite()->animation() != STAND_RIGHT) getCorrectSprite()->changeAnimation(STAND_RIGHT);
 				}
 				else {
-					//thereIsScroll = true;
+					if (posPlayer.x >= SCROLL_LIMIT) thereIsScroll = true;
 				}
 			}
 
