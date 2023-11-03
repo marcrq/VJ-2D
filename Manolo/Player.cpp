@@ -401,7 +401,6 @@ void Player::update(int deltaTime)
 			}
 			if (posPlayer.x >= SCROLL_LIMIT) {
 				walkedBeyondLimit += velocity; 
-				thereIsScroll = true;
 			}
 			else posPlayer.x += velocity;
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
@@ -409,6 +408,9 @@ void Player::update(int deltaTime)
 				if (posPlayer.x >= SCROLL_LIMIT) walkedBeyondLimit -= velocity;
 				else posPlayer.x -= velocity;
 				if (getCorrectSprite()->animation() != STAND_RIGHT) getCorrectSprite()->changeAnimation(STAND_RIGHT);
+			}
+			else {
+				thereIsScroll = true;
 			}
 		}
 		else
@@ -425,7 +427,6 @@ void Player::update(int deltaTime)
 			if (getCorrectSprite()->animation() == JUMP_RIGHT && !saltoQuieto) {
 				if (posPlayer.x >= SCROLL_LIMIT) {
 					walkedBeyondLimit += velocity; 
-					thereIsScroll = true;
 				}
 				else posPlayer.x += velocity;
 				if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
@@ -433,6 +434,9 @@ void Player::update(int deltaTime)
 					if (posPlayer.x >= SCROLL_LIMIT) walkedBeyondLimit -= velocity;
 					else posPlayer.x -= velocity;
 					if (getCorrectSprite()->animation() != STAND_RIGHT) getCorrectSprite()->changeAnimation(STAND_RIGHT);
+				}
+				else {
+					thereIsScroll = true;
 				}
 			}
 
@@ -691,9 +695,7 @@ void Player::instaKill() {
 }
 
 int Player::getRelativePosition() {
-	int r = getPosition().x;
-	if (walkedBeyondLimit == 0) return 0;
-	else return walkedBeyondLimit;
+	return walkedBeyondLimit;
 }
 
 //void keyboardCallback(unsigned char key, int x, int y) {
