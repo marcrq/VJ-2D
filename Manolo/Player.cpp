@@ -7,7 +7,7 @@
 
 
 #define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 96
+#define JUMP_HEIGHT 160
 #define FALL_STEP 4
 
 #define ACCELERATION 0.002f
@@ -465,7 +465,7 @@ void Player::update(int deltaTime)
 			else
 			{
 				if (jumpAngle <= 90) {
-					posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+					posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 					/*if (!Game::instance().getKey(' ')) {
 						jumpAngle = 91;
 					}*/
