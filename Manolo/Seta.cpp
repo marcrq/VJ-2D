@@ -39,11 +39,11 @@ void Seta::update(int deltaTime)
 	}
 	else {
 		posPlayer.y += FALL_STEP;
-		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y));
+		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y).first);
 
 		if (vaIzq) {
 			posPlayer.x -= velocity;
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)).first)
 			{
 				//posPlayer.x += 2;
 				posPlayer.x += velocity;
@@ -52,7 +52,7 @@ void Seta::update(int deltaTime)
 		}
 		else {
 			posPlayer.x += velocity;
-			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
+			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)).first)
 			{
 				//posPlayer.x += 2;
 				posPlayer.x -= velocity;

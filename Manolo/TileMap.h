@@ -35,14 +35,14 @@ public:
 
 	int getMapHeight() const { return mapSize.y; }
 
-	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
-	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, int altura);
+	pair<bool, int> collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
+	pair<bool, int> collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
+	pair<bool, int> collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
+	pair<bool, int> collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, int altura);
 	void setRelativePosition(int r);
 
 	bool pulsado;
-	std::vector<std::tuple<int, bool, bool>> rewardsLevel1; //posición, pulsado, creado/consumida moneda
+	std::vector<std::tuple<int, bool, bool>> rewardsLevel1; //posiciï¿½n, pulsado, creado/consumida moneda
 	
 private:
 	bool loadLevel(const string &levelFile);

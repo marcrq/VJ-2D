@@ -42,7 +42,7 @@ void Goomba::update(int deltaTime) {
 	sprite->update(deltaTime);
 
 	posPlayer.y += 1.5; //estas 2 lineas es para controlar la caida
-	bool isGrounded = map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+	bool isGrounded = map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y).first;
 
 	if (pisado && vivo) {
 		timeSinceDead += deltaTime / 1000.0;
@@ -51,7 +51,7 @@ void Goomba::update(int deltaTime) {
 
 	else if (vaIzq && isGrounded && !pisado) {
 		posPlayer.x -= velocity;
-		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
+		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)).first)
 		{
 			//posPlayer.x += 2;
 			posPlayer.x += velocity;
@@ -60,7 +60,7 @@ void Goomba::update(int deltaTime) {
 	}
 	else if (!vaIzq && isGrounded && !pisado) {
 		posPlayer.x += velocity;
-		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
+		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)).first)
 		{
 			//posPlayer.x += 2;
 			posPlayer.x -= velocity;

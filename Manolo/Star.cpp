@@ -59,7 +59,7 @@ void Star::update(int deltaTime)
 			{
 				posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
 				if (jumpAngle > 90) {
-					isGrounded = map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+					isGrounded = map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y).first;
 					if (isGrounded) {
 						isJumping = false;
 					}
@@ -69,7 +69,7 @@ void Star::update(int deltaTime)
 		else
 		{
 			posPlayer.y += FALL_STEP;
-			if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
+			if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y).first)
 			{
 				isJumping = true;
 				jumpAngle = 0;
@@ -79,7 +79,7 @@ void Star::update(int deltaTime)
 
 		if (vaIzq) {
 			posPlayer.x -= velocity;
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)).first)
 			{
 				//posPlayer.x += 2;
 				posPlayer.x += velocity;
@@ -88,7 +88,7 @@ void Star::update(int deltaTime)
 		}
 		else {
 			posPlayer.x += velocity;
-			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
+			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)).first)
 			{
 				//posPlayer.x += 2;
 				posPlayer.x -= velocity;
