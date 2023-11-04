@@ -41,7 +41,6 @@ public:
 	bool isBigFunc();
 	int getRelativePosition();
 
-	int alturaSprite;
 	float velocity;
 	bool thereIsScroll;
 
@@ -49,7 +48,7 @@ private:
 	bool bJumping, saltoQuieto, realesedJump, isBig, realesedBig, isInAnimacionAlternarModo, isInvencible, isInvulnerable, realesedInvencible, isInAnimacionDead, kickedAShell, animationEndLevel, running;
 	float timerAnimacionAlternarModo, timerIsInvencible, timerHasBeenHitted, timerAnimationDead, timerKickedAShell;
 	glm::ivec2 tileMapDispl, posPlayer;
-	int jumpAngle, startY, conteoCambiosAnimacion, walkedBeyondLimit, movementSafeZone;
+	int jumpAngle, startY, conteoCambiosAnimacion, walkedBeyondLimit, movementSafeZone, alturaSprite;
 	Texture minimario, bigmario, starmario, starbigmario;
 	Sprite* spriteMini;
 	Sprite* spriteBig;

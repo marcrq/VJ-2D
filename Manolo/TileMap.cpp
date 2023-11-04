@@ -179,8 +179,8 @@ pair<bool, int> TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ive
 	int x, y0, y1;
 
 	x = (pos.x + relativePosition) / tileSize;
-	y0 = pos.y / tileSize;
-	y1 = (pos.y + size.y - 1) / tileSize;
+	y0 = (pos.y - size.y + 32) / tileSize;
+	y1 = (pos.y + 31) / tileSize;
 
 	if (x <= 0) return pair<bool, int>(true, 0);
 
@@ -199,8 +199,8 @@ pair<bool, int> TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::iv
 	int x, y0, y1;
 
 	x = (pos.x + relativePosition + size.x - 1) / tileSize;
-	y0 = pos.y / tileSize;
-	y1 = (pos.y + size.y - 1) / tileSize;
+	y0 = (pos.y - size.y + 32) / tileSize;
+	y1 = (pos.y + 31) / tileSize;
 	for (int y = y0; y <= y1; y++)
 	{
 		int tile = map[y * mapSize.x + x];
@@ -217,14 +217,14 @@ pair<bool, int> TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ive
 
 	x0 = (pos.x + relativePosition) / tileSize;
 	x1 = (pos.x + relativePosition + size.x - 1) / tileSize;
-	y = (pos.y + size.y - 1) / tileSize;
+	y = (pos.y + 31) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
 		int tile = map[y * mapSize.x + x];
 		if (tile >= 1 && tile <= 8 or tile == 12) {
-			if (*posY - tileSize * y + size.y <= 4)
+			if (*posY - tileSize * y + 32 <= 4)
 			{
-				*posY = tileSize * y - size.y;
+				*posY = tileSize * y - 32;
 				return pair<bool, int>(true, tile);
 			}
 		}
@@ -233,15 +233,15 @@ pair<bool, int> TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ive
 	return pair<bool, int>(false, 0);
 }
 
-pair<bool, int> TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, int altura)
+pair<bool, int> TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY)
 {
 	int x0, x1, top;
 
 	x0 = (pos.x + relativePosition) / tileSize;
 	x1 = (pos.x + relativePosition + size.x - 1) / tileSize;
-	top = (pos.y - altura + 31) / tileSize;
+	top = (pos.y - size.y + 31) / tileSize;
 
-	for (int x = x0; x < x1; x++)
+	for (int x = x0; x <= x1; x++)
 	{
 		int tile = map[top * mapSize.x + x];
 		if (tile >= 1 && tile <= 8 or tile == 12) {
