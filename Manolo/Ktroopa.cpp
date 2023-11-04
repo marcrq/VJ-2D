@@ -93,7 +93,7 @@ enum KtroopaAnims
 				posPlayer.y += FALL_STEP;
 				if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y).first);
 
-				if (vaIzq) {
+				if (vaIzq && (!isDead || isShellMoving)) {
 					posPlayer.x -= velocity;
 					if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)).first)
 					{
@@ -103,7 +103,7 @@ enum KtroopaAnims
 						sprite->changeAnimation(MOVE_RIGHT);
 					}
 				}
-				else {
+				else if(!isDead || isShellMoving) {
 					posPlayer.x += velocity;
 					if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)).first)
 					{
@@ -114,9 +114,9 @@ enum KtroopaAnims
 					}
 				}
 			}
-			sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y - 32)));
-			shellSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-			}
+		}
+		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y - 32)));
+		shellSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
 
 	void Ktroopa::render() {
@@ -183,8 +183,8 @@ enum KtroopaAnims
 			else {
 				velocity = vel - v;
 			}
-			if (isDead) {
-				posPlayer.x += v;
+			if ((isDead || isInAnimacionAlternarModo) && !isShellMoving) {
+				posPlayer.x -= v;
 			}
 		}
 		else {
