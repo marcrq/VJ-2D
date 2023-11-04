@@ -880,7 +880,7 @@ void Scene::update(int deltaTime)
 		}
 
 		if (Game::instance().getKey('f')) {
-			player->setPosition(glm::vec2(190 * 32, 2 * 32), 190 * 32);
+			player->setPosition(glm::vec2(257, 3 * 32), 190 * 32);
 		}
 
 		if (Game::instance().getKey('1')) {
