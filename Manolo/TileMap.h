@@ -41,15 +41,15 @@ public:
 	pair<bool, int> collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY);
 	void setRelativePosition(int r);
 
+	std::vector<std::tuple<int, bool, bool>> rewardsLevel; //posicion, pulsado, creado/consumida moneda
+
 	bool pulsado;
-	std::vector<std::tuple<int, bool, bool>> rewardsLevel1; //posici�n, pulsado, creado/consumida moneda
 	
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
-	void prepareInteractiveLayer(const glm::vec2& minCoords, ShaderProgram& program);
-	void prepareBackgroundLayer(const glm::vec2& minCoords, ShaderProgram& program);
 	void itIsPressed();
+	void setRewardsLevel();
 
 private:
 	GLuint vao;
@@ -63,7 +63,6 @@ private:
 	int *map;
 
 	int relativePosition;
-	
 };
 
 

@@ -39,7 +39,7 @@ public:
 	bool isInAnimacionEndLevel();
 	bool isChangingLevel();
 	void instaKill();
-	bool isBigFunc();
+	bool isBigFunc() { return isBig; }
 	int getRelativePosition();
 
 	float velocity;
