@@ -241,7 +241,7 @@ pair<bool, int> TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2
 	x1 = (pos.x + relativePosition + size.x - 1) / tileSize;
 	top = (pos.y - altura + 31) / tileSize;
 
-	for (int x = x0; x <= x1; x++)
+	for (int x = x0; x < x1; x++)
 	{
 		int tile = map[top * mapSize.x + x];
 		if (tile >= 1 && tile <= 8 or tile == 12) {
