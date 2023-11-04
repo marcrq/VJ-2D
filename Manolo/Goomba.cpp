@@ -41,7 +41,37 @@ void Goomba::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 void Goomba::update(int deltaTime) {
 	sprite->update(deltaTime);
 
-	posPlayer.y += 1.5; //estas 2 lineas es para controlar la caida
+	if (pisado && vivo) {
+		timeSinceDead += deltaTime / 1000.0;
+		if (timeSinceDead >= TIME_UNTIL_ELIMINATION) vivo = false;
+	}
+	else {
+		posPlayer.y += FALL_STEP;
+		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y).first);
+
+		if (vaIzq && !pisado) {
+			posPlayer.x -= velocity;
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)).first)
+			{
+				//posPlayer.x += 2;
+				posPlayer.x += velocity;
+				vaIzq = false;
+			}
+		}
+		else if (!pisado) {
+			posPlayer.x += velocity;
+			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)).first)
+			{
+				//posPlayer.x += 2;
+				posPlayer.x -= velocity;
+				vaIzq = true;
+			}
+		}
+	}
+
+	
+
+	/*posPlayer.y += 1.5; //estas 2 lineas es para controlar la caida
 	bool isGrounded = map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y).first;
 
 	if (pisado && vivo) {
@@ -64,7 +94,7 @@ void Goomba::update(int deltaTime) {
 			posPlayer.x -= velocity;
 			vaIzq = true;
 		}
-	}
+	}*/
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
