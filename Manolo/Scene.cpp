@@ -79,7 +79,7 @@ void Scene::init(int lev) {
 	if (lev == 0) {
 		level = 0;
 		coins = 0;
-		lives = 0;
+		lives = 3;
 		points = 0;
 		maxPoints = 0;
 		firstTimeInGameShowScreenDead = true;
@@ -628,6 +628,18 @@ void Scene::init(int lev) {
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
+
+	if (Game::instance().getKey('1')) {
+		lives = 3;
+		borrarPersonajes();
+		init(1);
+	}
+	if (Game::instance().getKey('2')) {
+		lives = 3;
+		borrarPersonajes();
+		init(2);
+	}
+
 	if (level != 0) {
 		player->update(deltaTime);
 
@@ -883,16 +895,6 @@ void Scene::update(int deltaTime)
 			player->setPosition(glm::vec2(257, 3 * 32), 190 * 32);
 		}
 
-		if (Game::instance().getKey('1')) {
-			lives = 3;
-			borrarPersonajes();
-			init(1);
-		}
-		if (Game::instance().getKey('2')) {
-			lives = 3;
-			borrarPersonajes();
-			init(2);
-		}
 		if (player->getPosition().x >= palo_bandera->getPosition().x) { //siguiente nivel
 			if ((!player->isChangingLevel() && level == 1) || (level == 2 && sumarPuntosTimer)) {
 				if (level == 1) {
