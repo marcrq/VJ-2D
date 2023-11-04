@@ -42,6 +42,7 @@ Scene::Scene()
 	ktroopa2 = NULL;
 
 	engine = createIrrKlangDevice();
+	soundMenu = engine->play2D("audio/menu-mario.mp3", true, true, true);
 	soundGame = engine->play2D("audio/ringtones-super-mario-bros.mp3", true, true, true);
 	soundGameOver = engine->addSoundSourceFromFile("audio/smb_gameover.wav");
 	soundTimeUp = engine->addSoundSourceFromFile("audio/smb_warning.wav");
@@ -77,9 +78,10 @@ enum PlayerAnims
 
 void Scene::init(int lev) {
 	if (lev == 0) {
+		soundMenu->setIsPaused(false);
 		level = 0;
 		coins = 0;
-		lives = 0;
+		lives = 3;
 		points = 0;
 		maxPoints = 0;
 		firstTimeInGameShowScreenDead = true;
@@ -111,6 +113,7 @@ void Scene::init(int lev) {
 		spriteTimeUp->setPosition(glm::vec2(float(0), float(0)));
 	}
 	else if (lev == 1) {
+		soundMenu->setIsPaused(true);
 		if(!firstTimeInGameShowScreenDead) soundGame->setIsPaused(false);
 		level = 1;
 		timerLevel = 500;
@@ -362,6 +365,7 @@ void Scene::init(int lev) {
 		spriteNumberOfLives->setPosition(glm::vec2((22) * 16, (16) * 16));
 	}
 	else if (lev == 2) {
+		soundMenu->setIsPaused(true);
 		if (!firstTimeInGameShowScreenDead) {
 			soundGame->setIsPaused(false);
 		}
