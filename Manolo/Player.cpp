@@ -491,7 +491,7 @@ void Player::update(int deltaTime)
 					/*if (!Game::instance().getKey(' ')) {
 						jumpAngle = 91;
 					}*/
-					pair<bool, int> collisionUp = map->collisionMoveUp(posPlayer, glm::ivec2(32, alturaSprite), &posPlayer.y);
+					pair<bool, int> collisionUp = map->collisionMoveUp(posPlayer, glm::ivec2(32, alturaSprite), &posPlayer.y, isBig);
 					if (collisionUp.first)
 					{
 						if (collisionUp.second == 12)

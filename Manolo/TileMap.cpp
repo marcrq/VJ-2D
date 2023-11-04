@@ -21,11 +21,17 @@ TileMap::TileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProg
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
 	relativePosition = 0;
+	renderMatrix = new int[mapSize.y * mapSize.x];
+	for (int i = 0; i < mapSize.y * mapSize.x; i++) {
+		renderMatrix[i] = 1;
+	}
+	
 
 	pulsado = false;
 	rewardsLevel1.clear();
-	rewardsLevel1.push_back(make_tuple(514, false, false));
-	rewardsLevel1.push_back(make_tuple(673, false, false));
+	rewardsLevel1.push_back(make_tuple(514, false, false));// 16 * 32 = 512
+	rewardsLevel1.push_back(make_tuple(673, false, false));// 21 * 32 = 672
+	//hacer bucle para inicializar, y darle 
 }
 
 TileMap::~TileMap()
@@ -42,7 +48,50 @@ void TileMap::render() const
 	glBindVertexArray(vao);
 	glEnableVertexAttribArray(posLocation);
 	glEnableVertexAttribArray(texCoordLocation);
-	glDrawArrays(GL_TRIANGLES, 0, 6 * nTiles);
+	//glDrawArrays(GL_TRIANGLES, 0, 6 * nTiles);
+
+	for (int j = 0; j < mapSize.y; j++){
+		for (int i = 0; i < mapSize.x; i++){
+			int tileIndex = j * mapSize.x + i;
+			if (tileIndex < nTiles) {
+				// Verifica la matriz de booleanos para saber si renderizar este bloque.
+				if (renderMatrix[j * mapSize.x + i] == 1) {
+					// Calcula el índice de inicio para el bloque actual.
+					int startIndex = 6 * tileIndex;
+					glDrawArrays(GL_TRIANGLES, startIndex, 6);
+				}
+				//else {
+				//	// Renderiza un rectángulo con un color específico
+				//	int x0 = i * 32;
+				//	int y0 = j * 32;
+				//	int x1 = (i + 1) * 32;
+				//	int y1 = (j + 1) * 32;
+
+				//	// Define los vértices del rectángulo
+				//	float vertices[] = {
+				//		x0, y0,
+				//		x1, y0,
+				//		x1, y1,
+				//		x0, y1
+				//	};
+
+				//	// Establece el color del rectángulo (azul en este caso)
+				//	glColor3f(0.3529, 0.6078, 1.0);
+
+				//	// Habilita los atributos de posición y coordenas de textura (si los usas)
+				//	glEnableClientState(GL_VERTEX_ARRAY);
+				//	glVertexPointer(2, GL_FLOAT, 0, vertices);
+
+				//	// Renderiza el rectángulo
+				//	glDrawArrays(GL_QUADS, 0, 4);
+
+				//	// Deshabilita los atributos de posición
+				//	glDisableClientState(GL_VERTEX_ARRAY);
+				//}
+			}
+		}
+	}
+
 	glDisable(GL_TEXTURE_2D);
 }
 
@@ -234,7 +283,7 @@ pair<bool, int> TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ive
 	return pair<bool, int>(false, 0);
 }
 
-pair<bool, int> TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY)
+pair<bool, int> TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, bool isBig)
 {
 	int x0, x1, top;
 
@@ -251,12 +300,21 @@ pair<bool, int> TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2
 			}*/
 			for (auto& reward : rewardsLevel1) {
 				if (!std::get<1>(reward) && std::get<0>(reward) >= x * tileSize && std::get<0>(reward) <= (x + 1) * tileSize) {
-					std::get<1>(reward) = true;
+					std::get<1>(reward) = 0;
 				}
+			}
+			if (isBig && tile == 1) {
+				map[top * mapSize.x + x] = -1;
+				int a = mapSize.x;
+				int b = mapSize.y;
+				renderMatrix[top * mapSize.x + x] = false; //lo que debía ser, 9*211+20 = 1919
+				renderMatrix[166] = false; //para q se vea cambio visual, es 166
 			}
 			return pair<bool, int>(true, tile);
 		}
 	}
+
+	//for (int i = 0; i < 299; ++i) renderMatrix[i] = false;
 
 	return pair<bool, int>(false, 0);
 }

@@ -38,7 +38,7 @@ public:
 	pair<bool, int> collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	pair<bool, int> collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	pair<bool, int> collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
-	pair<bool, int> collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY);
+	pair<bool, int> collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, bool isBig);
 	void setRelativePosition(int r);
 
 	bool pulsado;
@@ -63,7 +63,7 @@ private:
 	int *map;
 
 	int relativePosition;
-	
+	int *renderMatrix;	
 };
 
 
