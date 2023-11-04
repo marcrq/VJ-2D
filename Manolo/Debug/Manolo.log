@@ -1,1 +1,7 @@
-﻿
+﻿  TileMap.cpp
+C:\Users\mroma\OneDrive\Escriptori\UNI\7è Quadri\VJ\VJ-2D\Manolo\TileMap.cpp(59,7): warning C4101: 'tile': unreferenced local variable
+SOIL.lib(image_DXT.obj) : warning LNK4099: PDB '' was not found with 'SOIL.lib(image_DXT.obj)' or at ''; linking object as if no debug info
+SOIL.lib(image_helper.obj) : warning LNK4099: PDB '' was not found with 'SOIL.lib(image_helper.obj)' or at ''; linking object as if no debug info
+SOIL.lib(SOIL.obj) : warning LNK4099: PDB '' was not found with 'SOIL.lib(SOIL.obj)' or at ''; linking object as if no debug info
+SOIL.lib(stb_image_aug.obj) : warning LNK4099: PDB '' was not found with 'SOIL.lib(stb_image_aug.obj)' or at ''; linking object as if no debug info
+  Manolo.vcxproj -> C:\Users\mroma\OneDrive\Escriptori\UNI\7è Quadri\VJ\VJ-2D\Manolo\Debug\Manolo.exe

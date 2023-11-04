@@ -17,10 +17,12 @@ public:
 	int getPoints();
 
 	bool vivo;
+	void changeVelocitiesScroll(bool thereIsScroll, int v);
 
 private:
 	Texture seta;
 	bool vaIzq, isJumping, isGrounded;
+	float timerStopped;
 };
 
 

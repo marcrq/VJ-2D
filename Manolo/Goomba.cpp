@@ -9,6 +9,7 @@
 #define MAX_VEL 3.f
 #define TIME_UNTIL_ELIMINATION 3.f
 #define POINTS 1
+#define VEL 1.0
 
 enum GoombaAnims
 {
@@ -40,8 +41,38 @@ void Goomba::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram) {
 void Goomba::update(int deltaTime) {
 	sprite->update(deltaTime);
 
-	posPlayer.y += 1.5; //estas 2 lineas es para controlar la caida
-	bool isGrounded = map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+	if (pisado && vivo) {
+		timeSinceDead += deltaTime / 1000.0;
+		if (timeSinceDead >= TIME_UNTIL_ELIMINATION) vivo = false;
+	}
+	else {
+		posPlayer.y += FALL_STEP;
+		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y).first);
+
+		if (vaIzq && !pisado) {
+			posPlayer.x -= velocity;
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)).first)
+			{
+				//posPlayer.x += 2;
+				posPlayer.x += velocity;
+				vaIzq = false;
+			}
+		}
+		else if (!pisado) {
+			posPlayer.x += velocity;
+			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)).first)
+			{
+				//posPlayer.x += 2;
+				posPlayer.x -= velocity;
+				vaIzq = true;
+			}
+		}
+	}
+
+	
+
+	/*posPlayer.y += 1.5; //estas 2 lineas es para controlar la caida
+	bool isGrounded = map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y).first;
 
 	if (pisado && vivo) {
 		timeSinceDead += deltaTime / 1000.0;
@@ -49,27 +80,21 @@ void Goomba::update(int deltaTime) {
 	}
 
 	else if (vaIzq && isGrounded && !pisado) {
-		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
+		posPlayer.x -= velocity;
+		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)).first)
 		{
-			//posPlayer.x += 2;
-			posPlayer.x += 1;
+			posPlayer.x += velocity;
 			vaIzq = false;
-		}
-		else {
-			posPlayer.x -= 1;
 		}
 	}
 	else if (!vaIzq && isGrounded && !pisado) {
-		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
+		posPlayer.x += velocity;
+		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)).first)
 		{
-			//posPlayer.x += 2;
-			posPlayer.x -= 1;
+			posPlayer.x -= velocity;
 			vaIzq = true;
 		}
-		else {
-			posPlayer.x += 1;
-		}
-	}
+	}*/
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
@@ -97,4 +122,26 @@ int Goomba::getPoints() {
 
 bool Goomba::isPisado() {
 	return pisado;
+}
+
+void Goomba::changeVelocitiesScroll(bool thereIsScroll, int v) {
+	if (thereIsScroll) {
+		if (vaIzq) {
+			velocity = VEL + v;
+		}
+		else {
+			velocity = VEL - v;
+		}
+		if (pisado) {
+			posPlayer.x -= v;
+		}
+	}
+	else {
+		if (vaIzq && !pisado) {
+			velocity = VEL;
+		}
+		else {
+			velocity = VEL;
+		}
+	}
 }

@@ -20,6 +20,12 @@ TileMap::TileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProg
 {
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
+	relativePosition = 0;
+
+	pulsado = false;
+	rewardsLevel1.clear();
+	rewardsLevel1.push_back(make_tuple(514, false, false));
+	rewardsLevel1.push_back(make_tuple(673, false, false));
 }
 
 TileMap::~TileMap()
@@ -168,80 +174,97 @@ void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
 // Method collisionMoveDown also corrects Y coordinate if the box is
 // already intersecting a tile below.
 
-bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const
+pair<bool, int> TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const
 {
 	int x, y0, y1;
 
-	x = pos.x / tileSize;
-	y0 = pos.y / tileSize;
-	y1 = (pos.y + size.y - 1) / tileSize;
+	x = (pos.x + relativePosition) / tileSize;
+	y0 = (pos.y - size.y + 32) / tileSize;
+	y1 = (pos.y + 31) / tileSize;
 
-	if (x <= 0) return true;
+	if (x <= 0) return pair<bool, int>(true, 0);
 
 	for (int y = y0; y <= y1; y++)
 	{
 		int tile = map[y * mapSize.x + x];
-		if (tile >= 1 && tile <= 8)
-			return true;
+		if (tile >= 1 && tile <= 8 or tile == 12)
+			return pair<bool, int>(true, tile);
 	}
 
-	return false;
+	return pair<bool, int>(false, 0);
 }
 
-bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) const
+pair<bool, int> TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) const
 {
 	int x, y0, y1;
 
-	x = (pos.x + size.x - 1) / tileSize;
-	y0 = pos.y / tileSize;
-	y1 = (pos.y + size.y - 1) / tileSize;
+	x = (pos.x + relativePosition + size.x - 1) / tileSize;
+	y0 = (pos.y - size.y + 32) / tileSize;
+	y1 = (pos.y + 31) / tileSize;
 	for (int y = y0; y <= y1; y++)
 	{
 		int tile = map[y * mapSize.x + x];
-		if (tile >= 1 && tile <= 8)
-			return true;
+		if (tile >= 1 && tile <= 8 or tile == 12)
+			return pair<bool, int>(true, tile);
 	}
 
-	return false;
+	return pair<bool, int>(false, 0);
 }
 
-bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const
+pair<bool, int> TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const
 {
 	int x0, x1, y;
 
-	x0 = pos.x / tileSize;
-	x1 = (pos.x + size.x - 1) / tileSize;
-	y = (pos.y + size.y - 1) / tileSize;
+	x0 = (pos.x + relativePosition) / tileSize;
+	x1 = (pos.x + relativePosition + size.x - 1) / tileSize;
+	y = (pos.y + 31) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
 		int tile = map[y * mapSize.x + x];
-		if (tile >= 1 && tile <= 8) {
-			if (*posY - tileSize * y + size.y <= 4)
+		if (tile >= 1 && tile <= 8 or tile == 12) {
+			if (*posY - tileSize * y + 32 <= 4)
 			{
-				*posY = tileSize * y - size.y;
-				return true;
+				*posY = tileSize * y - 32;
+				return pair<bool, int>(true, tile);
 			}
+			return pair<bool, int>(true, tile);
 		}
 	}
 
-	return false;
+	return pair<bool, int>(false, 0);
 }
 
-bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, int altura) const
+pair<bool, int> TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY)
 {
 	int x0, x1, top;
 
-	x0 = pos.x / tileSize;
-	x1 = (pos.x + size.x - 1) / tileSize;
-	top = (pos.y - altura + 31) / tileSize;
+	x0 = (pos.x + relativePosition) / tileSize;
+	x1 = (pos.x + relativePosition + size.x - 1) / tileSize;
+	top = (pos.y - size.y + 31) / tileSize;
 
 	for (int x = x0; x <= x1; x++)
 	{
 		int tile = map[top * mapSize.x + x];
-		if (tile >= 1 && tile <= 8) {
-			return true;
+		if (tile >= 1 && tile <= 8 or tile == 12) {
+			/*if (514 >= x * tileSize && 514 <= (x + 1) * tileSize) {
+				pulsado = true;
+			}*/
+			for (auto& reward : rewardsLevel1) {
+				if (!std::get<1>(reward) && std::get<0>(reward) >= x * tileSize && std::get<0>(reward) <= (x + 1) * tileSize) {
+					std::get<1>(reward) = true;
+				}
+			}
+			return pair<bool, int>(true, tile);
 		}
 	}
 
-	return false;
+	return pair<bool, int>(false, 0);
+}
+
+void TileMap::setRelativePosition(int r) {
+	relativePosition = r;
+}
+
+void TileMap::itIsPressed() {
+	
 }

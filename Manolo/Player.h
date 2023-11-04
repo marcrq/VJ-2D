@@ -22,6 +22,7 @@ public:
 
 	void setTileMap(TileMap* tileMap);
 	void setPosition(const glm::vec2& pos);
+	void setPosition(const glm::vec2& pos, int dist);
 
 	void hit();
 	void creceMario();
@@ -39,14 +40,16 @@ public:
 	bool isChangingLevel();
 	void instaKill();
 	bool isBigFunc();
+	int getRelativePosition();
 
-	int alturaSprite;
+	float velocity;
+	bool thereIsScroll;
 
 private:
 	bool bJumping, saltoQuieto, realesedJump, isBig, realesedBig, isInAnimacionAlternarModo, isInvencible, isInvulnerable, realesedInvencible, isInAnimacionDead, kickedAShell, animationEndLevel, running;
-	float velocity, timerAnimacionAlternarModo, timerIsInvencible, timerHasBeenHitted, timerAnimationDead, timerKickedAShell;
+	float timerAnimacionAlternarModo, timerIsInvencible, timerHasBeenHitted, timerAnimationDead, timerKickedAShell;
 	glm::ivec2 tileMapDispl, posPlayer;
-	int jumpAngle, startY, conteoCambiosAnimacion;
+	int jumpAngle, startY, conteoCambiosAnimacion, walkedBeyondLimit, movementSafeZone, alturaSprite;
 	Texture minimario, bigmario, starmario, starbigmario;
 	Sprite* spriteMini;
 	Sprite* spriteBig;

@@ -12,11 +12,13 @@ public:
 	bool isAlive() override;
 	string myType() override;
 	int getPoints();
+	void changeVelocitiesScroll(bool thereIsScroll, int v);
 
 
 private:
 	Texture star;
 	bool vaIzq, isJumping, isGrounded, vivo;
+	float timerStopped;
 };
 
 

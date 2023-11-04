@@ -9,8 +9,8 @@
 #define SCREEN_X 0
 #define SCREEN_Y 0
 
-#define INIT_PLAYER_X_TILES 2
-#define INIT_PLAYER_Y_TILES 12
+#define INIT_PLAYER_X_TILES 5
+#define INIT_PLAYER_Y_TILES 24
 
 #define INIT_GOOMBA_X_TILES 26
 #define INIT_GOOMBA_Y_TILES 15
@@ -20,7 +20,7 @@
 #define INIT_STAR_Y_TILES 17
 
 
-#define INIT_SETA_X_TILES 30
+#define INIT_SETA_X_TILES 60
 #define INIT_SETA_Y_TILES 15
 
 #define INIT_KTROOPA_X_TILES 15
@@ -47,6 +47,7 @@ Scene::Scene()
 	soundTimeUp = engine->addSoundSourceFromFile("audio/smb_warning.wav");
 	soundFlapPole = engine->addSoundSourceFromFile("audio/smb_flagpole.wav");
 	soundComplete = engine->addSoundSourceFromFile("audio/smb_stage_clear.wav");
+	soundCoin = engine->addSoundSourceFromFile("audio/smb_coin.wav");
 }
 
 Scene::~Scene()
@@ -130,10 +131,10 @@ void Scene::init(int lev) {
 		goomba->setPosition(glm::vec2(INIT_GOOMBA_X_TILES * 16, INIT_GOOMBA_Y_TILES * 16));
 		goomba->setTileMap(map);
 
-		star = new Star();
+		/*star = new Star();
 		star->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		star->setPosition(glm::vec2(INIT_STAR_X_TILES * 16, INIT_STAR_Y_TILES * 16));
-		star->setTileMap(map);
+		star->setTileMap(map);*/
 
 		seta = new Seta();
 		seta->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -147,14 +148,19 @@ void Scene::init(int lev) {
 
 		palo_bandera = new ObjetoEntorno();
 		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
-		palo_bandera->setPosition(glm::vec2((INIT_SETA_X_TILES - 1) * 16, (INIT_SETA_Y_TILES - 15) * 16));
+		palo_bandera->setPosition(glm::vec2(198 * 32, 2 * 32));
 		palo_bandera->setTileMap(map);
+
+		bandera = new ObjetoEntorno();
+		bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(64, 32), "bandera");
+		bandera->setPosition(glm::vec2(197 * 32, 11 * 32));
+		bandera->setTileMap(map);
 
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 		currentTime = 0.0f;
 
 		personajes.push_back(goomba);
-		personajes.push_back(ktroopa);
+		//personajes.push_back(ktroopa);
 		//personajes.push_back(star);
 		personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
@@ -401,8 +407,13 @@ void Scene::init(int lev) {
 
 		palo_bandera = new ObjetoEntorno();
 		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
-		palo_bandera->setPosition(glm::vec2((INIT_SETA_X_TILES - 1) * 16, (INIT_SETA_Y_TILES - 20) * 16));
+		palo_bandera->setPosition(glm::vec2(198 * 32, 2 * 32));
 		palo_bandera->setTileMap(map);
+
+		bandera = new ObjetoEntorno();
+		bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(64, 32), "bandera");
+		bandera->setPosition(glm::vec2(197 * 32, 11 * 32));
+		bandera->setTileMap(map);
 
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 		currentTime = 0.0f;
@@ -626,6 +637,47 @@ void Scene::update(int deltaTime)
 			}
 		}
 
+		if (level == 1) {
+			if (map->pulsado) {
+				/*seta2 = new Seta();
+				seta2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				seta2->setPosition(glm::vec2(player->getPosition().x, 16 * 16));
+				seta2->setTileMap(map);*/
+				/*star = new Star();
+				star->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				star->setPosition(glm::vec2(player->getPosition().x, 16 * 16));
+				star->setTileMap(map);
+				personajes.pop_back();
+				personajes.push_back(star);
+				personajes.push_back(nullptr);*/
+			}
+			for (auto& reward : map->rewardsLevel1) {
+				bool pulsado = std::get<1>(reward);
+				bool consumido = std::get<2>(reward);
+				if (pulsado && !consumido) {
+ 					std::get<2>(reward) = true;
+					if (std::get<0>(reward) == 514) {
+						seta2 = new Seta();
+						seta2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+						seta2->setPosition(glm::vec2(player->getPosition().x, 16 * 16));
+						seta2->setTileMap(map);
+						personajes.pop_back();
+						personajes.push_back(seta2);
+						personajes.push_back(nullptr);
+					}
+					//aquï¿½ poner otras posiciones donde crear setas o estrellas
+					else if (std::get<0>(reward) == 99999) {
+
+					}
+					//sinï¿½, +1 moneda
+					else {
+						++coins;
+						engine->play2D(soundCoin);
+					}
+				}
+			}
+		}
+
 		if (player->isInAnimacionDeadFunc() && timerAnimationDying == -1.0) {
 			soundGame->setIsPaused(true);
 			timerAnimationDying = 0.;
@@ -653,7 +705,44 @@ void Scene::update(int deltaTime)
 			}
 		}
 
+		//CONTROL DE ERRORES
+		if (Game::instance().getKey('e')) {
+			lives = lives;
+		}
+
+		//ajustar velocidades
 		vector<Personaje*>::iterator it = personajes.begin();
+		while (it != personajes.end()) {
+			Personaje* personaje = *it;
+			string tipo;
+			if (personaje != nullptr) tipo = personaje->myType();
+			if (tipo == "Seta") {
+				Seta* s = dynamic_cast<Seta*>(personaje);
+				s->changeVelocitiesScroll(player->thereIsScroll, player->velocity);
+			}
+			else if (tipo == "Goomba") {
+				Goomba* s = dynamic_cast<Goomba*>(personaje);
+				s->changeVelocitiesScroll(player->thereIsScroll, player->velocity);
+			}
+			else if (tipo == "Ktroopa") {
+				Ktroopa* s = dynamic_cast<Ktroopa*>(personaje);
+				s->changeVelocitiesScroll(player->thereIsScroll, player->velocity);
+			}
+			else if (tipo == "Star") {
+				Star* s = dynamic_cast<Star*>(personaje);
+				s->changeVelocitiesScroll(player->thereIsScroll, player->velocity);
+			}
+			++it;
+		}
+
+		palo_bandera->setPosition(player->getRelativePosition());
+
+		bandera->setPosition(player->getRelativePosition());
+
+		bandera->update(deltaTime);
+
+		/////////////////7
+		it = personajes.begin(); //vector<Personaje*>::iterator
 		while (it != personajes.end()) {
 			Personaje* personaje = *it;
 			string tipo;
@@ -790,6 +879,10 @@ void Scene::update(int deltaTime)
 			++it;
 		}
 
+		if (Game::instance().getKey('f')) {
+			player->setPosition(glm::vec2(190 * 32, 2 * 32), 190 * 32);
+		}
+
 		if (Game::instance().getKey('1')) {
 			lives = 3;
 			borrarPersonajes();
@@ -808,6 +901,7 @@ void Scene::update(int deltaTime)
 					engine->play2D(soundFlapPole);
 					engine->play2D(soundComplete);
 					player->animacionEndLevelFunc();
+					bandera->animacionEndLevelFunc(player->getPosition().y);
 					++level;
 					endedLevel = true;
 
@@ -874,7 +968,7 @@ void Scene::update(int deltaTime)
 		}
 
 		if (player->getPosition().x < palo_bandera->getPosition().x && !player->isInAnimacionDeadFunc() && !showScreenDeadPlayer) {
-			timerLevel = 30 - static_cast<int>(currentTime) / 1000;
+			timerLevel = TIME_LEVEL - static_cast<int>(currentTime) / 1000;
 			if (timerLevel == 0) {
 				player->instaKill();
 				soundGame->setIsPaused(true);
@@ -898,20 +992,28 @@ void Scene::render()
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	texProgram.setUniformMatrix4f("modelview", modelview);
-	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
 	if (level != 0) {
+		glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-(float)player->getRelativePosition(), 0.0, 0.0)); // +32, posiciï¿½n original
+
+		modelview = translationMatrix;
+
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+
+		map->setRelativePosition(player->getRelativePosition());
 		map->render();
 		if (level == 1 || (level == 2 && player->isChangingLevel()) || (level == 2 && sumarPuntosTimer) || (level == 2 && timerAnimationEndLevel != -1)) spriteResumenLevel1->render();
 		else if (level == 2 || (level == 3 && player->isChangingLevel()) || (level == 3 && sumarPuntosTimer) || (level == 3 && timerAnimationEndLevel != -1)) spriteResumenLevel2->render();
 		for (Personaje* personaje : personajes) {
 			if (personaje != nullptr) {
+				modelview = glm::mat4(1.0f);
+				texProgram.setUniformMatrix4f("modelview", modelview);
 				personaje->render();
 			}
 		}
 		palo_bandera->render();
+		bandera->render();
 		player->render();
 
 		spriteTimerCentena->render();
@@ -921,7 +1023,7 @@ void Scene::render()
 		spritePointsUnidad->render();
 		spritePointsDecena->render();
 		spritePointsCentena->render();
-		actualizarCoins(); //PONER DONDE SE GANA MONEDA Y QUITAR DE AQUÍ
+		actualizarCoins(); //PONER DONDE SE GANA MONEDA Y QUITAR DE AQUï¿½
 		spriteCoins->render();
 
 		if (showScreenDeadPlayer && lives != -1) {

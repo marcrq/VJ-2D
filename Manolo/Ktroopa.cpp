@@ -9,6 +9,8 @@
 #define MAX_VEL 3.f
 #define TIME_RESURRECTION 4.f
 #define POINTS 1
+#define VELTURTLE 1.0
+#define VELSHELL 3.0
 
 
 enum KtroopaAnims
@@ -89,36 +91,32 @@ enum KtroopaAnims
 			}
 			else {
 				posPlayer.y += FALL_STEP;
-				if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y));
+				if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y).first);
 
-				if (vaIzq) {
-					if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
+				if (vaIzq && (!isDead || isShellMoving)) {
+					posPlayer.x -= velocity;
+					if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)).first)
 					{
 						//posPlayer.x += 2;
 						posPlayer.x += velocity;
 						vaIzq = false;
 						sprite->changeAnimation(MOVE_RIGHT);
 					}
-					else {
-						posPlayer.x -= velocity;
-					}
 				}
-				else {
-					if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
+				else if(!isDead || isShellMoving) {
+					posPlayer.x += velocity;
+					if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)).first)
 					{
 						//posPlayer.x += 2;
 						posPlayer.x -= velocity;
 						vaIzq = true;
 						sprite->changeAnimation(MOVE_LEFT);
 					}
-					else {
-						posPlayer.x += velocity;
-					}
 				}
 			}
-			sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y - 32)));
-			shellSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-			}
+		}
+		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y - 32)));
+		shellSprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
 
 	void Ktroopa::render() {
@@ -172,4 +170,29 @@ enum KtroopaAnims
 
 	int Ktroopa::getPoints() {
 		return POINTS;
+	}
+
+	void Ktroopa::changeVelocitiesScroll(bool thereIsScroll, int v) {
+		int vel;
+		if (isShellMoving) vel = VELSHELL;
+		else vel = VELTURTLE;
+		if (thereIsScroll) {
+			if (vaIzq) {
+				velocity = vel + v;
+			}
+			else {
+				velocity = vel - v;
+			}
+			if ((isDead || isInAnimacionAlternarModo) && !isShellMoving) {
+				posPlayer.x -= v;
+			}
+		}
+		else {
+			if (vaIzq) {
+				velocity = vel;
+			}
+			else {
+				velocity = vel;
+			}
+		}
 	}

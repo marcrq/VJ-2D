@@ -27,14 +27,20 @@ void ObjetoEntorno::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProg
 	sprite->changeAnimation(1);
 	tileMapDispl = tileMapPos;
 
+	finalPos = 0;
+
 	tileMapDispl = tileMapPos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + pos.x), float(tileMapDispl.y + pos.y)));
 }
 
 void ObjetoEntorno::update(int deltaTime) {
 	sprite->update(deltaTime);
-
 	
+	if (finalPos != 0) {
+		if (pos.y > finalPos)
+			pos.y -= 1.f;
+	}
+
 	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
@@ -47,10 +53,20 @@ void ObjetoEntorno::setTileMap(TileMap* tileMap) {
 }
 
 void ObjetoEntorno::setPosition(const glm::vec2& pos) {
-	posPlayer = pos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	this->pos = pos;
+	initialPos = pos;
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + this->pos.x), float(tileMapDispl.y + this->pos.y)));
+}
+
+void ObjetoEntorno::setPosition(int dist) {
+	pos.x = initialPos.x - dist;
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + pos.x), float(tileMapDispl.y + pos.y)));
 }
 
 glm::vec2 ObjetoEntorno::getPosition() {
-	return posPlayer;
+	return pos;
+}
+
+void ObjetoEntorno::animacionEndLevelFunc(float posY) {
+	finalPos = posY;
 }

@@ -13,9 +13,10 @@ public:
     string myType() override;
     bool isPisado();
 
-    bool vivo, pisado;
+    bool vivo, pisado, isGrounded;
     float timeSinceDead;
     int getPoints();
+    void changeVelocitiesScroll(bool thereIsScroll, int v);
 
 private:
     Texture goomba;

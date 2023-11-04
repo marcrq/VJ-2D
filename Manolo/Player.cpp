@@ -7,7 +7,7 @@
 
 
 #define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 96
+#define JUMP_HEIGHT 160
 #define FALL_STEP 4
 
 #define ACCELERATION 0.002f
@@ -15,6 +15,8 @@
 #define TIME_INVINCIBILITY 2.f //cuando la estrella 12
 #define TIME_INVULNERABILITY 1.0 //cuando te pegan
 #define LIGHT_INVULNERABILITY 0.2 //para que no cuente como hit cuando chuto shell
+
+#define SCROLL_LIMIT 192.0
 
 
 
@@ -94,8 +96,9 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	timerKickedAShell = 0.f;
 	alturaSprite = 32;
 	animationEndLevel = false;
-
+	walkedBeyondLimit = 0;
 	running = false;
+	movementSafeZone = 0;
 	//glutKeyboardFunc(keyboardCallback);
 
 	minimario.loadFromFile("images/minimariosTODOS.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -243,6 +246,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 void Player::update(int deltaTime)
 {
+	thereIsScroll = false;
 	getCorrectSprite()->update(deltaTime);
 	if (isInAnimacionAlternarModo) {
 		timerAnimacionAlternarModo += deltaTime / 1000.0;
@@ -294,13 +298,22 @@ void Player::update(int deltaTime)
 	}
 	else if (animationEndLevel) {
 		
-		if (posPlayer.y < 376) {
+		if (posPlayer.y < 11 * 32) {
 			if (getCorrectSprite()->animation() != JUMP_RIGHT) {//se apreta izq 1r vez
 				getCorrectSprite()->changeAnimation(JUMP_RIGHT);
 			}
 			posPlayer.y += 1.f;
 		}
-		else if (posPlayer.x < 520) {
+		else if (posPlayer.x < 289) {
+			if (getCorrectSprite()->animation() != MOVE_RIGHT) {//se apreta izq 1r vez
+				getCorrectSprite()->changeAnimation(MOVE_RIGHT);
+			}
+			posPlayer.x += 1.f;
+		}
+		else if (posPlayer.y < 12 * 32) {
+			posPlayer.y += 1.f;
+		}
+		else if (posPlayer.x < 417) {
 			if (getCorrectSprite()->animation() != MOVE_RIGHT) {//se apreta izq 1r vez
 				getCorrectSprite()->changeAnimation(MOVE_RIGHT);
 			}
@@ -366,16 +379,31 @@ void Player::update(int deltaTime)
 		if (!realesedInvencible && (!Game::instance().getKey('g') && !Game::instance().getKey('G'))) realesedInvencible = true;
 
 
-
+		//CHECK DE VARIABLES
+		if (Game::instance().getKey('p')) {
+			velocity = velocity;
+		}
 		if ((Game::instance().getSpecialKey(GLUT_KEY_LEFT) && !bJumping) || (Game::instance().getSpecialKey(GLUT_KEY_LEFT) && bJumping && saltoQuieto)) //TODO ESTO ES PARA Q SE PUEDA MOVER SI EST�S HACIENDO UN SALTO EN PARADA
 		{
 			if (getCorrectSprite()->animation() != MOVE_LEFT && !bJumping) {//se apreta izq 1r vez
 				getCorrectSprite()->changeAnimation(MOVE_LEFT);
 			}
+			/*if (posPlayer.x + walkedBeyondLimit >= SCROLL_LIMIT) {
+				movementSafeZone -= velocity;
+				posPlayer.x -= velocity;
+			}
+			else posPlayer.x -= velocity;*/
 			posPlayer.x -= velocity;
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
+			pair<bool, int> collisionLeft = map->collisionMoveLeft(posPlayer, glm::ivec2(32, alturaSprite));
+			if (collisionLeft.first || posPlayer.x <= 20) //poner condición para que no se vaya de la pantalla
 			{
-				posPlayer.x += velocity;
+				if (collisionLeft.second == 12)
+					instaKill();
+					
+				if (posPlayer.x >= SCROLL_LIMIT) {
+					posPlayer.x += velocity;
+				}
+				else posPlayer.x += velocity;
 				if (getCorrectSprite()->animation() != STAND_LEFT) getCorrectSprite()->changeAnimation(STAND_LEFT);
 			}
 		}
@@ -384,11 +412,21 @@ void Player::update(int deltaTime)
 			if (getCorrectSprite()->animation() != MOVE_RIGHT && !bJumping) {
 				getCorrectSprite()->changeAnimation(MOVE_RIGHT);
 			}
-			posPlayer.x += velocity;
-			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
+			if (posPlayer.x >= SCROLL_LIMIT && walkedBeyondLimit < 190*32) {
+				walkedBeyondLimit += velocity; 
+			}
+			else posPlayer.x += velocity;
+			pair<bool, int> collisionRight = map->collisionMoveRight(posPlayer, glm::ivec2(32, alturaSprite));
+			if (collisionRight.first)
 			{
-				posPlayer.x -= velocity;
+				if (collisionRight.second == 12)
+					instaKill();
+				if (posPlayer.x >= SCROLL_LIMIT && walkedBeyondLimit < 190*32) walkedBeyondLimit -= velocity;
+				else posPlayer.x -= velocity;
 				if (getCorrectSprite()->animation() != STAND_RIGHT) getCorrectSprite()->changeAnimation(STAND_RIGHT);
+			}
+			else {
+				if (posPlayer.x >= SCROLL_LIMIT) thereIsScroll = true;
 			}
 		}
 		else
@@ -403,18 +441,31 @@ void Player::update(int deltaTime)
 		{
 			jumpAngle += JUMP_ANGLE_STEP;
 			if (getCorrectSprite()->animation() == JUMP_RIGHT && !saltoQuieto) {
-				posPlayer.x += velocity;
-				if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
+				if (posPlayer.x >= SCROLL_LIMIT && walkedBeyondLimit < 190*32) {
+					walkedBeyondLimit += velocity; 
+				}
+				else posPlayer.x += velocity;
+				pair<bool, int> collisionRight = map->collisionMoveRight(posPlayer, glm::ivec2(32, alturaSprite));
+				if (collisionRight.first)
 				{
-					posPlayer.x -= velocity;
+					if (collisionRight.second == 12)
+						instaKill();
+					if (posPlayer.x >= SCROLL_LIMIT && walkedBeyondLimit < 190*32) walkedBeyondLimit -= velocity;
+					else posPlayer.x -= velocity;
 					if (getCorrectSprite()->animation() != STAND_RIGHT) getCorrectSprite()->changeAnimation(STAND_RIGHT);
+				}
+				else {
+					if (posPlayer.x >= SCROLL_LIMIT) thereIsScroll = true;
 				}
 			}
 
 			else if (getCorrectSprite()->animation() == JUMP_LEFT && !saltoQuieto) {
 				posPlayer.x -= velocity;
-				if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
+				pair<bool, int> collisionLeft = map->collisionMoveLeft(posPlayer, glm::ivec2(32, alturaSprite));
+				if (collisionLeft.first || posPlayer.x <= 20)
 				{
+					if (collisionLeft.second == 12)
+						instaKill();
 					posPlayer.x += velocity;
 					if (getCorrectSprite()->animation() != STAND_LEFT) getCorrectSprite()->changeAnimation(STAND_LEFT);
 				}
@@ -436,11 +487,15 @@ void Player::update(int deltaTime)
 			else
 			{
 				if (jumpAngle <= 90) {
-					posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+					posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 					/*if (!Game::instance().getKey(' ')) {
 						jumpAngle = 91;
 					}*/
-					if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y, alturaSprite)) {
+					pair<bool, int> collisionUp = map->collisionMoveUp(posPlayer, glm::ivec2(32, alturaSprite), &posPlayer.y);
+					if (collisionUp.first)
+					{
+						if (collisionUp.second == 12)
+							instaKill();
 						jumpAngle = 91;
 
 						engine->play2D(soundMarioCabezazo);
@@ -457,8 +512,11 @@ void Player::update(int deltaTime)
 					//posPlayer.y = int(startY - 96 * sin(1.15 * 3.14159f * jumpAngle / 180.f));
 					//posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
 					posPlayer.y += FALL_STEP;
-					bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+					pair<bool, int> collisionDown = map->collisionMoveDown(posPlayer, glm::ivec2(32, alturaSprite), &posPlayer.y);
+					bJumping = !collisionDown.first;
 					if (!bJumping) {
+						if (collisionDown.second == 12)
+							instaKill();
 						if (getCorrectSprite()->animation() == JUMP_LEFT) {//se apreta izq 1r vez
 							getCorrectSprite()->changeAnimation(STAND_LEFT);
 						}
@@ -472,8 +530,11 @@ void Player::update(int deltaTime)
 		else
 		{
 			posPlayer.y += FALL_STEP;
-			if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
+			pair<bool, int> collisionDown = map->collisionMoveDown(posPlayer, glm::ivec2(32, alturaSprite), &posPlayer.y);
+			if (collisionDown.first)
 			{
+				if (collisionDown.second == 12)
+					instaKill();
 				if (realesedJump && Game::instance().getKey(' '))
 				{
 					if (isBig) {
@@ -522,6 +583,14 @@ void Player::setTileMap(TileMap* tileMap)
 void Player::setPosition(const glm::vec2& pos)
 {
 	posPlayer = pos;
+	if (isBig) getCorrectSprite()->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y - 32)));
+	else getCorrectSprite()->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+}
+
+void Player::setPosition(const glm::vec2& pos, int dist)
+{
+	posPlayer = pos;
+	walkedBeyondLimit = dist;
 	if (isBig) getCorrectSprite()->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y - 32)));
 	else getCorrectSprite()->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
@@ -665,6 +734,9 @@ void Player::instaKill() {
 	timerAnimationDead = 0.f;
 }
 
+int Player::getRelativePosition() {
+	return walkedBeyondLimit;
+}
 
 //void keyboardCallback(unsigned char key, int x, int y) {
 //	if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {
