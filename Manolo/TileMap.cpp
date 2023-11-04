@@ -227,6 +227,7 @@ pair<bool, int> TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ive
 				*posY = tileSize * y - 32;
 				return pair<bool, int>(true, tile);
 			}
+			return pair<bool, int>(true, tile);
 		}
 	}
 

@@ -22,6 +22,7 @@ public:
 
 	void setTileMap(TileMap* tileMap);
 	void setPosition(const glm::vec2& pos);
+	void setPosition(const glm::vec2& pos, int dist);
 
 	void hit();
 	void creceMario();

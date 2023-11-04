@@ -148,8 +148,13 @@ void Scene::init(int lev) {
 
 		palo_bandera = new ObjetoEntorno();
 		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
-		palo_bandera->setPosition(glm::vec2((INIT_SETA_X_TILES - 1) * 16, (INIT_SETA_Y_TILES - 15) * 16));
+		palo_bandera->setPosition(glm::vec2(198 * 32, 2 * 32));
 		palo_bandera->setTileMap(map);
+
+		bandera = new ObjetoEntorno();
+		bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(64, 32), "bandera");
+		bandera->setPosition(glm::vec2(197 * 32, 11 * 32));
+		bandera->setTileMap(map);
 
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 		currentTime = 0.0f;
@@ -402,8 +407,13 @@ void Scene::init(int lev) {
 
 		palo_bandera = new ObjetoEntorno();
 		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
-		palo_bandera->setPosition(glm::vec2((INIT_SETA_X_TILES - 1) * 16, (INIT_SETA_Y_TILES - 20) * 16));
+		palo_bandera->setPosition(glm::vec2(198 * 32, 2 * 32));
 		palo_bandera->setTileMap(map);
+
+		bandera = new ObjetoEntorno();
+		bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(64, 32), "bandera");
+		bandera->setPosition(glm::vec2(197 * 32, 11 * 32));
+		bandera->setTileMap(map);
 
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 		currentTime = 0.0f;
@@ -725,6 +735,12 @@ void Scene::update(int deltaTime)
 			++it;
 		}
 
+		palo_bandera->setPosition(player->getRelativePosition());
+
+		bandera->setPosition(player->getRelativePosition());
+
+		bandera->update(deltaTime);
+
 		/////////////////7
 		it = personajes.begin(); //vector<Personaje*>::iterator
 		while (it != personajes.end()) {
@@ -863,6 +879,10 @@ void Scene::update(int deltaTime)
 			++it;
 		}
 
+		if (Game::instance().getKey('f')) {
+			player->setPosition(glm::vec2(190 * 32, 2 * 32), 190 * 32);
+		}
+
 		if (Game::instance().getKey('1')) {
 			lives = 3;
 			borrarPersonajes();
@@ -881,6 +901,7 @@ void Scene::update(int deltaTime)
 					engine->play2D(soundFlapPole);
 					engine->play2D(soundComplete);
 					player->animacionEndLevelFunc();
+					bandera->animacionEndLevelFunc(player->getPosition().y);
 					++level;
 					endedLevel = true;
 
@@ -973,10 +994,8 @@ void Scene::render()
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 
 	if (level != 0) {
-		// Create a translation matrix and translate it by a certain amount
 		glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-(float)player->getRelativePosition(), 0.0, 0.0)); // +32, posici�n original
 
-		// Multiply the translation matrix with the modelview matrix
 		modelview = translationMatrix;
 
 		texProgram.setUniformMatrix4f("modelview", modelview);
@@ -994,6 +1013,7 @@ void Scene::render()
 			}
 		}
 		palo_bandera->render();
+		bandera->render();
 		player->render();
 
 		spriteTimerCentena->render();

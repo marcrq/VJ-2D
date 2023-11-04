@@ -298,13 +298,22 @@ void Player::update(int deltaTime)
 	}
 	else if (animationEndLevel) {
 		
-		if (posPlayer.y < 376) {
+		if (posPlayer.y < 11 * 32) {
 			if (getCorrectSprite()->animation() != JUMP_RIGHT) {//se apreta izq 1r vez
 				getCorrectSprite()->changeAnimation(JUMP_RIGHT);
 			}
 			posPlayer.y += 1.f;
 		}
-		else if (posPlayer.x < 520) {
+		else if (posPlayer.x < 289) {
+			if (getCorrectSprite()->animation() != MOVE_RIGHT) {//se apreta izq 1r vez
+				getCorrectSprite()->changeAnimation(MOVE_RIGHT);
+			}
+			posPlayer.x += 1.f;
+		}
+		else if (posPlayer.y < 12 * 32) {
+			posPlayer.y += 1.f;
+		}
+		else if (posPlayer.x < 417) {
 			if (getCorrectSprite()->animation() != MOVE_RIGHT) {//se apreta izq 1r vez
 				getCorrectSprite()->changeAnimation(MOVE_RIGHT);
 			}
@@ -574,6 +583,14 @@ void Player::setTileMap(TileMap* tileMap)
 void Player::setPosition(const glm::vec2& pos)
 {
 	posPlayer = pos;
+	if (isBig) getCorrectSprite()->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y - 32)));
+	else getCorrectSprite()->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+}
+
+void Player::setPosition(const glm::vec2& pos, int dist)
+{
+	posPlayer = pos;
+	walkedBeyondLimit = dist;
 	if (isBig) getCorrectSprite()->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y - 32)));
 	else getCorrectSprite()->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
