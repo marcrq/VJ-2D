@@ -420,23 +420,93 @@ void Scene::init(int lev) {
 
 		goomba = new Goomba();
 		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		goomba->setPosition(glm::vec2(INIT_GOOMBA_X_TILES * 16, INIT_GOOMBA_Y_TILES * 16));
+		goomba->setPosition(glm::vec2(42 * 16, INIT_PLAYER_Y_TILES * 16));
 		goomba->setTileMap(map);
+		personajes.push_back(goomba);
 
-		/*star = new Star();
-		star->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		star->setPosition(glm::vec2(INIT_STAR_X_TILES * 16, INIT_STAR_Y_TILES * 16));
-		star->setTileMap(map);*/
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(77 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
 
-		/*seta = new Seta();
-		seta->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		seta->setPosition(glm::vec2(INIT_SETA_X_TILES * 16, INIT_SETA_Y_TILES * 16));
-		seta->setTileMap(map);*/
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(93 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
 
-		/*ktroopa = new Ktroopa();
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(95 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
+
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(142 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
+
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(145 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
+
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(220 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
+
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(223 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
+
+		ktroopa = new Ktroopa();
 		ktroopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		ktroopa->setPosition(glm::vec2(INIT_KTROOPA_X_TILES * 16, INIT_KTROOPA_Y_TILES * 16));
-		ktroopa->setTileMap(map);*/
+		ktroopa->setPosition(glm::vec2(240 * 16, INIT_PLAYER_Y_TILES * 16));
+		ktroopa->setTileMap(map);
+		personajes.push_back(ktroopa);
+
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(257 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
+
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(260 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
+
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(263 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
+
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(266 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
+
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(353 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
+
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(356 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
 
 		palo_bandera = new ObjetoEntorno();
 		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
@@ -448,13 +518,7 @@ void Scene::init(int lev) {
 		bandera->setPosition(glm::vec2(197 * 32, 11 * 32));
 		bandera->setTileMap(map);
 
-		
 		currentTime = 0.0f;
-
-		personajes.push_back(goomba);
-		//personajes.push_back(ktroopa);
-		//personajes.push_back(star);
-		//personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
 	}
 	else if (lev == 2) {
@@ -482,28 +546,33 @@ void Scene::init(int lev) {
 
 		goomba = new Goomba();
 		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		goomba->setPosition(glm::vec2(INIT_GOOMBA_X_TILES * 16, INIT_GOOMBA_Y_TILES * 16));
+		goomba->setPosition(glm::vec2(31 * 16, INIT_PLAYER_Y_TILES * 16));
 		goomba->setTileMap(map);
+		personajes.push_back(goomba);
 
-		/*star = new Star();
-		star->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		star->setPosition(glm::vec2(INIT_STAR_X_TILES * 16, INIT_STAR_Y_TILES * 16));
-		star->setTileMap(map);
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(33 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
 
-		seta = new Seta();
-		seta->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		seta->setPosition(glm::vec2(INIT_SETA_X_TILES * 16, INIT_SETA_Y_TILES * 16));
-		seta->setTileMap(map);*/
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(60 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setTileMap(map);
+		personajes.push_back(goomba);
 
 		ktroopa = new Ktroopa();
 		ktroopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		ktroopa->setPosition(glm::vec2(INIT_KTROOPA_X_TILES * 16, INIT_KTROOPA_Y_TILES * 16));
+		ktroopa->setPosition(glm::vec2(90 * 16, INIT_PLAYER_Y_TILES * 16));
 		ktroopa->setTileMap(map);
+		personajes.push_back(ktroopa);
 
-		ktroopa2 = new Ktroopa();
-		ktroopa2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		ktroopa2->setPosition(glm::vec2((INIT_KTROOPA_X_TILES + 10) * 16, INIT_KTROOPA_Y_TILES * 16));
-		ktroopa2->setTileMap(map);
+		ktroopa = new Ktroopa();
+		ktroopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		ktroopa->setPosition(glm::vec2(93 * 16, INIT_PLAYER_Y_TILES * 16));
+		ktroopa->setTileMap(map);
+		personajes.push_back(ktroopa);
 
 		palo_bandera = new ObjetoEntorno();
 		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
@@ -515,14 +584,7 @@ void Scene::init(int lev) {
 		bandera->setPosition(glm::vec2(197 * 32, 11 * 32));
 		bandera->setTileMap(map);
 
-		//projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 		currentTime = 0.0f;
-
-		personajes.push_back(goomba);
-		personajes.push_back(ktroopa);
-		personajes.push_back(ktroopa2);
-		//personajes.push_back(star);
-		//personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
 	}
 
@@ -768,9 +830,6 @@ void Scene::update(int deltaTime)
 				Goomba* g = dynamic_cast<Goomba*>(personaje);
 				if (!g->vivo) {
 					int p = g->getPoints();
-					points += p;
-					actualizarPoints();
-					actualizarPointsAchived(p);
 					it = personajes.erase(it);
 					delete personaje;
 				}

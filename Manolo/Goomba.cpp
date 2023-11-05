@@ -46,8 +46,12 @@ void Goomba::update(int deltaTime) {
 		if (timeSinceDead >= TIME_UNTIL_ELIMINATION) vivo = false;
 	}
 	else {
+		//para evitar caer
 		posPlayer.y += FALL_STEP;
-		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y).first);
+		if (!map->collisionMoveDown(glm::vec2(vaIzq ? posPlayer.x-32 : posPlayer.x+32, posPlayer.y), glm::ivec2(32, 32), &posPlayer.y).first) {
+			posPlayer.y -= FALL_STEP;
+			vaIzq = !vaIzq;
+		}
 
 		if (vaIzq && !pisado) {
 			posPlayer.x -= velocity;

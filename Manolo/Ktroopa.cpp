@@ -90,8 +90,24 @@ enum KtroopaAnims
 				}
 			}
 			else {
-				posPlayer.y += FALL_STEP;
-				if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y).first);
+				if (isDead) {
+					posPlayer.y += FALL_STEP;
+					if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y).first);
+				}
+				else {
+					//para evitar caer
+					posPlayer.y += FALL_STEP;
+					if (!map->collisionMoveDown(glm::vec2(vaIzq ? posPlayer.x - 32 : posPlayer.x + 32, posPlayer.y), glm::ivec2(32, 32), &posPlayer.y).first) {
+						posPlayer.y -= FALL_STEP;
+						vaIzq = !vaIzq;
+						if (vaIzq) {
+							sprite->changeAnimation(MOVE_LEFT);
+						}
+						else {
+							sprite->changeAnimation(MOVE_RIGHT);
+						}
+					}
+				}
 
 				if (vaIzq && (!isDead || isShellMoving)) {
 					posPlayer.x -= velocity;
