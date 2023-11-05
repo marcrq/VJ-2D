@@ -285,7 +285,7 @@ void TileMap::setRewardsLevel() {
 	for (int y = 0; y < mapSize.y; y++) {
 		for (int x = 0; x < mapSize.x; x++) {
 			int posMap = y * mapSize.x + x;
-			int tile = map[posMap];
+			int tile = mapa[posMap];
 			if (tile == 2) {
 				rewardsLevel.push_back(std::make_tuple(posMap, false, false));
 			}
