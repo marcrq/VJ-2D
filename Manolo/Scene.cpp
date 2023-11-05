@@ -111,66 +111,8 @@ void Scene::init(int lev) {
 		timeUp.loadFromFile("images/timeUp.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		spriteTimeUp = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &timeUp, &texProgram);
 		spriteTimeUp->setPosition(glm::vec2(float(0), float(0)));
-	}
-	else if (lev == 1) {
-		soundMenu->setIsPaused(true);
-		if(!firstTimeInGameShowScreenDead) soundGame->setIsPaused(false);
-		level = 1;
-		timerLevel = 500;
-		showScreenDeadPlayer = false;
-		timerScreenDead = 0.f;
-		personajes.clear();
-		endedLevel = false;
-		timerAnimationDying = -1.0;
-		paintCoin = false;
-		showPointsAchived = false;
-		timerPointsAchived = 0.0;
-		initShaders();
-		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-		player = new Player();
-		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * 16, INIT_PLAYER_Y_TILES * 16));
-		player->setTileMap(map);
 
-		goomba = new Goomba();
-		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		goomba->setPosition(glm::vec2(INIT_GOOMBA_X_TILES * 16, INIT_GOOMBA_Y_TILES * 16));
-		goomba->setTileMap(map);
-
-		/*star = new Star();
-		star->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		star->setPosition(glm::vec2(INIT_STAR_X_TILES * 16, INIT_STAR_Y_TILES * 16));
-		star->setTileMap(map);*/
-
-		seta = new Seta();
-		seta->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		seta->setPosition(glm::vec2(INIT_SETA_X_TILES * 16, INIT_SETA_Y_TILES * 16));
-		seta->setTileMap(map);
-
-		ktroopa = new Ktroopa();
-		ktroopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		ktroopa->setPosition(glm::vec2(INIT_KTROOPA_X_TILES * 16, INIT_KTROOPA_Y_TILES * 16));
-		ktroopa->setTileMap(map);
-
-		palo_bandera = new ObjetoEntorno();
-		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
-		palo_bandera->setPosition(glm::vec2(198 * 32, 2 * 32));
-		palo_bandera->setTileMap(map);
-
-		bandera = new ObjetoEntorno();
-		bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(64, 32), "bandera");
-		bandera->setPosition(glm::vec2(197 * 32, 11 * 32));
-		bandera->setTileMap(map);
-
-		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
-		currentTime = 0.0f;
-
-		personajes.push_back(goomba);
-		//personajes.push_back(ktroopa);
-		//personajes.push_back(star);
-		personajes.push_back(seta);
-		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
-
+		//////////////////77
 		coin.loadFromFile("images/coin.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		spriteCoin = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.166667, 1.0), &coin, &texProgram);
 		spriteCoin->setNumberAnimations(1);
@@ -450,6 +392,66 @@ void Scene::init(int lev) {
 		spriteNumberOfLives->setAnimationSpeed(NUEVE, 8);
 		spriteNumberOfLives->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
 		spriteNumberOfLives->setPosition(glm::vec2((22) * 16, (16) * 16));
+		///////////////////7
+	}
+	else if (lev == 1) {
+		soundMenu->setIsPaused(true);
+		if(!firstTimeInGameShowScreenDead) soundGame->setIsPaused(false);
+		level = 1;
+		showScreenDeadPlayer = false;
+		timerScreenDead = 0.f;
+		timerLevel = 500;
+		personajes.clear();
+		endedLevel = false;
+		timerAnimationDying = -1.0;
+		paintCoin = false;
+		showPointsAchived = false;
+		timerPointsAchived = 0.0;
+		initShaders();
+		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+		player = new Player();
+		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * 16, INIT_PLAYER_Y_TILES * 16));
+		player->setTileMap(map);
+
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setPosition(glm::vec2(INIT_GOOMBA_X_TILES * 16, INIT_GOOMBA_Y_TILES * 16));
+		goomba->setTileMap(map);
+
+		/*star = new Star();
+		star->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		star->setPosition(glm::vec2(INIT_STAR_X_TILES * 16, INIT_STAR_Y_TILES * 16));
+		star->setTileMap(map);*/
+
+		/*seta = new Seta();
+		seta->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		seta->setPosition(glm::vec2(INIT_SETA_X_TILES * 16, INIT_SETA_Y_TILES * 16));
+		seta->setTileMap(map);*/
+
+		ktroopa = new Ktroopa();
+		ktroopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		ktroopa->setPosition(glm::vec2(INIT_KTROOPA_X_TILES * 16, INIT_KTROOPA_Y_TILES * 16));
+		ktroopa->setTileMap(map);
+
+		palo_bandera = new ObjetoEntorno();
+		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
+		palo_bandera->setPosition(glm::vec2(198 * 32, 2 * 32));
+		palo_bandera->setTileMap(map);
+
+		bandera = new ObjetoEntorno();
+		bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(64, 32), "bandera");
+		bandera->setPosition(glm::vec2(197 * 32, 11 * 32));
+		bandera->setTileMap(map);
+
+		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+		currentTime = 0.0f;
+
+		personajes.push_back(goomba);
+		//personajes.push_back(ktroopa);
+		//personajes.push_back(star);
+		//personajes.push_back(seta);
+		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
 	}
 	else if (lev == 2) {
 		soundMenu->setIsPaused(true);
@@ -458,9 +460,9 @@ void Scene::init(int lev) {
 		}
 		//soundGame->setPlayPosition(0.0);
 		level = 2;
-		timerLevel = 500;
 		showScreenDeadPlayer = false;
 		timerScreenDead = 0.f;
+		timerLevel = 500;
 		personajes.clear();
 		endedLevel = false;
 		timerAnimationDying = -1.0;
@@ -518,286 +520,6 @@ void Scene::init(int lev) {
 		//personajes.push_back(star);
 		//personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
-
-		coin.loadFromFile("images/coin.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		spriteCoin = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.166667, 1.0), &coin, &texProgram);
-		spriteCoin->setNumberAnimations(1);
-		spriteCoin->setAnimationSpeed(0, 10);
-		spriteCoin->addKeyframe(0, glm::vec2(0.f, 1.0f));
-		spriteCoin->addKeyframe(0, glm::vec2(0.166667, 1.0f));
-		spriteCoin->addKeyframe(0, glm::vec2(0.333333, 1.0f));
-		spriteCoin->addKeyframe(0, glm::vec2(0.499999, 1.0f));
-		spriteCoin->addKeyframe(0, glm::vec2(0.666666, 1.0f));
-		spriteCoin->addKeyframe(0, glm::vec2(0.833333, 1.0f));
-		spriteCoin->changeAnimation(0);
-
-		////////////////////////////////////////////////7
-		numbers.loadFromFile("images/numbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		spriteTimerCentena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
-		spriteTimerCentena->setNumberAnimations(10);
-		spriteTimerCentena->setAnimationSpeed(CERO, 8);
-		spriteTimerCentena->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
-		spriteTimerCentena->setAnimationSpeed(UNO, 8);
-		spriteTimerCentena->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
-		spriteTimerCentena->setAnimationSpeed(DOS, 8);
-		spriteTimerCentena->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
-		spriteTimerCentena->setAnimationSpeed(TRES, 8);
-		spriteTimerCentena->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
-		spriteTimerCentena->setAnimationSpeed(CUATRO, 8);
-		spriteTimerCentena->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
-		spriteTimerCentena->setAnimationSpeed(CINCO, 8);
-		spriteTimerCentena->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
-		spriteTimerCentena->setAnimationSpeed(SEIS, 8);
-		spriteTimerCentena->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
-		spriteTimerCentena->setAnimationSpeed(SIETE, 8);
-		spriteTimerCentena->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
-		spriteTimerCentena->setAnimationSpeed(OCHO, 8);
-		spriteTimerCentena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
-		spriteTimerCentena->setAnimationSpeed(NUEVE, 8);
-		spriteTimerCentena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteTimerCentena->setPosition(glm::vec2((33) * 16, (1) * 16));
-
-		spriteTimerDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
-		spriteTimerDecena->setNumberAnimations(10);
-		spriteTimerDecena->setAnimationSpeed(CERO, 8);
-		spriteTimerDecena->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
-		spriteTimerDecena->setAnimationSpeed(UNO, 8);
-		spriteTimerDecena->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
-		spriteTimerDecena->setAnimationSpeed(DOS, 8);
-		spriteTimerDecena->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
-		spriteTimerDecena->setAnimationSpeed(TRES, 8);
-		spriteTimerDecena->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
-		spriteTimerDecena->setAnimationSpeed(CUATRO, 8);
-		spriteTimerDecena->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
-		spriteTimerDecena->setAnimationSpeed(CINCO, 8);
-		spriteTimerDecena->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
-		spriteTimerDecena->setAnimationSpeed(SEIS, 8);
-		spriteTimerDecena->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
-		spriteTimerDecena->setAnimationSpeed(SIETE, 8);
-		spriteTimerDecena->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
-		spriteTimerDecena->setAnimationSpeed(OCHO, 8);
-		spriteTimerDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
-		spriteTimerDecena->setAnimationSpeed(NUEVE, 8);
-		spriteTimerDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteTimerDecena->setPosition(glm::vec2((34) * 16, (1) * 16));
-
-		spriteTimerUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
-		spriteTimerUnidad->setNumberAnimations(10);
-		spriteTimerUnidad->setAnimationSpeed(CERO, 8);
-		spriteTimerUnidad->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
-		spriteTimerUnidad->setAnimationSpeed(UNO, 8);
-		spriteTimerUnidad->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
-		spriteTimerUnidad->setAnimationSpeed(DOS, 8);
-		spriteTimerUnidad->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
-		spriteTimerUnidad->setAnimationSpeed(TRES, 8);
-		spriteTimerUnidad->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
-		spriteTimerUnidad->setAnimationSpeed(CUATRO, 8);
-		spriteTimerUnidad->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
-		spriteTimerUnidad->setAnimationSpeed(CINCO, 8);
-		spriteTimerUnidad->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
-		spriteTimerUnidad->setAnimationSpeed(SEIS, 8);
-		spriteTimerUnidad->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
-		spriteTimerUnidad->setAnimationSpeed(SIETE, 8);
-		spriteTimerUnidad->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
-		spriteTimerUnidad->setAnimationSpeed(OCHO, 8);
-		spriteTimerUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
-		spriteTimerUnidad->setAnimationSpeed(NUEVE, 8);
-		spriteTimerUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteTimerUnidad->setPosition(glm::vec2((35) * 16, (1) * 16));
-
-		/////////////////POINTS//////////////////
-		spritePointsUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
-		spritePointsUnidad->setNumberAnimations(10);
-		spritePointsUnidad->setAnimationSpeed(CERO, 8);
-		spritePointsUnidad->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
-		spritePointsUnidad->setAnimationSpeed(UNO, 8);
-		spritePointsUnidad->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
-		spritePointsUnidad->setAnimationSpeed(DOS, 8);
-		spritePointsUnidad->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
-		spritePointsUnidad->setAnimationSpeed(TRES, 8);
-		spritePointsUnidad->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
-		spritePointsUnidad->setAnimationSpeed(CUATRO, 8);
-		spritePointsUnidad->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
-		spritePointsUnidad->setAnimationSpeed(CINCO, 8);
-		spritePointsUnidad->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
-		spritePointsUnidad->setAnimationSpeed(SEIS, 8);
-		spritePointsUnidad->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
-		spritePointsUnidad->setAnimationSpeed(SIETE, 8);
-		spritePointsUnidad->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
-		spritePointsUnidad->setAnimationSpeed(OCHO, 8);
-		spritePointsUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
-		spritePointsUnidad->setAnimationSpeed(NUEVE, 8);
-		spritePointsUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsUnidad->setPosition(glm::vec2((5) * 16, (1) * 16));
-
-		spritePointsDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
-		spritePointsDecena->setNumberAnimations(10);
-		spritePointsDecena->setAnimationSpeed(CERO, 8);
-		spritePointsDecena->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
-		spritePointsDecena->setAnimationSpeed(UNO, 8);
-		spritePointsDecena->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
-		spritePointsDecena->setAnimationSpeed(DOS, 8);
-		spritePointsDecena->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
-		spritePointsDecena->setAnimationSpeed(TRES, 8);
-		spritePointsDecena->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
-		spritePointsDecena->setAnimationSpeed(CUATRO, 8);
-		spritePointsDecena->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
-		spritePointsDecena->setAnimationSpeed(CINCO, 8);
-		spritePointsDecena->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
-		spritePointsDecena->setAnimationSpeed(SEIS, 8);
-		spritePointsDecena->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
-		spritePointsDecena->setAnimationSpeed(SIETE, 8);
-		spritePointsDecena->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
-		spritePointsDecena->setAnimationSpeed(OCHO, 8);
-		spritePointsDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
-		spritePointsDecena->setAnimationSpeed(NUEVE, 8);
-		spritePointsDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsDecena->setPosition(glm::vec2((4) * 16, (1) * 16));
-
-		spritePointsCentena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
-		spritePointsCentena->setNumberAnimations(10);
-		spritePointsCentena->setAnimationSpeed(CERO, 8);
-		spritePointsCentena->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
-		spritePointsCentena->setAnimationSpeed(UNO, 8);
-		spritePointsCentena->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
-		spritePointsCentena->setAnimationSpeed(DOS, 8);
-		spritePointsCentena->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
-		spritePointsCentena->setAnimationSpeed(TRES, 8);
-		spritePointsCentena->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
-		spritePointsCentena->setAnimationSpeed(CUATRO, 8);
-		spritePointsCentena->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
-		spritePointsCentena->setAnimationSpeed(CINCO, 8);
-		spritePointsCentena->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
-		spritePointsCentena->setAnimationSpeed(SEIS, 8);
-		spritePointsCentena->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
-		spritePointsCentena->setAnimationSpeed(SIETE, 8);
-		spritePointsCentena->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
-		spritePointsCentena->setAnimationSpeed(OCHO, 8);
-		spritePointsCentena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
-		spritePointsCentena->setAnimationSpeed(NUEVE, 8);
-		spritePointsCentena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsCentena->setPosition(glm::vec2((3) * 16, (1) * 16));
-		
-		mininumbers.loadFromFile("images/mininumbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		spritePointsAchivedUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &mininumbers, &texProgram);
-		spritePointsAchivedUnidad->setNumberAnimations(10);
-		spritePointsAchivedUnidad->setAnimationSpeed(CERO, 8);
-		spritePointsAchivedUnidad->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
-		spritePointsAchivedUnidad->setAnimationSpeed(UNO, 8);
-		spritePointsAchivedUnidad->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
-		spritePointsAchivedUnidad->setAnimationSpeed(DOS, 8);
-		spritePointsAchivedUnidad->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
-		spritePointsAchivedUnidad->setAnimationSpeed(TRES, 8);
-		spritePointsAchivedUnidad->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
-		spritePointsAchivedUnidad->setAnimationSpeed(CUATRO, 8);
-		spritePointsAchivedUnidad->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
-		spritePointsAchivedUnidad->setAnimationSpeed(CINCO, 8);
-		spritePointsAchivedUnidad->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
-		spritePointsAchivedUnidad->setAnimationSpeed(SEIS, 8);
-		spritePointsAchivedUnidad->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
-		spritePointsAchivedUnidad->setAnimationSpeed(SIETE, 8);
-		spritePointsAchivedUnidad->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
-		spritePointsAchivedUnidad->setAnimationSpeed(OCHO, 8);
-		spritePointsAchivedUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
-		spritePointsAchivedUnidad->setAnimationSpeed(NUEVE, 8);
-		spritePointsAchivedUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsAchivedUnidad->setPosition(glm::vec2((33) * 16, (1) * 16));
-
-		spritePointsAchivedDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &mininumbers, &texProgram);
-		spritePointsAchivedDecena->setNumberAnimations(10);
-		spritePointsAchivedDecena->setAnimationSpeed(CERO, 8);
-		spritePointsAchivedDecena->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
-		spritePointsAchivedDecena->setAnimationSpeed(UNO, 8);
-		spritePointsAchivedDecena->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
-		spritePointsAchivedDecena->setAnimationSpeed(DOS, 8);
-		spritePointsAchivedDecena->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
-		spritePointsAchivedDecena->setAnimationSpeed(TRES, 8);
-		spritePointsAchivedDecena->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
-		spritePointsAchivedDecena->setAnimationSpeed(CUATRO, 8);
-		spritePointsAchivedDecena->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
-		spritePointsAchivedDecena->setAnimationSpeed(CINCO, 8);
-		spritePointsAchivedDecena->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
-		spritePointsAchivedDecena->setAnimationSpeed(SEIS, 8);
-		spritePointsAchivedDecena->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
-		spritePointsAchivedDecena->setAnimationSpeed(SIETE, 8);
-		spritePointsAchivedDecena->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
-		spritePointsAchivedDecena->setAnimationSpeed(OCHO, 8);
-		spritePointsAchivedDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
-		spritePointsAchivedDecena->setAnimationSpeed(NUEVE, 8);
-		spritePointsAchivedDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spritePointsAchivedDecena->setPosition(glm::vec2((33) * 16, (1) * 16));
-		////////////////////COINS////////////////////////////
-		spriteCoinsUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
-		spriteCoinsUnidad->setNumberAnimations(10);
-		spriteCoinsUnidad->setAnimationSpeed(CERO, 8);
-		spriteCoinsUnidad->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
-		spriteCoinsUnidad->setAnimationSpeed(UNO, 8);
-		spriteCoinsUnidad->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
-		spriteCoinsUnidad->setAnimationSpeed(DOS, 8);
-		spriteCoinsUnidad->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
-		spriteCoinsUnidad->setAnimationSpeed(TRES, 8);
-		spriteCoinsUnidad->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
-		spriteCoinsUnidad->setAnimationSpeed(CUATRO, 8);
-		spriteCoinsUnidad->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
-		spriteCoinsUnidad->setAnimationSpeed(CINCO, 8);
-		spriteCoinsUnidad->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
-		spriteCoinsUnidad->setAnimationSpeed(SEIS, 8);
-		spriteCoinsUnidad->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
-		spriteCoinsUnidad->setAnimationSpeed(SIETE, 8);
-		spriteCoinsUnidad->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
-		spriteCoinsUnidad->setAnimationSpeed(OCHO, 8);
-		spriteCoinsUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
-		spriteCoinsUnidad->setAnimationSpeed(NUEVE, 8);
-		spriteCoinsUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteCoinsUnidad->setPosition(glm::vec2((17) * 16, (1) * 16));
-
-		spriteCoinsDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
-		spriteCoinsDecena->setNumberAnimations(10);
-		spriteCoinsDecena->setAnimationSpeed(CERO, 8);
-		spriteCoinsDecena->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
-		spriteCoinsDecena->setAnimationSpeed(UNO, 8);
-		spriteCoinsDecena->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
-		spriteCoinsDecena->setAnimationSpeed(DOS, 8);
-		spriteCoinsDecena->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
-		spriteCoinsDecena->setAnimationSpeed(TRES, 8);
-		spriteCoinsDecena->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
-		spriteCoinsDecena->setAnimationSpeed(CUATRO, 8);
-		spriteCoinsDecena->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
-		spriteCoinsDecena->setAnimationSpeed(CINCO, 8);
-		spriteCoinsDecena->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
-		spriteCoinsDecena->setAnimationSpeed(SEIS, 8);
-		spriteCoinsDecena->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
-		spriteCoinsDecena->setAnimationSpeed(SIETE, 8);
-		spriteCoinsDecena->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
-		spriteCoinsDecena->setAnimationSpeed(OCHO, 8);
-		spriteCoinsDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
-		spriteCoinsDecena->setAnimationSpeed(NUEVE, 8);
-		spriteCoinsDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteCoinsDecena->setPosition(glm::vec2((16) * 16, (1) * 16));
-		////////////////////LIVES////////////////////////////
-		spriteNumberOfLives = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
-		spriteNumberOfLives->setNumberAnimations(10);
-		spriteNumberOfLives->setAnimationSpeed(CERO, 8);
-		spriteNumberOfLives->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
-		spriteNumberOfLives->setAnimationSpeed(UNO, 8);
-		spriteNumberOfLives->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
-		spriteNumberOfLives->setAnimationSpeed(DOS, 8);
-		spriteNumberOfLives->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
-		spriteNumberOfLives->setAnimationSpeed(TRES, 8);
-		spriteNumberOfLives->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
-		spriteNumberOfLives->setAnimationSpeed(CUATRO, 8);
-		spriteNumberOfLives->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
-		spriteNumberOfLives->setAnimationSpeed(CINCO, 8);
-		spriteNumberOfLives->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
-		spriteNumberOfLives->setAnimationSpeed(SEIS, 8);
-		spriteNumberOfLives->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
-		spriteNumberOfLives->setAnimationSpeed(SIETE, 8);
-		spriteNumberOfLives->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
-		spriteNumberOfLives->setAnimationSpeed(OCHO, 8);
-		spriteNumberOfLives->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
-		spriteNumberOfLives->setAnimationSpeed(NUEVE, 8);
-		spriteNumberOfLives->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteNumberOfLives->setPosition(glm::vec2((22) * 16, (16) * 16));
 	}
 
 
