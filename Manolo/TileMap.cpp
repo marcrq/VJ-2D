@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <map>
 #include "TileMap.h"
 
 
@@ -10,9 +11,9 @@ using namespace std;
 
 TileMap* TileMap::createTileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program)
 {
-	TileMap* map = new TileMap(levelFile, minCoords, program);
+	TileMap* mapa = new TileMap(levelFile, minCoords, program);
 
-	return map;
+	return mapa;
 }
 
 
@@ -21,6 +22,7 @@ TileMap::TileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProg
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
 	relativePosition = 0;
+	
 
 	setRewardsLevel();
 	pulsado = false;
@@ -28,8 +30,8 @@ TileMap::TileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProg
 
 TileMap::~TileMap()
 {
-	if (map != NULL)
-		delete map;
+	if (mapa != NULL)
+		delete mapa;
 }
 
 
@@ -40,7 +42,13 @@ void TileMap::render() const
 	glBindVertexArray(vao);
 	glEnableVertexAttribArray(posLocation);
 	glEnableVertexAttribArray(texCoordLocation);
-	glDrawArrays(GL_TRIANGLES, 0, 6 * nTiles);
+
+	for (const auto& entry : renderMatrix) {
+		if (entry.second.second) {
+			glDrawArrays(GL_TRIANGLES, entry.second.first * 6, 6);
+		}
+	}
+
 	glDisable(GL_TEXTURE_2D);
 }
 
@@ -91,12 +99,12 @@ bool TileMap::loadLevel(const string& levelFile)
 	sstream.str(line);
 	sstream >> numTilesX >> numTilesY;
 
-	map = new int[mapSize.x * mapSize.y];
+	mapa = new int[mapSize.x * mapSize.y];
 	for (int j = 0; j < mapSize.y; j++)
 	{
 		for (int i = 0; i < mapSize.x; i++)
 		{
-			fin >> map[j * mapSize.x + i];
+			fin >> mapa[j * mapSize.x + i];
 		}
 	}
 
@@ -126,14 +134,16 @@ void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
 	vector<float> vertices;
 
 	nTiles = 0;
+	renderMatrix = map<int, pair<int, bool> >();
 	halfTexel = glm::vec2(0.5f / tilesheet.width(), 0.5f / tilesheet.height());
 	for (int j = 0; j < mapSize.y; j++)
 	{
 		for (int i = 0; i < mapSize.x; i++)
 		{
-			tile = map[j * mapSize.x + i];
+			tile = mapa[j * mapSize.x + i];
 			if (tile != 0)
 			{
+				renderMatrix.insert(pair<int, pair<int, bool> >(j * mapSize.x + i, pair<int, bool>(nTiles, true)));
 				// Non-empty tile
 				nTiles++;
 				posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
@@ -184,7 +194,7 @@ pair<bool, int> TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ive
 
 	for (int y = y0; y <= y1; y++)
 	{
-		int tile = map[y * mapSize.x + x];
+		int tile = mapa[y * mapSize.x + x];
 		if (tile >= 1 && tile <= 8 or tile == 12)
 			return pair<bool, int>(true, tile);
 	}
@@ -201,7 +211,7 @@ pair<bool, int> TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::iv
 	y1 = (pos.y + 31) / tileSize;
 	for (int y = y0; y <= y1; y++)
 	{
-		int tile = map[y * mapSize.x + x];
+		int tile = mapa[y * mapSize.x + x];
 		if (tile >= 1 && tile <= 8 or tile == 12)
 			return pair<bool, int>(true, tile);
 	}
@@ -218,7 +228,7 @@ pair<bool, int> TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ive
 	y = (pos.y + 31) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
-		int tile = map[y * mapSize.x + x];
+		int tile = mapa[y * mapSize.x + x];
 		if (tile >= 1 && tile <= 8 or tile == 12) {
 			if (*posY - tileSize * y + 32 <= 4)
 			{
@@ -232,7 +242,7 @@ pair<bool, int> TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ive
 	return pair<bool, int>(false, 0);
 }
 
-pair<bool, int> TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY)
+pair<bool, int> TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, bool isBig)
 {
 	int x0, x1, top;
 
@@ -242,15 +252,18 @@ pair<bool, int> TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2
 
 	for (int x = x0; x <= x1; x++)
 	{
-		int tile = map[top * mapSize.x + x];
+		int tile = mapa[top * mapSize.x + x];
 		if (tile >= 1 && tile <= 8 or tile == 12) {
-			/*if (514 >= x * tileSize && 514 <= (x + 1) * tileSize) {
-				pulsado = true;
-			}*/
 			for (auto& reward : rewardsLevel) {
 				int mapPos = top * mapSize.x + x;
 				if (!std::get<1>(reward) && std::get<0>(reward) == mapPos) 
 					std::get<1>(reward) = true;
+			}
+			if (isBig && tile == 1) {
+				mapa[top * mapSize.x + x] = -1;
+				int a = mapSize.x;
+				int b = mapSize.y;
+				renderMatrix.find(top * mapSize.x + x)->second.second = false;
 			}
 			return pair<bool, int>(true, tile);
 		}

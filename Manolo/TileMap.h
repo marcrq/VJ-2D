@@ -6,9 +6,9 @@
 #include "Texture.h"
 #include "ShaderProgram.h"
 #include <vector>
+#include <map>
 #include <tuple>  // Necesario para std::pair
 #include <iostream>
-
 
 // Class Tilemap is capable of loading a tile map from a text file in a very
 // simple format (see level01.txt for an example). With this information
@@ -38,7 +38,7 @@ public:
 	pair<bool, int> collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	pair<bool, int> collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	pair<bool, int> collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
-	pair<bool, int> collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY);
+	pair<bool, int> collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, bool isBig);
 	void setRelativePosition(int r);
 
 	std::vector<std::tuple<int, bool, bool>> rewardsLevel; //posicion, pulsado, creado/consumida moneda
@@ -60,9 +60,10 @@ private:
 	int tileSize, blockSize;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
-	int *map;
+	int *mapa;
 
 	int relativePosition;
+	map<int, pair<int, bool> > renderMatrix;
 };
 
 
