@@ -4,6 +4,8 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
+#include <irrKlang.h>
+using namespace irrklang;
 
 class Menus {
 public:
@@ -21,8 +23,10 @@ private:
     TileMap* map;
     Texture level1, level2, instr, instrucciones, credits, numbers;
     int opt, maxPoints;
-    bool changedRecently, insideInstrucciones, releasedUp, releasedDown, showingCredits;
+    bool changedRecently, insideInstrucciones, releasedUp, releasedDown, showingCredits, musicCredits;
     float timerChangeOption;
+    ISoundEngine* engine;
+    ISoundSource* soundGameClear;
 
     void actualizarPoints();
     void asignarSpriteNumber(Sprite* s, int n);

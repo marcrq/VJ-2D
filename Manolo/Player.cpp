@@ -302,7 +302,7 @@ void Player::update(int deltaTime)
 			if (getCorrectSprite()->animation() != JUMP_RIGHT) {//se apreta izq 1r vez
 				getCorrectSprite()->changeAnimation(JUMP_RIGHT);
 			}
-			posPlayer.y += 1.f;
+			posPlayer.y += 2.f;
 		}
 		else if (posPlayer.x < 289) {
 			if (getCorrectSprite()->animation() != MOVE_RIGHT) {//se apreta izq 1r vez

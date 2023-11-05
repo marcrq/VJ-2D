@@ -48,14 +48,14 @@ private:
 	ObjetoEntorno* bandera;
 	ObjetoEntorno* palo_bandera;
 	ShaderProgram texProgram;
-	float currentTime, timerAnimationDying, timerScreenDead, timerAnimationEndLevel;
+	float currentTime, timerAnimationDying, timerScreenDead, timerAnimationEndLevel, timerPaintCoin, timerPointsAchived;
 	glm::mat4 projection;
-	bool endedLevel, showScreenDeadPlayer, firstTimeInGameShowScreenDead, sumarPuntosTimer;
+	bool endedLevel, showScreenDeadPlayer, firstTimeInGameShowScreenDead, sumarPuntosTimer, paintCoin, showPointsAchived;
 	int level, timerLevel, points, maxPoints, coins, lives;
 	Menus* menus;
 	std::vector<Personaje*> personajes;
-	Texture resumenLevel1, resumenLevel2, numbers, screenDeadLevel1, screenDeadLevel2, deadScreenGameOver, timeUp;
-	Sprite* spriteResumenLevel1, *spriteResumenLevel2, *spriteTimerCentena, *spriteTimerDecena, *spriteTimerUnidad, * spritePointsUnidad, * spritePointsDecena, * spritePointsCentena, *spriteCoins, *spriteNumberOfLives, * spriteScreenDeadLevel1, * spriteScreenDeadLevel2, * spriteDeadScreenGameOver, *spriteTimeUp;
+	Texture resumenLevel1, resumenLevel2, numbers, screenDeadLevel1, screenDeadLevel2, deadScreenGameOver, timeUp, coin, mininumbers;
+	Sprite* spriteResumenLevel1, *spriteResumenLevel2, *spriteTimerCentena, *spriteTimerDecena, *spriteTimerUnidad, * spritePointsUnidad, * spritePointsDecena, * spritePointsCentena, *spriteCoinsUnidad, * spriteCoinsDecena, *spriteNumberOfLives, * spriteScreenDeadLevel1, * spriteScreenDeadLevel2, * spriteDeadScreenGameOver, *spriteTimeUp, *spriteCoin, *spritePointsAchivedUnidad, *spritePointsAchivedDecena;
 	//Text textTimerLevel
 
 	ISoundEngine* engine;
@@ -68,6 +68,7 @@ private:
 	void actualizarTimer();
 	void actualizarCoins();
 	void actualizarPoints();
+	void actualizarPointsAchived(int p);
 	void checkCollisionsShell(Personaje* it);
 };
 
