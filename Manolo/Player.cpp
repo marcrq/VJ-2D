@@ -539,13 +539,13 @@ void Player::setPosition(const glm::vec2& pos)
 	else getCorrectSprite()->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
-//void Player::setPosition(const glm::vec2& pos, int dist)
-//{
-//	posPlayer = pos;
-//	walkedBeyondLimit = dist;
-//	if (isBig) getCorrectSprite()->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y - 32)));
-//	else getCorrectSprite()->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-//}
+void Player::setPosition(const glm::vec2& pos, int dist)
+{
+	posPlayer = pos;
+	walkedBeyondLimit = dist;
+	if (isBig) getCorrectSprite()->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y - 32)));
+	else getCorrectSprite()->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+}
 
 glm::vec2 Player::getPosition() { return posPlayer; }
 
