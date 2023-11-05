@@ -8,7 +8,8 @@
 #define TIME_FOR_CHANGE 0.15
 
 Menus::Menus() {
-    // Constructor code, if needed
+    engine = createIrrKlangDevice();
+    soundGameClear = engine->addSoundSourceFromFile("audio/smb_world_clear.wav");
 }
 
 Menus::~Menus() {
@@ -29,6 +30,7 @@ void Menus::init(ShaderProgram& shaderProgram) {
     releasedDown = true;
     showingCredits = false;
     maxPoints = 0;
+    musicCredits = true;
     level1.loadFromFile("images/test1v2.png", TEXTURE_PIXEL_FORMAT_RGBA);
     sprite1 = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &level1, &shaderProgram);
     level2.loadFromFile("images/test2v2.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -157,8 +159,13 @@ void Menus::update(int deltaTime, int &chosed) {
         if (!releasedUp && !Game::instance().getSpecialKey(GLUT_KEY_UP)) releasedUp = true;
     }
     else {
+        if (musicCredits) {
+            engine->play2D(soundGameClear);
+            musicCredits = false;
+        }
         if (Game::instance().getKey('b')) {
             showingCredits = false;
+            musicCredits = true;
         }
     }
     

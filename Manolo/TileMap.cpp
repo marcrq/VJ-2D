@@ -261,8 +261,6 @@ pair<bool, int> TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2
 			}
 			if (isBig && tile == 1) {
 				mapa[top * mapSize.x + x] = -1;
-				int a = mapSize.x;
-				int b = mapSize.y;
 				renderMatrix.find(top * mapSize.x + x)->second.second = false;
 			}
 			return pair<bool, int>(true, tile);

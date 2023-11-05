@@ -8,7 +8,7 @@
 #define ACCELERATION 0.002f
 #define MAX_VEL 3.f
 #define TIME_RESURRECTION 4.f
-#define POINTS 1
+#define POINTS 10
 #define VELTURTLE 1.0
 #define VELSHELL 3.0
 

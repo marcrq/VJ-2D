@@ -6,7 +6,7 @@
 
 #define ACCELERATION 0.002f
 #define VEL 2.f
-#define POINTS 1
+#define POINTS 10
 #define TIME_STOPPED 2.f
 
 

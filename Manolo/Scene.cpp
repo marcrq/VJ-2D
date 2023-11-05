@@ -122,6 +122,9 @@ void Scene::init(int lev) {
 		personajes.clear();
 		endedLevel = false;
 		timerAnimationDying = -1.0;
+		paintCoin = false;
+		showPointsAchived = false;
+		timerPointsAchived = 0.0;
 		initShaders();
 		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 		player = new Player();
@@ -168,8 +171,19 @@ void Scene::init(int lev) {
 		personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
 
-		/////////////////////////////////////77
+		coin.loadFromFile("images/coin.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		spriteCoin = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.166667, 1.0), &coin, &texProgram);
+		spriteCoin->setNumberAnimations(1);
+		spriteCoin->setAnimationSpeed(0, 10);
+		spriteCoin->addKeyframe(0, glm::vec2(0.f, 1.0f));
+		spriteCoin->addKeyframe(0, glm::vec2(0.166667, 1.0f));
+		spriteCoin->addKeyframe(0, glm::vec2(0.333333, 1.0f));
+		spriteCoin->addKeyframe(0, glm::vec2(0.499999, 1.0f));
+		spriteCoin->addKeyframe(0, glm::vec2(0.666666, 1.0f));
+		spriteCoin->addKeyframe(0, glm::vec2(0.833333, 1.0f));
+		spriteCoin->changeAnimation(0);
 
+		/////////////////////////////////////77
 		numbers.loadFromFile("images/numbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		spriteTimerCentena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteTimerCentena->setNumberAnimations(10);
@@ -315,30 +329,103 @@ void Scene::init(int lev) {
 		spritePointsCentena->setAnimationSpeed(NUEVE, 8);
 		spritePointsCentena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
 		spritePointsCentena->setPosition(glm::vec2((3) * 16, (1) * 16));
+
+		mininumbers.loadFromFile("images/mininumbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		spritePointsAchivedUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &mininumbers, &texProgram);
+		spritePointsAchivedUnidad->setNumberAnimations(10);
+		spritePointsAchivedUnidad->setAnimationSpeed(CERO, 8);
+		spritePointsAchivedUnidad->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(UNO, 8);
+		spritePointsAchivedUnidad->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(DOS, 8);
+		spritePointsAchivedUnidad->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(TRES, 8);
+		spritePointsAchivedUnidad->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(CUATRO, 8);
+		spritePointsAchivedUnidad->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(CINCO, 8);
+		spritePointsAchivedUnidad->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(SEIS, 8);
+		spritePointsAchivedUnidad->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(SIETE, 8);
+		spritePointsAchivedUnidad->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(OCHO, 8);
+		spritePointsAchivedUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(NUEVE, 8);
+		spritePointsAchivedUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spritePointsAchivedUnidad->setPosition(glm::vec2((33) * 16, (1) * 16));
+
+		spritePointsAchivedDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &mininumbers, &texProgram);
+		spritePointsAchivedDecena->setNumberAnimations(10);
+		spritePointsAchivedDecena->setAnimationSpeed(CERO, 8);
+		spritePointsAchivedDecena->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(UNO, 8);
+		spritePointsAchivedDecena->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(DOS, 8);
+		spritePointsAchivedDecena->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(TRES, 8);
+		spritePointsAchivedDecena->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(CUATRO, 8);
+		spritePointsAchivedDecena->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(CINCO, 8);
+		spritePointsAchivedDecena->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(SEIS, 8);
+		spritePointsAchivedDecena->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(SIETE, 8);
+		spritePointsAchivedDecena->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(OCHO, 8);
+		spritePointsAchivedDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(NUEVE, 8);
+		spritePointsAchivedDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spritePointsAchivedDecena->setPosition(glm::vec2((33) * 16, (1) * 16));
 		////////////////////COINS////////////////////////////
-		spriteCoins = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
-		spriteCoins->setNumberAnimations(10);
-		spriteCoins->setAnimationSpeed(CERO, 8);
-		spriteCoins->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
-		spriteCoins->setAnimationSpeed(UNO, 8);
-		spriteCoins->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
-		spriteCoins->setAnimationSpeed(DOS, 8);
-		spriteCoins->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
-		spriteCoins->setAnimationSpeed(TRES, 8);
-		spriteCoins->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
-		spriteCoins->setAnimationSpeed(CUATRO, 8);
-		spriteCoins->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
-		spriteCoins->setAnimationSpeed(CINCO, 8);
-		spriteCoins->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
-		spriteCoins->setAnimationSpeed(SEIS, 8);
-		spriteCoins->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
-		spriteCoins->setAnimationSpeed(SIETE, 8);
-		spriteCoins->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
-		spriteCoins->setAnimationSpeed(OCHO, 8);
-		spriteCoins->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
-		spriteCoins->setAnimationSpeed(NUEVE, 8);
-		spriteCoins->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteCoins->setPosition(glm::vec2((16) * 16, (1) * 16));
+		spriteCoinsUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
+		spriteCoinsUnidad->setNumberAnimations(10);
+		spriteCoinsUnidad->setAnimationSpeed(CERO, 8);
+		spriteCoinsUnidad->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(UNO, 8);
+		spriteCoinsUnidad->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(DOS, 8);
+		spriteCoinsUnidad->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(TRES, 8);
+		spriteCoinsUnidad->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(CUATRO, 8);
+		spriteCoinsUnidad->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(CINCO, 8);
+		spriteCoinsUnidad->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(SEIS, 8);
+		spriteCoinsUnidad->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(SIETE, 8);
+		spriteCoinsUnidad->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(OCHO, 8);
+		spriteCoinsUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(NUEVE, 8);
+		spriteCoinsUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spriteCoinsUnidad->setPosition(glm::vec2((17) * 16, (1) * 16));
+
+		spriteCoinsDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
+		spriteCoinsDecena->setNumberAnimations(10);
+		spriteCoinsDecena->setAnimationSpeed(CERO, 8);
+		spriteCoinsDecena->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(UNO, 8);
+		spriteCoinsDecena->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(DOS, 8);
+		spriteCoinsDecena->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(TRES, 8);
+		spriteCoinsDecena->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(CUATRO, 8);
+		spriteCoinsDecena->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(CINCO, 8);
+		spriteCoinsDecena->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(SEIS, 8);
+		spriteCoinsDecena->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(SIETE, 8);
+		spriteCoinsDecena->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(OCHO, 8);
+		spriteCoinsDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(NUEVE, 8);
+		spriteCoinsDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spriteCoinsDecena->setPosition(glm::vec2((16) * 16, (1) * 16));
 		////////////////////LIVES////////////////////////////
 		spriteNumberOfLives = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteNumberOfLives->setNumberAnimations(10);
@@ -377,6 +464,9 @@ void Scene::init(int lev) {
 		personajes.clear();
 		endedLevel = false;
 		timerAnimationDying = -1.0;
+		paintCoin = false;
+		showPointsAchived = false;
+		timerPointsAchived = 0.0;
 		initShaders();
 		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 		player = new Player();
@@ -429,6 +519,17 @@ void Scene::init(int lev) {
 		//personajes.push_back(seta);
 		personajes.push_back(nullptr); //necesario para que no pete al hacer desaparecer al ultimo elementod de la lista, comentar para probar
 
+		coin.loadFromFile("images/coin.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		spriteCoin = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.166667, 1.0), &coin, &texProgram);
+		spriteCoin->setNumberAnimations(1);
+		spriteCoin->setAnimationSpeed(0, 10);
+		spriteCoin->addKeyframe(0, glm::vec2(0.f, 1.0f));
+		spriteCoin->addKeyframe(0, glm::vec2(0.166667, 1.0f));
+		spriteCoin->addKeyframe(0, glm::vec2(0.333333, 1.0f));
+		spriteCoin->addKeyframe(0, glm::vec2(0.499999, 1.0f));
+		spriteCoin->addKeyframe(0, glm::vec2(0.666666, 1.0f));
+		spriteCoin->addKeyframe(0, glm::vec2(0.833333, 1.0f));
+		spriteCoin->changeAnimation(0);
 
 		////////////////////////////////////////////////7
 		numbers.loadFromFile("images/numbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -576,30 +677,103 @@ void Scene::init(int lev) {
 		spritePointsCentena->setAnimationSpeed(NUEVE, 8);
 		spritePointsCentena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
 		spritePointsCentena->setPosition(glm::vec2((3) * 16, (1) * 16));
+		
+		mininumbers.loadFromFile("images/mininumbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		spritePointsAchivedUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &mininumbers, &texProgram);
+		spritePointsAchivedUnidad->setNumberAnimations(10);
+		spritePointsAchivedUnidad->setAnimationSpeed(CERO, 8);
+		spritePointsAchivedUnidad->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(UNO, 8);
+		spritePointsAchivedUnidad->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(DOS, 8);
+		spritePointsAchivedUnidad->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(TRES, 8);
+		spritePointsAchivedUnidad->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(CUATRO, 8);
+		spritePointsAchivedUnidad->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(CINCO, 8);
+		spritePointsAchivedUnidad->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(SEIS, 8);
+		spritePointsAchivedUnidad->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(SIETE, 8);
+		spritePointsAchivedUnidad->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(OCHO, 8);
+		spritePointsAchivedUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spritePointsAchivedUnidad->setAnimationSpeed(NUEVE, 8);
+		spritePointsAchivedUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spritePointsAchivedUnidad->setPosition(glm::vec2((33) * 16, (1) * 16));
+
+		spritePointsAchivedDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &mininumbers, &texProgram);
+		spritePointsAchivedDecena->setNumberAnimations(10);
+		spritePointsAchivedDecena->setAnimationSpeed(CERO, 8);
+		spritePointsAchivedDecena->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(UNO, 8);
+		spritePointsAchivedDecena->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(DOS, 8);
+		spritePointsAchivedDecena->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(TRES, 8);
+		spritePointsAchivedDecena->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(CUATRO, 8);
+		spritePointsAchivedDecena->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(CINCO, 8);
+		spritePointsAchivedDecena->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(SEIS, 8);
+		spritePointsAchivedDecena->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(SIETE, 8);
+		spritePointsAchivedDecena->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(OCHO, 8);
+		spritePointsAchivedDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spritePointsAchivedDecena->setAnimationSpeed(NUEVE, 8);
+		spritePointsAchivedDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spritePointsAchivedDecena->setPosition(glm::vec2((33) * 16, (1) * 16));
 		////////////////////COINS////////////////////////////
-		spriteCoins = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
-		spriteCoins->setNumberAnimations(10);
-		spriteCoins->setAnimationSpeed(CERO, 8);
-		spriteCoins->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
-		spriteCoins->setAnimationSpeed(UNO, 8);
-		spriteCoins->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
-		spriteCoins->setAnimationSpeed(DOS, 8);
-		spriteCoins->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
-		spriteCoins->setAnimationSpeed(TRES, 8);
-		spriteCoins->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
-		spriteCoins->setAnimationSpeed(CUATRO, 8);
-		spriteCoins->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
-		spriteCoins->setAnimationSpeed(CINCO, 8);
-		spriteCoins->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
-		spriteCoins->setAnimationSpeed(SEIS, 8);
-		spriteCoins->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
-		spriteCoins->setAnimationSpeed(SIETE, 8);
-		spriteCoins->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
-		spriteCoins->setAnimationSpeed(OCHO, 8);
-		spriteCoins->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
-		spriteCoins->setAnimationSpeed(NUEVE, 8);
-		spriteCoins->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
-		spriteCoins->setPosition(glm::vec2((16) * 16, (1) * 16));
+		spriteCoinsUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
+		spriteCoinsUnidad->setNumberAnimations(10);
+		spriteCoinsUnidad->setAnimationSpeed(CERO, 8);
+		spriteCoinsUnidad->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(UNO, 8);
+		spriteCoinsUnidad->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(DOS, 8);
+		spriteCoinsUnidad->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(TRES, 8);
+		spriteCoinsUnidad->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(CUATRO, 8);
+		spriteCoinsUnidad->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(CINCO, 8);
+		spriteCoinsUnidad->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(SEIS, 8);
+		spriteCoinsUnidad->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(SIETE, 8);
+		spriteCoinsUnidad->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(OCHO, 8);
+		spriteCoinsUnidad->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spriteCoinsUnidad->setAnimationSpeed(NUEVE, 8);
+		spriteCoinsUnidad->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spriteCoinsUnidad->setPosition(glm::vec2((17) * 16, (1) * 16));
+
+		spriteCoinsDecena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
+		spriteCoinsDecena->setNumberAnimations(10);
+		spriteCoinsDecena->setAnimationSpeed(CERO, 8);
+		spriteCoinsDecena->addKeyframe(CERO, glm::vec2(0.f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(UNO, 8);
+		spriteCoinsDecena->addKeyframe(UNO, glm::vec2(0.1f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(DOS, 8);
+		spriteCoinsDecena->addKeyframe(DOS, glm::vec2(0.2f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(TRES, 8);
+		spriteCoinsDecena->addKeyframe(TRES, glm::vec2(0.3f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(CUATRO, 8);
+		spriteCoinsDecena->addKeyframe(CUATRO, glm::vec2(0.4f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(CINCO, 8);
+		spriteCoinsDecena->addKeyframe(CINCO, glm::vec2(0.5f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(SEIS, 8);
+		spriteCoinsDecena->addKeyframe(SEIS, glm::vec2(0.6f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(SIETE, 8);
+		spriteCoinsDecena->addKeyframe(SIETE, glm::vec2(0.7f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(OCHO, 8);
+		spriteCoinsDecena->addKeyframe(OCHO, glm::vec2(0.8f, 1.0f));
+		spriteCoinsDecena->setAnimationSpeed(NUEVE, 8);
+		spriteCoinsDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
+		spriteCoinsDecena->setPosition(glm::vec2((16) * 16, (1) * 16));
 		////////////////////LIVES////////////////////////////
 		spriteNumberOfLives = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteNumberOfLives->setNumberAnimations(10);
@@ -681,11 +855,13 @@ void Scene::update(int deltaTime)
 				//sino, +1 moneda
 				else {
 					++coins;
+					actualizarCoins(); 
 					engine->play2D(soundCoin);
+					paintCoin = true;
 				}
 			}
 		}
-
+		
 		if (player->isInAnimacionDeadFunc() && timerAnimationDying == -1.0) {
 			soundGame->setIsPaused(true);
 			timerAnimationDying = 0.;
@@ -762,6 +938,7 @@ void Scene::update(int deltaTime)
 					int p = s->getPoints();
 					points += p;
 					actualizarPoints();
+					actualizarPointsAchived(p);
 					it = personajes.erase(it);
 					delete personaje;
 				}
@@ -772,6 +949,7 @@ void Scene::update(int deltaTime)
 						int p = g->getPoints();
 						points += p;
 						actualizarPoints();
+						actualizarPointsAchived(p);
 						it = personajes.erase(it);
 						delete personaje;
 					}
@@ -782,6 +960,7 @@ void Scene::update(int deltaTime)
 							int p = g->getPoints();
 							points += p;
 							actualizarPoints();
+							actualizarPointsAchived(p);
 						}
 						else {
 							//bool isBig = player->isBigFunc();
@@ -800,6 +979,7 @@ void Scene::update(int deltaTime)
 						int p = kt->getPoints();
 						points += p;
 						actualizarPoints();
+						actualizarPointsAchived(p);
 						it = personajes.erase(it);
 						delete personaje;
 					}
@@ -820,6 +1000,7 @@ void Scene::update(int deltaTime)
 							int p = kt->getPoints();
 							points += p;
 							actualizarPoints();
+							actualizarPointsAchived(p);
 							player->kickShell();
 						}
 						else { //es shell en movimiento, es hit al player
@@ -835,6 +1016,7 @@ void Scene::update(int deltaTime)
 					int p = s->getPoints();
 					points += p;
 					actualizarPoints();
+					actualizarPointsAchived(p);
 					it = personajes.erase(it);
 					delete personaje;
 				}
@@ -870,6 +1052,7 @@ void Scene::update(int deltaTime)
 					int p = g->getPoints();
 					points += p;
 					actualizarPoints();
+					actualizarPointsAchived(p);
 					it = personajes.erase(it);
 					delete personaje;
 				}
@@ -880,6 +1063,7 @@ void Scene::update(int deltaTime)
 					int p = kt->getPoints();
 					points += p;
 					actualizarPoints();
+					actualizarPointsAchived(p);
 					it = personajes.erase(it);
 					delete personaje;
 				}
@@ -887,48 +1071,51 @@ void Scene::update(int deltaTime)
 			++it;
 		}
 
-		if (Game::instance().getKey('f')) {
+		if (Game::instance().getKey('f') && !showScreenDeadPlayer) {
 			player->setPosition(glm::vec2(257, 3 * 32), 190 * 32);
 		}
 
 		if (player->getPosition().x >= palo_bandera->getPosition().x) { //siguiente nivel
-			if ((!player->isChangingLevel() && level == 1) || (level == 2 && sumarPuntosTimer)) {
-				if (level == 1) {
-					soundGame->setPlayPosition(0.0);
-					soundGame->setIsPaused(true);
-					engine->play2D(soundFlapPole);
-					engine->play2D(soundComplete);
-					player->animacionEndLevelFunc();
-					bandera->animacionEndLevelFunc(player->getPosition().y);
-					++level;
-					endedLevel = true;
+			if (!player->isChangingLevel() && level == 1) {
+				borrarPersonajes();
+				soundGame->setPlayPosition(0.0);
+				soundGame->setIsPaused(true);
+				engine->play2D(soundFlapPole);
+				engine->play2D(soundComplete);
+				player->animacionEndLevelFunc();
+				bandera->animacionEndLevelFunc(player->getPosition().y);
+				++level;
+				endedLevel = true;
 
-					float altura = 401 - player->getPosition().y;
-					int pointsAltura = altura / 10;
-					points += pointsAltura;
-					actualizarPoints();
-					sumarPuntosTimer = true;
-					timerAnimationEndLevel = 0.0;
-				}
-				if (sumarPuntosTimer) {
-					--timerLevel;
-					++points;
+				float altura = 401 - player->getPosition().y;
+				int pointsAltura = altura / 10;
+				points += pointsAltura;
+				actualizarPoints();
+				actualizarPointsAchived(pointsAltura);
+				sumarPuntosTimer = true;
+				timerAnimationEndLevel = 0.0;
+				
+			}
+			else if ((timerAnimationEndLevel >= 0 && !player->isChangingLevel() && level == 2 && endedLevel) || sumarPuntosTimer) {
+				timerAnimationEndLevel += deltaTime / 1000.0;
+				if (timerAnimationEndLevel >= 2.0 && sumarPuntosTimer) {
+					timerLevel -= 2;
+					points += 2;
 					actualizarPoints();
 					actualizarTimer();
-					if (timerLevel == 0) sumarPuntosTimer = false;
+					if (timerLevel <= 0) {
+						sumarPuntosTimer = false;
+					}
 				}
-			}
-			else if (timerAnimationEndLevel >= 0 && !player->isChangingLevel() && level == 2 && endedLevel) {
-				timerAnimationEndLevel += deltaTime / 1000.0;
-				if (timerAnimationEndLevel >= 5.0) timerAnimationEndLevel = -1.0;
+				if (timerAnimationEndLevel >= 6.0) timerAnimationEndLevel = -1.0;
 			}
 			else if (!player->isChangingLevel() && level == 2 && endedLevel) { //cambiamos de nivel, se cambia el mapa
-				borrarPersonajes();
 				init(2);
 				firstTimeInGameShowScreenDead = true;
 			}
-			else if ((!player->isChangingLevel() && level == 2) || (level == 3 && sumarPuntosTimer)) {
+			else if (!player->isChangingLevel() && level == 2) {
 				if (level == 2) {
+					borrarPersonajes();
 					soundGame->setPlayPosition(0.0);
 					soundGame->setIsPaused(true);
 					engine->play2D(soundFlapPole);
@@ -942,20 +1129,23 @@ void Scene::update(int deltaTime)
 					int pointsAltura = altura / 10;
 					points += pointsAltura;
 					actualizarPoints();
+					actualizarPointsAchived(pointsAltura);
 					sumarPuntosTimer = true;
 					timerAnimationEndLevel = 0.0;
 				}
-				if (sumarPuntosTimer) {
-					--timerLevel;
-					++points;
+			}
+			else if ((timerAnimationEndLevel >= 0 && !player->isChangingLevel() && level == 3 && endedLevel) || sumarPuntosTimer) {
+				timerAnimationEndLevel += deltaTime / 1000.0;
+				if (timerAnimationEndLevel >= 2.0 && sumarPuntosTimer) {
+					timerLevel -= 2;
+					points += 2;
 					actualizarPoints();
 					actualizarTimer();
-					if (timerLevel == 0) sumarPuntosTimer = false;
+					if (timerLevel <= 0) {
+						sumarPuntosTimer = false;
+					}
 				}
-			}
-			else if (timerAnimationEndLevel >= 0 && !player->isChangingLevel() && level == 3 && endedLevel) {
-				timerAnimationEndLevel += deltaTime / 1000.0;
-				if (timerAnimationEndLevel >= 5.0) timerAnimationEndLevel = -1.0;
+				if (timerAnimationEndLevel >= 6.0) timerAnimationEndLevel = -1.0;
 			}
 			else if (!player->isChangingLevel() && level == 3 && endedLevel) { //cambiamos de nivel, se cambia a los creditos
 				menus->showingCreditsFunc();
@@ -973,6 +1163,26 @@ void Scene::update(int deltaTime)
 				soundGame->setIsPaused(true);
 			}
 			actualizarTimer();
+		}
+		if (paintCoin) {
+			spriteCoin->setPosition(glm::vec2(player->getPosition().x, player->getPosition().y - player->getAltura()));
+			spriteCoin->update(deltaTime);
+			timerPaintCoin += deltaTime / 1000.0;
+			if (timerPaintCoin >= 1) {
+				paintCoin = false;
+				timerPaintCoin = 0.f;
+			}
+		}
+
+
+		if (showPointsAchived) {
+			spritePointsAchivedDecena->setPosition(glm::vec2(player->getPosition().x, player->getPosition().y - player->getAltura()));
+			spritePointsAchivedUnidad->setPosition(glm::vec2(player->getPosition().x+10, player->getPosition().y - player->getAltura()));
+			timerPointsAchived += deltaTime / 1000.0;
+			if (timerPointsAchived >= 1.5) {
+				timerPointsAchived = 0.0;
+				showPointsAchived = false;
+			}
 		}
 	}
 	else {
@@ -1011,9 +1221,15 @@ void Scene::render()
 				personaje->render();
 			}
 		}
+		if (paintCoin) spriteCoin->render();
 		palo_bandera->render();
 		bandera->render();
 		player->render();
+
+		if (showPointsAchived) {
+			spritePointsAchivedDecena->render();
+			spritePointsAchivedUnidad->render();
+		}
 
 		spriteTimerCentena->render();
 		spriteTimerDecena->render();
@@ -1022,8 +1238,9 @@ void Scene::render()
 		spritePointsUnidad->render();
 		spritePointsDecena->render();
 		spritePointsCentena->render();
-		actualizarCoins(); //PONER DONDE SE GANA MONEDA Y QUITAR DE AQU�
-		spriteCoins->render();
+		
+		spriteCoinsUnidad->render();
+		spriteCoinsDecena->render();
 
 		if (showScreenDeadPlayer && lives != -1) {
 			if (timerLevel <= 0) spriteTimeUp->render();
@@ -1150,7 +1367,9 @@ void Scene::actualizarTimer() {
 
 void Scene::actualizarCoins() {
 	int aux = coins;
-	asignarSpriteNumber(spriteCoins, coins % 10);
+	asignarSpriteNumber(spriteCoinsUnidad, coins % 10);
+	coins = coins / 10;
+	asignarSpriteNumber(spriteCoinsDecena, coins % 10);
 	coins = aux;
 }
 
@@ -1185,4 +1404,15 @@ void Scene::checkCollisionsShell(Personaje* personajeShell) {
 		tipo = "null";
 		++it2;
 	}
+}
+
+void Scene::actualizarPointsAchived(int p) {
+	asignarSpriteNumber(spritePointsAchivedUnidad, p % 10);
+	p = p / 10;
+	asignarSpriteNumber(spritePointsAchivedDecena, p % 10);
+	showPointsAchived = true;
+	int posxDecena = player->getPosition().x + player->getRelativePosition() % 3; //para que tenga un factor de aleatoriedad
+	int posy = player->getPosition().x + player->getAltura();
+	spritePointsAchivedDecena->setPosition(glm::vec2(posxDecena, posy));
+	spritePointsAchivedUnidad->setPosition(glm::vec2(posxDecena+12, posy));
 }

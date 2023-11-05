@@ -8,7 +8,7 @@
 #define ACCELERATION 0.002f
 #define MAX_VEL 3.f
 #define TIME_UNTIL_ELIMINATION 3.f
-#define POINTS 1
+#define POINTS 10
 #define VEL 1.0
 
 enum GoombaAnims
