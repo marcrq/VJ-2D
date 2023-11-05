@@ -79,7 +79,7 @@ void Scene::init(int lev) {
 	if (lev == 0) {
 		level = 0;
 		coins = 0;
-		lives = 0;
+		lives = 3;
 		points = 0;
 		maxPoints = 0;
 		firstTimeInGameShowScreenDead = true;

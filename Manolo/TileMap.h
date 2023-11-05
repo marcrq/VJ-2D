@@ -6,9 +6,9 @@
 #include "Texture.h"
 #include "ShaderProgram.h"
 #include <vector>
+#include <map>
 #include <tuple>  // Necesario para std::pair
 #include <iostream>
-
 
 // Class Tilemap is capable of loading a tile map from a text file in a very
 // simple format (see level01.txt for an example). With this information
@@ -47,8 +47,6 @@ public:
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
-	void prepareInteractiveLayer(const glm::vec2& minCoords, ShaderProgram& program);
-	void prepareBackgroundLayer(const glm::vec2& minCoords, ShaderProgram& program);
 	void itIsPressed();
 
 private:
@@ -60,10 +58,10 @@ private:
 	int tileSize, blockSize;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
-	int *map;
+	int *mapa;
 
 	int relativePosition;
-	int *renderMatrix;	
+	map<int, pair<int, bool> > renderMatrix;
 };
 
 
