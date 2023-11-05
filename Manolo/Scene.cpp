@@ -662,7 +662,7 @@ void Scene::update(int deltaTime)
 					if (player->isBigFunc()) {
 						star = new Star();
 						star->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-						star->setPosition(glm::vec2(player->getPosition().x, 16 * 16));
+						star->setPosition(glm::vec2(player->getPosition().x, player->getPosition().y - player->getAltura() - 32));
 						star->setTileMap(map);
 						personajes.pop_back();
 						personajes.push_back(star);
@@ -671,7 +671,7 @@ void Scene::update(int deltaTime)
 					else {
 						seta2 = new Seta();
 						seta2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-						seta2->setPosition(glm::vec2(player->getPosition().x, 16 * 16));
+						seta2->setPosition(glm::vec2(player->getPosition().x, player->getPosition().y - player->getAltura() - 32));
 						seta2->setTileMap(map);
 						personajes.pop_back();
 						personajes.push_back(seta2);
