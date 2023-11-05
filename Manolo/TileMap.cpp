@@ -178,10 +178,6 @@ void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
 	texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 }
 
-// Collision tests for axis aligned bounding boxes.
-// Method collisionMoveDown also corrects Y coordinate if the box is
-// already intersecting a tile below.
-
 pair<bool, int> TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) const
 {
 	int x, y0, y1;
@@ -206,7 +202,7 @@ pair<bool, int> TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::iv
 {
 	int x, y0, y1;
 
-	x = (pos.x + relativePosition + size.x - 1) / tileSize;
+	x = (pos.x + relativePosition + size.x +1) / tileSize;
 	y0 = (pos.y - size.y + 32) / tileSize;
 	y1 = (pos.y + 31) / tileSize;
 	for (int y = y0; y <= y1; y++)
@@ -224,7 +220,7 @@ pair<bool, int> TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ive
 	int x0, x1, y;
 
 	x0 = (pos.x + relativePosition) / tileSize;
-	x1 = (pos.x + relativePosition + size.x - 1) / tileSize;
+	x1 = (pos.x + relativePosition + size.x - 3) / tileSize;
 	y = (pos.y + 31) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
@@ -247,7 +243,7 @@ pair<bool, int> TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2
 	int x0, x1, top;
 
 	x0 = (pos.x + relativePosition) / tileSize;
-	x1 = (pos.x + relativePosition + size.x - 1) / tileSize;
+	x1 = (pos.x + relativePosition + size.x -3) / tileSize;
 	top = (pos.y - size.y + 31) / tileSize;
 
 	for (int x = x0; x <= x1; x++)

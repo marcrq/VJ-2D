@@ -297,7 +297,7 @@ void Player::update(int deltaTime)
 
 		//cosas de velocidades, run e invencibilidad
 		if (Game::instance().getSpecialKey(112)) { // shift per correr
-			velocity = 3.f;
+			velocity = 4.f;
 		}
 		else if (!isInvencible && velocity != 2.f) velocity = 2.f;
 

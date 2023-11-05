@@ -93,6 +93,7 @@ void Scene::init(int lev) {
 		menus->init(texProgram);
 		projection = glm::ortho(-1.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 
+		//pantallas de info
 		resumenLevel1.loadFromFile("images/resumenLevel1v2.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		spriteResumenLevel1 = Sprite::createSprite(glm::ivec2(640, 42), glm::vec2(1.0, 1.0), &resumenLevel1, &texProgram);
 		resumenLevel2.loadFromFile("images/resumenLevel2v2.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -112,7 +113,7 @@ void Scene::init(int lev) {
 		spriteTimeUp = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &timeUp, &texProgram);
 		spriteTimeUp->setPosition(glm::vec2(float(0), float(0)));
 
-		//////////////////77
+		//moneda animation
 		coin.loadFromFile("images/coin.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		spriteCoin = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.166667, 1.0), &coin, &texProgram);
 		spriteCoin->setNumberAnimations(1);
@@ -125,7 +126,7 @@ void Scene::init(int lev) {
 		spriteCoin->addKeyframe(0, glm::vec2(0.833333, 1.0f));
 		spriteCoin->changeAnimation(0);
 
-		/////////////////////////////////////77
+		//tema de numeros
 		numbers.loadFromFile("images/numbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		spriteTimerCentena = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteTimerCentena->setNumberAnimations(10);
@@ -320,6 +321,7 @@ void Scene::init(int lev) {
 		spritePointsAchivedDecena->setAnimationSpeed(NUEVE, 8);
 		spritePointsAchivedDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
 		spritePointsAchivedDecena->setPosition(glm::vec2((33) * 16, (1) * 16));
+
 		////////////////////COINS////////////////////////////
 		spriteCoinsUnidad = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteCoinsUnidad->setNumberAnimations(10);
@@ -368,6 +370,7 @@ void Scene::init(int lev) {
 		spriteCoinsDecena->setAnimationSpeed(NUEVE, 8);
 		spriteCoinsDecena->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
 		spriteCoinsDecena->setPosition(glm::vec2((16) * 16, (1) * 16));
+
 		////////////////////LIVES////////////////////////////
 		spriteNumberOfLives = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.1, 1.0), &numbers, &texProgram);
 		spriteNumberOfLives->setNumberAnimations(10);
@@ -392,7 +395,8 @@ void Scene::init(int lev) {
 		spriteNumberOfLives->setAnimationSpeed(NUEVE, 8);
 		spriteNumberOfLives->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
 		spriteNumberOfLives->setPosition(glm::vec2((22) * 16, (16) * 16));
-		///////////////////7
+
+		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	}
 	else if (lev == 1) {
 		soundMenu->setIsPaused(true);
@@ -429,10 +433,10 @@ void Scene::init(int lev) {
 		seta->setPosition(glm::vec2(INIT_SETA_X_TILES * 16, INIT_SETA_Y_TILES * 16));
 		seta->setTileMap(map);*/
 
-		ktroopa = new Ktroopa();
+		/*ktroopa = new Ktroopa();
 		ktroopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		ktroopa->setPosition(glm::vec2(INIT_KTROOPA_X_TILES * 16, INIT_KTROOPA_Y_TILES * 16));
-		ktroopa->setTileMap(map);
+		ktroopa->setTileMap(map);*/
 
 		palo_bandera = new ObjetoEntorno();
 		palo_bandera->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, glm::vec2(32, 320), "palo_bandera");
@@ -444,7 +448,7 @@ void Scene::init(int lev) {
 		bandera->setPosition(glm::vec2(197 * 32, 11 * 32));
 		bandera->setTileMap(map);
 
-		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+		
 		currentTime = 0.0f;
 
 		personajes.push_back(goomba);
@@ -481,7 +485,7 @@ void Scene::init(int lev) {
 		goomba->setPosition(glm::vec2(INIT_GOOMBA_X_TILES * 16, INIT_GOOMBA_Y_TILES * 16));
 		goomba->setTileMap(map);
 
-		star = new Star();
+		/*star = new Star();
 		star->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		star->setPosition(glm::vec2(INIT_STAR_X_TILES * 16, INIT_STAR_Y_TILES * 16));
 		star->setTileMap(map);
@@ -489,7 +493,7 @@ void Scene::init(int lev) {
 		seta = new Seta();
 		seta->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		seta->setPosition(glm::vec2(INIT_SETA_X_TILES * 16, INIT_SETA_Y_TILES * 16));
-		seta->setTileMap(map);
+		seta->setTileMap(map);*/
 
 		ktroopa = new Ktroopa();
 		ktroopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -511,7 +515,7 @@ void Scene::init(int lev) {
 		bandera->setPosition(glm::vec2(197 * 32, 11 * 32));
 		bandera->setTileMap(map);
 
-		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+		//projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 		currentTime = 0.0f;
 
 		personajes.push_back(goomba);
@@ -642,9 +646,7 @@ void Scene::update(int deltaTime)
 		}
 
 		palo_bandera->setPosition(player->getRelativePosition());
-
 		bandera->setPosition(player->getRelativePosition());
-
 		bandera->update(deltaTime);
 
 		/////////////////7
@@ -685,10 +687,6 @@ void Scene::update(int deltaTime)
 							actualizarPointsAchived(p);
 						}
 						else {
-							//bool isBig = player->isBigFunc();
-							/*if (!isBig) {
-								soundGame->setIsPaused(true);
-							}*/
 							player->hit();
 							++it;
 						}
@@ -696,7 +694,6 @@ void Scene::update(int deltaTime)
 				}
 				else if (tipo == "Ktroopa") {
 					if (player->isInvencibleFunc()) { //muere el enemigo
-						//personaje->hit();
 						Ktroopa* kt = dynamic_cast<Ktroopa*>(personaje);
 						int p = kt->getPoints();
 						points += p;
@@ -725,8 +722,7 @@ void Scene::update(int deltaTime)
 							actualizarPointsAchived(p);
 							player->kickShell();
 						}
-						else { //es shell en movimiento, es hit al player
-							//if (!player->isBigFunc()) soundGame->setIsPaused(true);
+						else { 
 							player->hit();
 						}
 						++it;
@@ -794,6 +790,7 @@ void Scene::update(int deltaTime)
 		}
 
 		if (Game::instance().getKey('f') && !showScreenDeadPlayer) {
+			borrarPersonajes();
 			player->setPosition(glm::vec2(257, 3 * 32), 190 * 32);
 		}
 
@@ -949,7 +946,7 @@ void Scene::render()
 		player->render();
 
 		if (showPointsAchived) {
-			spritePointsAchivedDecena->render();
+			if (spritePointsAchivedDecena->animation() != 0) spritePointsAchivedDecena->render();
 			spritePointsAchivedUnidad->render();
 		}
 
@@ -1010,33 +1007,27 @@ void Scene::initShaders()
 
 bool Scene::checkCollision(glm::vec2 posPlayer, glm::vec2 posEnemy, int alturaPlayer, int alturaEnemy) {
 	float left1 = posPlayer.x;
-	float right1 = posPlayer.x + 32; // Debes definir el ancho del objeto
+	float right1 = posPlayer.x + 32;
 	float left2 = posEnemy.x;
-	float right2 = posEnemy.x + 32; // Debes definir el ancho del objeto
+	float right2 = posEnemy.x + 32; 
 
-	// Calcula los l�mites de los objetos en el eje Y (teniendo en cuenta la altura)
 	float top1 = posPlayer.y - alturaPlayer;
 	float bottom1 = posPlayer.y;
 	float top2 = posEnemy.y - alturaEnemy;
 	float bottom2 = posEnemy.y;
 
-	// Verifica si hay colisi�n en el eje X
 	bool collisionX = (left1 < right2) && (right1 > left2);
-
-	// Verifica si hay colisi�n en el eje Y (considerando la altura)
 	bool collisionY = (top1 < bottom2) && (bottom1 > top2);
 
-	// Si hay colisi�n en ambos ejes, entonces hay colisi�n en 2D
 	return collisionX && collisionY;
 }
 
 bool Scene::esMuerte(glm::vec2 posPlayer, glm::vec2 posEnemy, int alturaPlayer, int alturaEnemy) {
 	float left1 = posPlayer.x;
-	float right1 = posPlayer.x + 32; // Debes definir el ancho del objeto
+	float right1 = posPlayer.x + 32; 
 	float left2 = posEnemy.x;
-	float right2 = posEnemy.x + 32; // Debes definir el ancho del objeto
+	float right2 = posEnemy.x + 32; 
 
-	// Calcula los l�mites de los objetos en el eje Y (teniendo en cuenta la altura)
 	float top1 = posPlayer.y - 32;
 	float bottom1 = posPlayer.y;
 	float top2 = posEnemy.y - 32;
@@ -1048,11 +1039,10 @@ bool Scene::esMuerte(glm::vec2 posPlayer, glm::vec2 posEnemy, int alturaPlayer, 
 
 bool Scene::isCollisionLeft(glm::vec2 posPlayer, glm::vec2 posEnemy) {
 	float left1 = posPlayer.x;
-	float right1 = posPlayer.x + 32; // Debes definir el ancho del objeto
+	float right1 = posPlayer.x + 32; 
 	float left2 = posEnemy.x;
-	float right2 = posEnemy.x + 32; // Debes definir el ancho del objeto
+	float right2 = posEnemy.x + 32; 
 
-	// Si hay colisi�n en ambos ejes, entonces hay colisi�n en 2D
 	return left1 < left2 && right1 < right2;
 }
 
