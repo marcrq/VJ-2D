@@ -356,7 +356,7 @@ void Player::update(int deltaTime)
 					posPlayer.x += velocity;
 				}
 				else posPlayer.x += velocity;
-				if (getCorrectSprite()->animation() != STAND_LEFT) getCorrectSprite()->changeAnimation(STAND_LEFT);
+				//if (getCorrectSprite()->animation() != STAND_LEFT) getCorrectSprite()->changeAnimation(STAND_LEFT);
 			}
 		}
 		else if ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && !bJumping) || (Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && bJumping && saltoQuieto)) //TODO ESTO ES PARA Q SE PUEDA MOVER SI EST�S HACIENDO UN SALTO EN PARADA
@@ -375,7 +375,7 @@ void Player::update(int deltaTime)
 					instaKill();
 				if (posPlayer.x >= SCROLL_LIMIT && walkedBeyondLimit < 190*32) walkedBeyondLimit -= velocity;
 				else posPlayer.x -= velocity;
-				if (getCorrectSprite()->animation() != STAND_RIGHT) getCorrectSprite()->changeAnimation(STAND_RIGHT);
+				//if (getCorrectSprite()->animation() != STAND_RIGHT) getCorrectSprite()->changeAnimation(STAND_RIGHT);
 			}
 			else {
 				if (posPlayer.x >= SCROLL_LIMIT) thereIsScroll = true;
@@ -404,7 +404,7 @@ void Player::update(int deltaTime)
 						instaKill();
 					if (posPlayer.x >= SCROLL_LIMIT && walkedBeyondLimit < 190*32) walkedBeyondLimit -= velocity;
 					else posPlayer.x -= velocity;
-					if (getCorrectSprite()->animation() != STAND_RIGHT) getCorrectSprite()->changeAnimation(STAND_RIGHT);
+					//if (getCorrectSprite()->animation() != STAND_RIGHT) getCorrectSprite()->changeAnimation(STAND_RIGHT);
 				}
 				else {
 					if (posPlayer.x >= SCROLL_LIMIT) thereIsScroll = true;
@@ -419,7 +419,7 @@ void Player::update(int deltaTime)
 					if (collisionLeft.second == 12)
 						instaKill();
 					posPlayer.x += velocity;
-					if (getCorrectSprite()->animation() != STAND_LEFT) getCorrectSprite()->changeAnimation(STAND_LEFT);
+					//if (getCorrectSprite()->animation() != STAND_LEFT) getCorrectSprite()->changeAnimation(STAND_LEFT);
 				}
 			}
 
