@@ -43,7 +43,7 @@ Scene::Scene()
 
 	engine = createIrrKlangDevice();
 	soundMenu = engine->play2D("audio/menu-mario.mp3", true, true, true);
-	soundGame = engine->play2D("audio/ringtones-super-mario-bros.mp3", true, true, true);
+	soundGame = engine->play2D("audio/SuperMarioBros.mp3", true, true, true);
 	soundGameOver = engine->addSoundSourceFromFile("audio/smb_gameover.wav");
 	soundTimeUp = engine->addSoundSourceFromFile("audio/smb_warning.wav");
 	soundFlapPole = engine->addSoundSourceFromFile("audio/smb_flagpole.wav");
