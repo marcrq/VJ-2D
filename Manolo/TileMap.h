@@ -40,6 +40,7 @@ public:
 	pair<bool, int> collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
 	pair<bool, int> collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY, bool isBig);
 	void setRelativePosition(int r);
+	int getTileType(glm::ivec2& pos);
 
 	std::vector<std::tuple<int, bool, bool>> rewardsLevel; //posicion, pulsado, creado/consumida moneda
 
