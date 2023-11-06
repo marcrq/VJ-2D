@@ -275,6 +275,7 @@ void TileMap::setRewardsLevel() {
 		}
 	}
 }
-int TileMap::getTileType(glm::ivec2& pos) { 
+
+int TileMap::getTileType(const glm::ivec2& pos) { 
 	return mapa[pos.y * mapSize.x + pos.x]; 
 }
