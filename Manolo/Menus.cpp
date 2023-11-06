@@ -151,7 +151,7 @@ void Menus::update(int deltaTime, int &chosed) {
                 insideInstrucciones = true;
             }
         }
-        else if (insideInstrucciones && Game::instance().getKey('b')) {
+        else if (insideInstrucciones && (Game::instance().getKey('b') || Game::instance().getKey('B'))) {
             insideInstrucciones = false;
         }
 
@@ -163,7 +163,7 @@ void Menus::update(int deltaTime, int &chosed) {
             engine->play2D(soundGameClear);
             musicCredits = false;
         }
-        if (Game::instance().getKey('b')) {
+        if (Game::instance().getKey('b') || Game::instance().getKey('B')) {
             showingCredits = false;
             musicCredits = true;
         }
