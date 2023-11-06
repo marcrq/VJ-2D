@@ -546,7 +546,7 @@ void Scene::init(int lev) {
 
 		goomba = new Goomba();
 		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		goomba->setPosition(glm::vec2(31 * 16, INIT_PLAYER_Y_TILES * 16));
+		goomba->setPosition(glm::vec2(30 * 16, INIT_PLAYER_Y_TILES * 16));
 		goomba->setTileMap(map);
 		personajes.push_back(goomba);
 
