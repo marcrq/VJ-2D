@@ -43,7 +43,7 @@ Scene::Scene()
 
 	engine = createIrrKlangDevice();
 	soundMenu = engine->play2D("audio/menu-mario.mp3", true, true, true);
-	soundGame = engine->play2D("audio/ringtones-super-mario-bros.mp3", true, true, true);
+	soundGame = engine->play2D("audio/SuperMarioBros.mp3", true, true, true);
 	soundGameOver = engine->addSoundSourceFromFile("audio/smb_gameover.wav");
 	soundTimeUp = engine->addSoundSourceFromFile("audio/smb_warning.wav");
 	soundFlapPole = engine->addSoundSourceFromFile("audio/smb_flagpole.wav");
@@ -91,7 +91,7 @@ void Scene::init(int lev) {
 		initShaders();
 		menus = new Menus();
 		menus->init(texProgram);
-		projection = glm::ortho(-1.0f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+		projection = glm::ortho(0.0f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 
 		//pantallas de info
 		resumenLevel1.loadFromFile("images/resumenLevel1v2.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -396,7 +396,7 @@ void Scene::init(int lev) {
 		spriteNumberOfLives->addKeyframe(NUEVE, glm::vec2(0.9f, 1.0f));
 		spriteNumberOfLives->setPosition(glm::vec2((22) * 16, (16) * 16));
 
-		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+		projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	}
 	else if (lev == 1) {
 		soundMenu->setIsPaused(true);
