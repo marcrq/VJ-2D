@@ -303,7 +303,7 @@ void Player::update(int deltaTime)
 
 		if (isInvencible) {
 			timerIsInvencible += deltaTime / 1000.0;
-			velocity = 3.f;
+			velocity = 4.f;
 			if (timerIsInvencible >= TIME_INVINCIBILITY) {
 				isInvencible = false;
 				velocity = 2.f;

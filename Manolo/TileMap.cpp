@@ -110,17 +110,6 @@ bool TileMap::loadLevel(const string& levelFile)
 
 	getline(fin, line);
 
-	for (int j = 0; j < numTilesY; j++)
-	{
-		getline(fin, line);
-		sstream.str(line);
-		for (int i = 0; i < numTilesX; i++)
-		{
-			int value;
-			sstream >> value;
-		}
-	}
-
 	fin.close();
 
 	return true;
