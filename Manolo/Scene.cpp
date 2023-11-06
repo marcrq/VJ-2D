@@ -677,11 +677,6 @@ void Scene::update(int deltaTime)
 			}
 		}
 
-		//CONTROL DE ERRORES
-		if (Game::instance().getKey('e')) {
-			lives = lives;
-		}
-
 		//ajustar velocidades
 		vector<Personaje*>::iterator it = personajes.begin();
 		while (it != personajes.end()) {
@@ -848,7 +843,7 @@ void Scene::update(int deltaTime)
 			++it;
 		}
 
-		if (Game::instance().getKey('f') && !showScreenDeadPlayer) {
+		if ((Game::instance().getKey('f') || Game::instance().getKey('F')) && !showScreenDeadPlayer) {
 			borrarPersonajes();
 			player->setPosition(glm::vec2(257, 3 * 32), 190 * 32);
 		}

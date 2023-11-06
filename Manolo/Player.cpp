@@ -335,11 +335,6 @@ void Player::update(int deltaTime)
 		if (!realesedBig && (!Game::instance().getKey('m') && !Game::instance().getKey('M'))) realesedBig = true;
 		if (!realesedInvencible && (!Game::instance().getKey('g') && !Game::instance().getKey('G'))) realesedInvencible = true;
 
-
-		//CHECK DE VARIABLES
-		if (Game::instance().getKey('p')) {
-			velocity = velocity;
-		}
 		if ((Game::instance().getSpecialKey(GLUT_KEY_LEFT) && !bJumping) || (Game::instance().getSpecialKey(GLUT_KEY_LEFT) && bJumping && saltoQuieto)) //TODO ESTO ES PARA Q SE PUEDA MOVER SI EST�S HACIENDO UN SALTO EN PARADA
 		{
 			if (getCorrectSprite()->animation() != MOVE_LEFT && !bJumping) {//se apreta izq 1r vez
