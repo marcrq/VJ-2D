@@ -37,7 +37,7 @@ void Menus::init(ShaderProgram& shaderProgram) {
     sprite2 = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &level2, &shaderProgram);
     instr.loadFromFile("images/test3v2.png", TEXTURE_PIXEL_FORMAT_RGBA);
     sprite3 = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &instr, &shaderProgram);
-    instrucciones.loadFromFile("images/instrv2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    instrucciones.loadFromFile("images/instructions2.png", TEXTURE_PIXEL_FORMAT_RGBA);
     spriteInstrucciones = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &instrucciones, &shaderProgram);
     credits.loadFromFile("images/credits.png", TEXTURE_PIXEL_FORMAT_RGBA);
     spriteCredits = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &credits, &shaderProgram);

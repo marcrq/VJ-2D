@@ -970,6 +970,7 @@ void Scene::update(int deltaTime)
 
 				float altura = 401 - player->getPosition().y;
 				int pointsAltura = altura / 10;
+				if (pointsAltura > 30) pointsAltura = 30;
 				points += pointsAltura;
 				actualizarPoints();
 				actualizarPointsAchived(pointsAltura);
@@ -1008,6 +1009,7 @@ void Scene::update(int deltaTime)
 
 					float altura = 401 - player->getPosition().y;
 					int pointsAltura = altura / 10;
+					if (pointsAltura > 30) pointsAltura = 30;
 					points += pointsAltura;
 					actualizarPoints();
 					actualizarPointsAchived(pointsAltura);
