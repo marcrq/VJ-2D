@@ -932,7 +932,6 @@ void Scene::update(int deltaTime)
 			if (tipo == "Goomba") {
 				Goomba* g = dynamic_cast<Goomba*>(personaje);
 				if (!g->vivo) {
-					int p = g->getPoints();
 					it = personajes.erase(it);
 					delete personaje;
 				}
@@ -1270,7 +1269,13 @@ void Scene::checkCollisionsShell(Personaje* personajeShell) {
 		if (personaje2 != nullptr && personaje2 != personajeShell && (tipo == "Goomba" || tipo == "Ktroopa") && checkCollision(shell->getPosition(), personaje2->getPosition(), 32, 32)) {
 			if (tipo == "Goomba") {
 				Goomba* g = dynamic_cast<Goomba*>(personaje2);
-				if(!g->isPisado()) g->hit();
+				if (!g->isPisado()) {
+					g->hit();
+					int p = g->getPoints();
+					points += p;
+					actualizarPoints();
+					actualizarPointsAchived(p);
+				}
 			}
 			else if (tipo == "Ktroopa" && personajeShell != personaje2) {
 				Ktroopa* kt = dynamic_cast<Ktroopa*>(personaje2);
